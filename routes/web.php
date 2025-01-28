@@ -1,0 +1,51 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AtivoController;
+use App\Http\Controllers\MarcaController;
+use App\Http\Controllers\TipoController;
+use App\Http\Controllers\MovimentacaoController;
+
+
+// Dashboard (Página inicial autenticada)
+Route::get('/', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+// Grupo de rotas protegidas por autenticação
+Route::middleware('auth')->group(function () {
+
+    // Ativos
+    Route::prefix('ativos')->name('ativos.')->group(function () {
+        Route::get('/', [AtivoController::class, 'index'])->name('index');
+        Route::post('/store', [AtivoController::class, 'store'])->name('store');
+        Route::put('/update', [AtivoController::class, 'update'])->name('update');
+    });
+
+    // Marcas
+    Route::prefix('marcas')->name('marcas.')->group(function () {
+        Route::get('/', [MarcaController::class, 'index'])->name('index');
+        Route::post('/store', [MarcaController::class, 'store'])->name('store');
+        Route::put('/update', [MarcaController::class, 'update'])->name('update');
+        Route::delete('/delete', [MarcaController::class, 'destroy'])->name('delete');
+    });
+
+    // Tipos
+    Route::prefix('tipos')->name('tipos.')->group(function () {
+        Route::get('/', [TipoController::class, 'index'])->name('index');
+        Route::post('/store', [TipoController::class, 'store'])->name('store');
+        Route::put('/update', [TipoController::class, 'update'])->name('update');
+        Route::delete('/delete', [TipoController::class, 'destroy'])->name('delete');
+    });
+
+    // Perfil do usuário
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'edit'])->name('edit');
+        Route::patch('/', [ProfileController::class, 'update'])->name('update');
+        Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
+    });
+});
+
+// Importa as rotas de autenticação padrão do Laravel
+require __DIR__ . '/auth.php';
