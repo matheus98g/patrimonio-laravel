@@ -39,6 +39,14 @@ Route::middleware('auth')->group(function () {
         Route::delete('/delete', [TipoController::class, 'destroy'])->name('delete');
     });
 
+    // Movimentações
+    Route::prefix('movimentacoes')->name('movimentacoes.')->group(function () {
+        Route::get('/', [MovimentacaoController::class, 'index'])->name('index');
+        Route::post('/store', [MovimentacaoController::class, 'store'])->name('store');
+        Route::put('/update', [MovimentacaoController::class, 'update'])->name('update');
+        Route::delete('/delete', [MovimentacaoController::class, 'destroy'])->name('delete');
+    });
+
     // Perfil do usuário
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'edit'])->name('edit');

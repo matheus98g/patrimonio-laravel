@@ -24,9 +24,9 @@
                     <x-nav-link :href="route('tipos.index')" :active="request()->routeIs('tipos.index')">
                         {{ __('Tipos') }}
                     </x-nav-link>
-                    {{-- <x-nav-link :href="route('movimentacoes.index')" :active="request()->routeIs('movimentacoes.index')">
+                    <x-nav-link :href="route('movimentacoes.index')" :active="request()->routeIs('movimentacoes.index')">
                         {{ __('Movimentações') }}
-                    </x-nav-link> --}}
+                    </x-nav-link>
 
 
                 </div>

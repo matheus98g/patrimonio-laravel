@@ -16,4 +16,16 @@ class Ativo extends Model
         'id_tipo',
         'id_user',
     ];
+
+    // Relacionamento com a tabela marcas
+    public function marca()
+    {
+        return $this->belongsTo(Marca::class);
+    }
+
+    // Relacionamento com a tabela tipos
+    public function tipo()
+    {
+        return $this->belongsTo(Tipo::class);
+    }
 }

@@ -16,4 +16,6 @@ class Movimentacao extends Model
         'qntUso',
         'tipo',
     ];
+
+    protected $table = 'movimentacoes';
 }

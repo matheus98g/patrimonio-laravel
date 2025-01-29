@@ -11,4 +11,10 @@ class Marca extends Model
         'descricao',
         'status',
     ];
+
+    // Relacionamento com ativos
+    public function ativos()
+    {
+        return $this->hasMany(Ativo::class);
+    }
 }
