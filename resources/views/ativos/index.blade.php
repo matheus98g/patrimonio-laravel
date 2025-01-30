@@ -96,7 +96,7 @@
         </div>
     </div>
 
-    <!-- Modal para adicionar ativo -->
+    {{-- <!-- Modal para adicionar ativo -->
     <div id="ativo-modal" class="fixed inset-0 z-50 flex justify-center items-center hidden"
         onclick="closeModal(event)">
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96" onclick="event.stopPropagation()">
@@ -155,6 +155,83 @@
                     <x-secondary-button class="ml-2 px-4 py-2" type="button"
                         onclick="closeModal('ativo-modal')">Cancelar</x-secondary-button>
 
+                </div>
+            </form>
+        </div>
+    </div> --}}
+
+    <!-- Modal para adicionar ativo -->
+    <div id="ativo-modal" class="fixed inset-0 z-50 flex justify-center items-center hidden"
+        onclick="closeModal(event, 'ativo-modal')">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96" onclick="event.stopPropagation()">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Cadastrar Ativo</h3>
+            <form action="{{ route('ativos.store') }}" method="POST">
+                @csrf
+                <div class="mb-4">
+                    <label for="descricao"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descrição</label>
+                    <input type="text" id="descricao" name="descricao"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="id_marca"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Marca</label>
+                    <select name="id_marca" id="id_marca"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Selecione uma Marca</option>
+                        @foreach ($marcas as $marca)
+                            <option value="{{ $marca->id }}">{{ $marca->descricao }}</option>
+                        @endforeach
+                    </select>
+                    <!-- Botão para cadastrar nova marca -->
+                    <button type="button" onclick="toggleMarcaForm()" class="mt-2 text-blue-500 text-sm">Cadastrar nova
+                        marca</button>
+                    <div id="nova-marca-form" class="hidden mt-2">
+                        <input type="text" name="nova_marca" id="nova_marca" placeholder="Digite a nova marca"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="id_tipo"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo</label>
+                    <select name="id_tipo" id="id_tipo"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Selecione um Tipo</option>
+                        @foreach ($tipos as $tipo)
+                            <option value="{{ $tipo->id }}">{{ $tipo->descricao }}</option>
+                        @endforeach
+                    </select>
+                    <!-- Botão para cadastrar novo tipo -->
+                    <button type="button" onclick="toggleTipoForm()" class="mt-2 text-blue-500 text-sm">Cadastrar novo
+                        tipo</button>
+                    <div id="novo-tipo-form" class="hidden mt-2">
+                        <input type="text" name="novo_tipo" id="novo_tipo" placeholder="Digite o novo tipo"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="quantidade"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade</label>
+                    <input type="number" id="quantidade" name="quantidade" value="1"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="observacao"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Observação</label>
+                    <textarea id="observacao" name="observacao"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+
+                <div class="flex justify-end px-4">
+                    <x-primary-button class="ml-2 px-4 py-2" type="submit">Cadastrar</x-primary-button>
+                    <x-secondary-button class="ml-2 px-4 py-2" type="button"
+                        onclick="closeModal('ativo-modal')">Cancelar</x-secondary-button>
                 </div>
             </form>
         </div>
@@ -258,6 +335,18 @@
 
         function closeModal(modalId) {
             document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // Função para mostrar/ocultar o formulário de nova marca
+        function toggleMarcaForm() {
+            var marcaForm = document.getElementById('nova-marca-form');
+            marcaForm.classList.toggle('hidden');
+        }
+
+        // Função para mostrar/ocultar o formulário de novo tipo
+        function toggleTipoForm() {
+            var tipoForm = document.getElementById('novo-tipo-form');
+            tipoForm.classList.toggle('hidden');
         }
     </script>
 

@@ -31,20 +31,61 @@ class AtivoController extends Controller
 
 
     // Método para salvar o novo ativo
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'descricao' => 'required|string|max:255',
+    //         'id_marca' => 'required|exists:marcas,id',
+    //         'id_tipo' => 'required|exists:tipos,id',
+    //         'quantidade' => 'required|integer|min:1',
+    //         'observacao' => 'nullable|string',
+    //     ]);
+
+    //     Ativo::create([
+    //         'descricao' => $request->descricao,
+    //         'id_marca' => $request->id_marca,
+    //         'id_tipo' => $request->id_tipo,
+    //         'quantidade' => $request->quantidade,
+    //         'observacao' => $request->observacao,
+    //         'id_user' => $request->user()->id
+    //     ]);
+
+    //     return redirect()->route('ativos.index')->with('success', 'Ativo cadastrado com sucesso!');
+    // }
+
     public function store(Request $request)
     {
         $request->validate([
             'descricao' => 'required|string|max:255',
-            'id_marca' => 'required|exists:marcas,id',
-            'id_tipo' => 'required|exists:tipos,id',
+            'id_marca' => 'nullable|exists:marcas,id',
+            'id_tipo' => 'nullable|exists:tipos,id',
             'quantidade' => 'required|integer|min:1',
             'observacao' => 'nullable|string',
+            'nova_marca' => 'nullable|string|max:255',
+            'novo_tipo' => 'nullable|string|max:255',
         ]);
 
+        // Lógica para adicionar uma nova marca, se fornecida
+        if ($request->nova_marca) {
+            $marca = Marca::create(['descricao' => $request->nova_marca]);
+            $id_marca = $marca->id;
+        } else {
+            $id_marca = $request->id_marca;
+        }
+
+        // Lógica para adicionar um novo tipo, se fornecido
+        if ($request->novo_tipo) {
+            $tipo = Tipo::create(['descricao' => $request->novo_tipo]);
+            $id_tipo = $tipo->id;
+        } else {
+            $id_tipo = $request->id_tipo;
+        }
+
+        // Criação do ativo
         Ativo::create([
             'descricao' => $request->descricao,
-            'id_marca' => $request->id_marca,
-            'id_tipo' => $request->id_tipo,
+            'id_marca' => $id_marca,
+            'id_tipo' => $id_tipo,
             'quantidade' => $request->quantidade,
             'observacao' => $request->observacao,
             'id_user' => $request->user()->id
@@ -52,6 +93,7 @@ class AtivoController extends Controller
 
         return redirect()->route('ativos.index')->with('success', 'Ativo cadastrado com sucesso!');
     }
+
 
     public function getAtivosEdit($id)
     {
