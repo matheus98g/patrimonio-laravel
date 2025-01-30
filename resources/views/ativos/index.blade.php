@@ -11,8 +11,8 @@
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <!-- Botão para abrir o modal -->
                     <div class="py-4">
-                        <x-primary-button class="px-4 py-2 bg-blue-500 text-white rounded-md"
-                            data-modal-target="ativo-modal" data-modal-toggle="ativo-modal">
+                        <x-primary-button class="px-4 py-2 " data-modal-target="ativo-modal"
+                            data-modal-toggle="ativo-modal">
                             Adicionar Ativo
                         </x-primary-button>
                     </div>
@@ -134,8 +134,9 @@
                 </div>
 
                 <div class="flex justify-end px-4">
-                    <x-primary-button type="submit">Cadastrar</x-primary-button>
-                    <x-secondary-button type="button" data-modal-toggle="ativo-modal">Cancelar</x-secondary-button>
+                    <x-primary-button class="ml-2 px-4 py-2" type="submit">Cadastrar</x-primary-button>
+                    <x-secondary-button class="ml-2 px-4 py-2" type="button"
+                        data-modal-toggle="ativo-modal">Cancelar</x-secondary-button>
                 </div>
             </form>
         </div>
@@ -200,9 +201,9 @@
                 </div>
 
                 <div class="flex justify-end">
-                    <x-primary-button type="submit">Atualizar</x-primary-button>
+                    <x-primary-button class="ml-2 px-4 py-2" type="submit">Atualizar</x-primary-button>
                     <!-- Botão de Cancelar ajustado para fechar o modal -->
-                    <x-secondary-button type="button"
+                    <x-secondary-button class="ml-2 px-4 py-2" type="button"
                         onclick="document.getElementById('editar-ativo-modal').classList.add('hidden')">
                         Cancelar
                     </x-secondary-button>

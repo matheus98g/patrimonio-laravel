@@ -75,9 +75,8 @@
                 </div>
 
                 <div class="flex justify-end">
-                    <x-primary-button type="submit"
-                        class="px-4 py-2 bg-blue-500 text-white rounded-md">Cadastrar</x-primary-button>
-                    <x-secondary-button type="button" class="ml-2 px-4 py-2 bg-gray-300 text-black rounded-md"
+                    <x-primary-button type="submit" class="px-4 py-2">Cadastrar</x-primary-button>
+                    <x-secondary-button type="button" class="ml-2 px-4 py-2"
                         data-modal-toggle="marca-modal">Cancelar</x-secondary-button>
                 </div>
             </form>

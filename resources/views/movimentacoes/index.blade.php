@@ -144,27 +144,30 @@
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
 
-                <!-- Quantidade de Uso -->
-                <div class="mb-4">
-                    <label for="qntUso"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade</label>
-                    <input type="number" id="qntUso" name="qntUso"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required min="1">
+                <div class="flex space-x-4">
+                    <!-- Quantidade de Uso -->
+                    <div class="mb-4 flex-1">
+                        <label for="qntUso"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade</label>
+                        <input type="number" id="qntUso" name="qntUso"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required min="1">
+                    </div>
+
+                    <!-- Tipo -->
+                    <div class="mb-4 flex-1">
+                        <label for="tipo"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo</label>
+                        <select id="tipo" name="tipo"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required>
+                            <option value="entrada">Entrada</option>
+                            <option value="saida">Saída</option>
+                            <option value="transferencia">Transferência</option>
+                        </select>
+                    </div>
                 </div>
 
-                <!-- Tipo -->
-                <div class="mb-4">
-                    <label for="tipo"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo</label>
-                    <select id="tipo" name="tipo"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required>
-                        <option value="entrada">Entrada</option>
-                        <option value="saida">Saída</option>
-                        <option value="transferencia">Transferência</option>
-                    </select>
-                </div>
 
                 <!-- Status -->
                 <div class="mb-4">
@@ -182,8 +185,9 @@
                 <!-- Botões -->
                 <div class="flex justify-end">
 
-                    <x-primary-button type="submit">Adicionar</x-primary-button>
-                    <x-secondary-button type="button" onclick="closeModal()">Cancelar</x-secondary-button>
+                    <x-primary-button class="ml-2 px-4 py-2" type="submit">Adicionar</x-primary-button>
+                    <x-secondary-button class="ml-2 px-4 py-2" type="button"
+                        onclick="closeModal()">Cancelar</x-secondary-button>
                 </div>
             </form>
         </div>
