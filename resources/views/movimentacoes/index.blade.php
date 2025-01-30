@@ -128,21 +128,24 @@
                         required>
                 </div>
 
-                <!-- Origem -->
-                <div class="mb-4">
-                    <label for="origem"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Origem</label>
-                    <input type="text" id="origem" name="origem"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <div class="flex space-x-4">
+                    <!-- Origem -->
+                    <div class="mb-4 flex-1">
+                        <label for="origem"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Origem</label>
+                        <input type="text" id="origem" name="origem"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <!-- Destino -->
+                    <div class="mb-4 flex-1">
+                        <label for="destino"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Destino</label>
+                        <input type="text" id="destino" name="destino"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
                 </div>
 
-                <!-- Destino -->
-                <div class="mb-4">
-                    <label for="destino"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Destino</label>
-                    <input type="text" id="destino" name="destino"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
 
                 <div class="flex space-x-4">
                     <!-- Quantidade de Uso -->
