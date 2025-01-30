@@ -23,12 +23,13 @@
                             <tr>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">ID</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Ativo</th>
+                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Usuario</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Descrição
                                 </th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Origem</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Destino</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Quantidade
-                                </th>
+                                    Uso</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Tipo</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Status</th>
                             </tr>
@@ -40,6 +41,8 @@
                                         {{ $movimentacao->id }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $movimentacao->ativo->descricao }}</td>
+                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                        {{ $movimentacao->user->name }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $movimentacao->descricao }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
@@ -72,23 +75,51 @@
     </div>
 
     <!-- Modal para adicionar movimentação -->
-    <div id="movimentacao-modal" class="fixed inset-0 z-50 flex justify-center items-center hidden"
+    <div id="movimentacao-modal"
+        class="fixed inset-0 z-50 flex justify-center items-center hidden bg-gray-900 bg-opacity-50"
         onclick="closeModal(event)">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96" onclick="event.stopPropagation()">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96 max-w-full"
+            onclick="event.stopPropagation()">
             <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Adicionar Movimentação</h3>
+
+            <!-- Exibir Erros de Validação -->
+            @if ($errors->any())
+                <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">
+                    <strong>Erros encontrados:</strong>
+                    <ul class="list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form action="{{ route('movimentacoes.store') }}" method="POST">
                 @csrf
+
+                <!-- Usuário (Preenchido automaticamente com o usuário logado) -->
                 <div class="mb-4">
-                    <label for="ativo_id"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ativo</label>
-                    <select id="ativo_id" name="ativo_id"
+
+                    <input type="hidden" id="id_user" name="id_user" value="{{ auth()->user()->id }}">
+                    <input type="hidden" value="{{ auth()->user()->name }}" disabled
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Ativo -->
+                <div class="mb-4">
+                    <label for="id_ativo"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ativo</label>
+                    <select id="id_ativo" name="id_ativo"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+                        <option value="">Selecione um ativo</option>
                         @foreach ($ativos as $ativo)
                             <option value="{{ $ativo->id }}">{{ $ativo->descricao }}</option>
                         @endforeach
                     </select>
                 </div>
 
+                <!-- Descrição -->
                 <div class="mb-4">
                     <label for="descricao"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descrição</label>
@@ -97,51 +128,74 @@
                         required>
                 </div>
 
+                <!-- Origem -->
                 <div class="mb-4">
                     <label for="origem"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Origem</label>
                     <input type="text" id="origem" name="origem"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required>
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
 
+                <!-- Destino -->
                 <div class="mb-4">
                     <label for="destino"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Destino</label>
                     <input type="text" id="destino" name="destino"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required>
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
 
+                <!-- Quantidade de Uso -->
                 <div class="mb-4">
                     <label for="qntUso"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade</label>
                     <input type="number" id="qntUso" name="qntUso"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required>
+                        required min="1">
                 </div>
 
+                <!-- Tipo -->
                 <div class="mb-4">
                     <label for="tipo"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo</label>
                     <select id="tipo" name="tipo"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
-                        <option value="Adicionar">Adicionar</option>
-                        <option value="Realocar">Realocar</option>
-                        <option value="Remover">Remover</option>
+                        <option value="entrada">Entrada</option>
+                        <option value="saida">Saída</option>
+                        <option value="transferencia">Transferência</option>
                     </select>
                 </div>
 
+                <!-- Status -->
+                <div class="mb-4">
+                    <label for="status"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
+                    <select id="status" name="status"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+                        <option value="pendente">Pendente</option>
+                        <option value="concluido">Concluído</option>
+                        <option value="cancelado">Cancelado</option>
+                    </select>
+                </div>
+
+                <!-- Botões -->
                 <div class="flex justify-end">
-                    <x-primary-button type="submit"
-                        class="px-4 py-2 bg-blue-500 text-white rounded-md">Cadastrar</x-primary-button>
-                    <x-secondary-button type="button" class="ml-2 px-4 py-2 bg-gray-300 text-black rounded-md"
-                        data-modal-toggle="movimentacao-modal">Cancelar</x-secondary-button>
+
+                    <x-primary-button type="submit">Adicionar</x-primary-button>
+                    <x-secondary-button type="button" onclick="closeModal()">Cancelar</x-secondary-button>
                 </div>
             </form>
         </div>
     </div>
+
+    <script>
+        function closeModal(event) {
+            if (!event || event.target.id === "movimentacao-modal") {
+                document.getElementById('movimentacao-modal').classList.add('hidden');
+            }
+        }
+    </script>
 
     <script>
         document.querySelectorAll('[data-modal-toggle="movimentacao-modal"]').forEach(button => {

@@ -11,7 +11,7 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="hidden sm:flex space-x-8 sm:-my-px sm:ms-10">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
@@ -27,8 +27,6 @@
                     <x-nav-link :href="route('movimentacoes.index')" :active="request()->routeIs('movimentacoes.index')">
                         {{ __('Movimentações') }}
                     </x-nav-link>
-
-
                 </div>
             </div>
 
@@ -39,7 +37,6 @@
                         <button
                             class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
                             <div>{{ Auth::user()->name }}</div>
-
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 20 20">
@@ -60,8 +57,7 @@
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault();
-                                        this.closest('form').submit();">
+                                onclick="event.preventDefault(); this.closest('form').submit();">
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
                         </form>
@@ -82,6 +78,30 @@
                     </svg>
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="sm:hidden" x-show="open" x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100"
+        x-transition:leave="transition ease-in duration-150" x-transition:leave-start="transform opacity-100 scale-100"
+        x-transition:leave-end="transform opacity-0 scale-95">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col">
+            <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                {{ __('Dashboard') }}
+            </x-nav-link>
+            <x-nav-link :href="route('ativos.index')" :active="request()->routeIs('ativos.index')">
+                {{ __('Ativos') }}
+            </x-nav-link>
+            <x-nav-link :href="route('marcas.index')" :active="request()->routeIs('marcas.index')">
+                {{ __('Marcas') }}
+            </x-nav-link>
+            <x-nav-link :href="route('tipos.index')" :active="request()->routeIs('tipos.index')">
+                {{ __('Tipos') }}
+            </x-nav-link>
+            <x-nav-link :href="route('movimentacoes.index')" :active="request()->routeIs('movimentacoes.index')">
+                {{ __('Movimentações') }}
+            </x-nav-link>
         </div>
     </div>
 </nav>
