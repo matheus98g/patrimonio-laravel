@@ -11,8 +11,8 @@
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <!-- Botão para abrir o modal -->
                     <div class="py-4">
-                        <x-primary-button class="px-4 py-2 bg-blue-500 text-white rounded-md"
-                            data-modal-target="movimentacao-modal" data-modal-toggle="movimentacao-modal">
+                        <x-primary-button class="px-4 py-2" data-modal-target="movimentacao-modal"
+                            data-modal-toggle="movimentacao-modal">
                             Adicionar Movimentação
                         </x-primary-button>
                     </div>

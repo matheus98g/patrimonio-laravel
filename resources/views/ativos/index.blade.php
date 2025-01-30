@@ -11,10 +11,10 @@
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <!-- Botão para abrir o modal -->
                     <div class="py-4">
-                        <x-primary-button class="px-4 py-2 " data-modal-target="ativo-modal"
-                            data-modal-toggle="ativo-modal">
+                        <x-primary-button onclick="openCreateModal()" class="px-3 py-2 bg-green-500 text-white rounded">
                             Adicionar Ativo
                         </x-primary-button>
+
                     </div>
 
                     <!-- Tabela de Ativos -->
@@ -23,6 +23,10 @@
                             <tr>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">ID</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Descrição
+                                </th>
+                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Marca
+                                </th>
+                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Tipo
                                 </th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Quantidade
                                 </th>
@@ -43,6 +47,10 @@
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $ativo->descricao }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                        {{ $ativo->marca->descricao }}</td>
+                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                        {{ $ativo->tipo->descricao }}</td>
+                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $ativo->quantidade }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         <span
@@ -57,10 +65,19 @@
                                         {{ $ativo->observacao }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         <!-- Botão para abrir o modal de edição -->
-                                        <x-secondary-button type="button"
-                                            onclick="openEditModal({{ $ativo->id }}, '{{ $ativo->descricao }}', {{ $ativo->id_marca }}, {{ $ativo->id_tipo }}, {{ $ativo->quantidade }}, '{{ $ativo->observacao }}')">
+                                        <x-secondary-button
+                                            onclick="openEditModal({ 
+                                                    id: '{{ $ativo->id }}', 
+                                                    descricao: '{{ $ativo->descricao }}', 
+                                                    id_marca: '{{ $ativo->id_marca }}', 
+                                                    id_tipo: '{{ $ativo->id_tipo }}', 
+                                                    quantidade: '{{ $ativo->quantidade }}', 
+                                                    observacao: '{{ $ativo->observacao }}' 
+                                                })"
+                                            class="px-3 py-2 bg-blue-500 text-white rounded">
                                             Editar
                                         </x-secondary-button>
+
                                     </td>
 
                                 </tr>
@@ -136,7 +153,8 @@
                 <div class="flex justify-end px-4">
                     <x-primary-button class="ml-2 px-4 py-2" type="submit">Cadastrar</x-primary-button>
                     <x-secondary-button class="ml-2 px-4 py-2" type="button"
-                        data-modal-toggle="ativo-modal">Cancelar</x-secondary-button>
+                        onclick="closeModal('ativo-modal')">Cancelar</x-secondary-button>
+
                 </div>
             </form>
         </div>
@@ -147,7 +165,7 @@
         onclick="closeModal(event)">
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96" onclick="event.stopPropagation()">
             <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Editar Ativo</h3>
-            <form action="{{ route('ativos.update', ['ativo' => $ativo->id]) }}" method="POST">
+            <form id="editForm" action="" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="mb-4">
@@ -204,62 +222,43 @@
                     <x-primary-button class="ml-2 px-4 py-2" type="submit">Atualizar</x-primary-button>
                     <!-- Botão de Cancelar ajustado para fechar o modal -->
                     <x-secondary-button class="ml-2 px-4 py-2" type="button"
-                        onclick="document.getElementById('editar-ativo-modal').classList.add('hidden')">
-                        Cancelar
-                    </x-secondary-button>
+                        onclick="closeModal('editar-ativo-modal')">Cancelar</x-secondary-button>
                 </div>
 
             </form>
         </div>
     </div>
-
     <script>
-        // Função para alternar a visibilidade do modal de cadastro
-        document.querySelectorAll('[data-modal-toggle="ativo-modal"]').forEach(button => {
-            button.addEventListener('click', () => {
-                document.getElementById('ativo-modal').classList.toggle('hidden');
-            });
-        });
+        function openCreateModal() {
+            // Limpa os campos do formulário antes de abrir o modal
+            document.getElementById('descricao').value = '';
+            document.getElementById('id_marca').value = '';
+            document.getElementById('id_tipo').value = '';
+            document.getElementById('quantidade').value = '1';
+            document.getElementById('observacao').value = '';
 
-        // Função para alternar a visibilidade do modal de edição
-        document.querySelectorAll('[data-modal-toggle="editar-ativo-modal"]').forEach(button => {
-            button.addEventListener('click', () => {
-                document.getElementById('editar-ativo-modal').classList.toggle('hidden');
-            });
-        });
-
-        // Função para fechar os modais quando clicar fora deles
-        function closeModal(event) {
-            const modalAtivo = document.getElementById('ativo-modal');
-            const modalEditarAtivo = document.getElementById('editar-ativo-modal');
-
-            if (event.target === modalAtivo) {
-                modalAtivo.classList.add('hidden');
-            }
-            if (event.target === modalEditarAtivo) {
-                modalEditarAtivo.classList.add('hidden');
-            }
+            // Exibe o modal
+            document.getElementById('ativo-modal').classList.remove('hidden');
         }
 
-        // Função para abrir o modal de edição e preencher os campos com os dados do ativo
-        function openEditModal(id, descricao, idMarca, idTipo, quantidade, observacao) {
-            document.getElementById('descricao').value = descricao;
-            document.getElementById('id_marca').value = idMarca;
-            document.getElementById('id_tipo').value = idTipo;
-            document.getElementById('quantidade').value = quantidade;
-            document.getElementById('observacao').value = observacao;
+        function openEditModal(ativo) {
+            // Define a URL do formulário com o ID do ativo
+            document.getElementById('editForm').action = `/ativos/${ativo.id}`;
 
-            // Alterar a ação do formulário para atualizar o ativo
-            let form = document.querySelector('#editar-ativo-modal form');
-            form.action = `/ativos/${id}`;
+            // Preenche os campos do formulário com os dados do ativo
+            document.getElementById('descricao').value = ativo.descricao;
+            document.getElementById('id_marca').value = ativo.id_marca;
+            document.getElementById('id_tipo').value = ativo.id_tipo;
+            document.getElementById('quantidade').value = ativo.quantidade;
+            document.getElementById('observacao').value = ativo.observacao || '';
 
-            // Mostrar o modal de edição
+            // Exibe o modal
             document.getElementById('editar-ativo-modal').classList.remove('hidden');
         }
 
-        // Adicionando event listener para fechar os modais ao clicar fora
-        document.getElementById('ativo-modal').addEventListener('click', closeModal);
-        document.getElementById('editar-ativo-modal').addEventListener('click', closeModal);
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
     </script>
 
 

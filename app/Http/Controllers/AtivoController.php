@@ -12,7 +12,7 @@ class AtivoController extends Controller
     public function index()
     {
         // Pegando todos os ativos do banco de dados
-        $ativos = Ativo::all();
+        $ativos = Ativo::with(['marca', 'tipo'])->get();
         $marcas = Marca::all(); // Pegando todas as marcas
         $tipos = Tipo::all();   // Pegando todos os tipos
 

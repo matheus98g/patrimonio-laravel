@@ -20,12 +20,12 @@ class Ativo extends Model
     // Relacionamento com a tabela marcas
     public function marca()
     {
-        return $this->belongsTo(Marca::class);
+        return $this->belongsTo(Marca::class, 'id_marca');
     }
 
     // Relacionamento com a tabela tipos
     public function tipo()
     {
-        return $this->belongsTo(Tipo::class);
+        return $this->belongsTo(Tipo::class, 'id_tipo');
     }
 }
