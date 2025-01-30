@@ -20,7 +20,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('ativos')->name('ativos.')->group(function () {
         Route::get('/', [AtivoController::class, 'index'])->name('index');
         Route::post('/store', [AtivoController::class, 'store'])->name('store');
-        Route::put('/{ativo}', [AtivoController::class, 'update'])->name('update');
+        Route::put('/{ativo}', [AtivoController::class, 'update'])->name('update'); //editar
     });
 
 
