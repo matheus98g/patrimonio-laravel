@@ -29,6 +29,8 @@
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Origem</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Destino</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Quantidade
+                                    Mov</th>
+                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Quantidade
                                     Uso</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Tipo</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Status</th>
@@ -49,6 +51,8 @@
                                         {{ $movimentacao->origem }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $movimentacao->destino }}</td>
+                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                        {{ $movimentacao->qntMov }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $movimentacao->qntUso }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
@@ -150,9 +154,9 @@
                 <div class="flex space-x-4">
                     <!-- Quantidade de Uso -->
                     <div class="mb-4 flex-1">
-                        <label for="qntUso"
+                        <label for="qntMov"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade</label>
-                        <input type="number" id="qntUso" name="qntUso"
+                        <input type="number" id="qntMov" name="qntMov"
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required min="1">
                     </div>

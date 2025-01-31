@@ -96,69 +96,6 @@
         </div>
     </div>
 
-    {{-- <!-- Modal para adicionar ativo -->
-    <div id="ativo-modal" class="fixed inset-0 z-50 flex justify-center items-center hidden"
-        onclick="closeModal(event)">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96" onclick="event.stopPropagation()">
-            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Cadastrar Ativo</h3>
-            <form action="{{ route('ativos.store') }}" method="POST">
-                @csrf
-                <div class="mb-4">
-                    <label for="descricao"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descrição</label>
-                    <input type="text" id="descricao" name="descricao"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required>
-                </div>
-
-                <div class="mb-4">
-                    <label for="id_marca"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Marca</label>
-                    <select name="id_marca" id="id_marca"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">Selecione uma Marca</option>
-                        @foreach ($marcas as $marca)
-                            <option value="{{ $marca->id }}">{{ $marca->descricao }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="mb-4">
-                    <label for="id_tipo"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo</label>
-                    <select name="id_tipo" id="id_tipo"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">Selecione um Tipo</option>
-                        @foreach ($tipos as $tipo)
-                            <option value="{{ $tipo->id }}">{{ $tipo->descricao }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="mb-4">
-                    <label for="quantidade"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade</label>
-                    <input type="number" id="quantidade" name="quantidade" value="1"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required>
-                </div>
-
-                <div class="mb-4">
-                    <label for="observacao"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Observação</label>
-                    <textarea id="observacao" name="observacao"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                </div>
-
-                <div class="flex justify-end px-4">
-                    <x-primary-button class="ml-2 px-4 py-2" type="submit">Cadastrar</x-primary-button>
-                    <x-secondary-button class="ml-2 px-4 py-2" type="button"
-                        onclick="closeModal('ativo-modal')">Cancelar</x-secondary-button>
-
-                </div>
-            </form>
-        </div>
-    </div> --}}
 
     <!-- Modal para adicionar ativo -->
     <div id="ativo-modal" class="fixed inset-0 z-50 flex justify-center items-center hidden"
@@ -246,17 +183,17 @@
                 @csrf
                 @method('PUT')
                 <div class="mb-4">
-                    <label for="descricao"
+                    <label for="descricao-edit"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descrição</label>
-                    <input type="text" id="descricao" name="descricao" value="{{ $ativo->descricao }}"
+                    <input type="text" id="descricao-edit" name="descricao-edit"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
                 </div>
 
                 <div class="mb-4">
-                    <label for="id_marca"
+                    <label for="id_marca-edit"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Marca</label>
-                    <select name="id_marca" id="id_marca"
+                    <select name="id_marca-edit" id="id_marca-edit"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="">Selecione uma Marca</option>
                         @foreach ($marcas as $marca)
@@ -268,9 +205,9 @@
                 </div>
 
                 <div class="mb-4">
-                    <label for="id_tipo"
+                    <label for="id_tipo-edit"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo</label>
-                    <select name="id_tipo" id="id_tipo"
+                    <select name="id_tipo-edit" id="id_tipo-edit"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="">Selecione um Tipo</option>
                         @foreach ($tipos as $tipo)
@@ -281,17 +218,18 @@
                 </div>
 
                 <div class="mb-4">
-                    <label for="quantidade"
+                    <label for="quantidade-edit"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade</label>
-                    <input type="number" id="quantidade" name="quantidade" value="{{ $ativo->quantidade }}"
+                    <input type="number" id="quantidade-edit" name="quantidade-edit"
+                        value="{{ $ativo->quantidade }}"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
                 </div>
 
                 <div class="mb-4">
-                    <label for="observacao"
+                    <label for="observacao-edit"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Observação</label>
-                    <textarea id="observacao" name="observacao"
+                    <textarea id="observacao-edit" name="observacao-edit"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">{{ $ativo->observacao }}</textarea>
                 </div>
 
@@ -319,15 +257,17 @@
         }
 
         function openEditModal(ativo) {
+
+            console.log(ativo);
             // Define a URL do formulário com o ID do ativo
             document.getElementById('editForm').action = `/ativos/${ativo.id}`;
 
             // Preenche os campos do formulário com os dados do ativo
-            document.getElementById('descricao').value = ativo.descricao;
-            document.getElementById('id_marca').value = ativo.id_marca;
-            document.getElementById('id_tipo').value = ativo.id_tipo;
-            document.getElementById('quantidade').value = ativo.quantidade;
-            document.getElementById('observacao').value = ativo.observacao || '';
+            document.getElementById('descricao-edit').value = ativo.descricao;
+            document.getElementById('id_marca-edit').value = ativo.id_marca;
+            document.getElementById('id_tipo-edit').value = ativo.id_tipo;
+            document.getElementById('quantidade-edit').value = ativo.quantidade;
+            document.getElementById('observacao-edit').value = ativo.observacao || '';
 
             // Exibe o modal
             document.getElementById('editar-ativo-modal').classList.remove('hidden');

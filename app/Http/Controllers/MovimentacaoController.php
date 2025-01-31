@@ -29,7 +29,7 @@ class MovimentacaoController extends Controller
             'status' => 'required|string|max:50',
             'origem' => 'nullable|string|max:255',
             'destino' => 'nullable|string|max:255',
-            'qntUso' => 'required|integer|min:0',
+            'qntMov' => 'required|integer|min:0',
             'tipo' => 'required|string|max:50',
         ]);
 
@@ -41,7 +41,7 @@ class MovimentacaoController extends Controller
             'status' => $request->status,
             'origem' => $request->origem,
             'destino' => $request->destino,
-            'qntUso' => $request->qntUso,
+            'qntMov' => $request->qntMov,
             'tipo' => $request->tipo,
         ]);
 

@@ -13,7 +13,7 @@ class Movimentacao extends Model
         'status',
         'origem',
         'destino',
-        'qntUso',
+        'qntMov',
         'tipo',
     ];
 
