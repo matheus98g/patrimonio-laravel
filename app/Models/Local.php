@@ -12,7 +12,7 @@ class Local extends Model
         'descricao'
     ];
 
-    // Relacionamento com ativos (um local pode ter muitos ativos)
+    // Relacionamento com ativos (um local pode ter muitos ativos).
     public function ativos()
     {
         return $this->hasMany(AtivoLocal::class, 'id_local', 'id');
