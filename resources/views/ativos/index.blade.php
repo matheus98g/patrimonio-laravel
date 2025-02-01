@@ -21,7 +21,7 @@
                     <table class="table-auto w-full border-collapse border border-gray-300 dark:border-gray-700">
                         <thead class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
                             <tr>
-                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">ID</th>
+                                {{-- <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">ID</th> --}}
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Descrição
                                 </th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Marca
@@ -29,6 +29,9 @@
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Tipo
                                 </th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Quantidade
+                                </th>
+                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Quantidade
+                                    Disponivel
                                 </th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Status</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Cadastrado
@@ -43,15 +46,20 @@
                             @forelse ($ativos as $ativo)
                                 <tr class="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $ativo->id }}</td>
+                                        {{ $ativo->descricao ?? 'Não encontrado' }}
+                                    </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $ativo->descricao }}</td>
+                                        {{ $ativo->marca->descricao ?? 'Não encontrado' }}
+                                    </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $ativo->marca->descricao }}</td>
+                                        {{ $ativo->tipo->descricao ?? 'Não encontrado' }}
+                                    </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $ativo->tipo->descricao }}</td>
+                                        {{ $ativo->quantidade ?? 'Não encontrado' }}
+                                    </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $ativo->quantidade }}</td>
+                                        {{ $ativo->quantidade_disp ?? 'Não encontrado' }}
+                                    </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         <span
                                             class="{{ $ativo->status == 1 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
@@ -59,10 +67,12 @@
                                         </span>
                                     </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ \Carbon\Carbon::parse($ativo->created_at)->format('d/m/Y H:i:s') }}
+                                        {{ $ativo->created_at ? \Carbon\Carbon::parse($ativo->created_at)->format('d/m/Y H:i:s') : 'Não encontrado' }}
                                     </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $ativo->observacao }}</td>
+                                        {{ $ativo->observacao ?? 'Não encontrado' }}
+                                    </td>
+
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         <!-- Botão para abrir o modal de edição -->
                                         <x-secondary-button

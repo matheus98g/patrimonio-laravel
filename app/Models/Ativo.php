@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Ativo extends Model
 {
     protected $fillable = [
-
         'descricao',
         'quantidade',
         'status',
@@ -15,6 +14,7 @@ class Ativo extends Model
         'id_marca',
         'id_tipo',
         'id_user',
+        'quantidade_disp',
     ];
 
     // Relacionamento com a tabela marcas
@@ -27,5 +27,19 @@ class Ativo extends Model
     public function tipo()
     {
         return $this->belongsTo(Tipo::class, 'id_tipo');
+    }
+
+    // Relacionamento com ativos_locais (tabela intermediária)
+    public function ativosLocais()
+    {
+        return $this->hasMany(AtivoLocal::class, 'id_ativo', 'id');
+    }
+
+    // Obter todos os locais onde o ativo está presente (caso use a tabela intermediária)
+    public function locais()
+    {
+        return $this->belongsToMany(Local::class, 'ativo_locais', 'id_ativo', 'id_local')
+            ->withPivot('quantidade') // Inclui a quantidade de cada ativo em cada local
+            ->withTimestamps();
     }
 }
