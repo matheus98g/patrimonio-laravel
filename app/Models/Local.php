@@ -8,12 +8,14 @@ class Local extends Model
 {
     // Definir os campos que podem ser preenchidos (mass assignment)
     protected $fillable = [
-        'nome',
-        'descricao'
+        'descricao',
+        'observacao',
     ];
 
-    // Relacionamento com ativos (um local pode ter muitos ativos).
-    public function ativos()
+    protected $table = 'locais';
+
+    // Relacionamento com ativos locais (um local pode ter muitos ativos locais)
+    public function ativosLocais()
     {
         return $this->hasMany(AtivoLocal::class, 'id_local', 'id');
     }

@@ -45,6 +45,9 @@
                                 <x-dropdown-link :href="route('tipos.index')" :active="request()->routeIs('tipos.index')">
                                     {{ __('Tipos') }}
                                 </x-dropdown-link>
+                                <x-dropdown-link :href="route('locais.index')" :active="request()->routeIs('locais.index')">
+                                    {{ __('Locais') }}
+                                </x-dropdown-link>
                             </x-slot>
                         </x-dropdown>
                     </div>
@@ -123,6 +126,9 @@
             </x-nav-link>
             <x-nav-link :href="route('tipos.index')" :active="request()->routeIs('tipos.index')">
                 {{ __('Tipos') }}
+            </x-nav-link>
+            <x-nav-link :href="route('locais.index')" :active="request()->routeIs('locais.index')">
+                {{ __('Locais') }}
             </x-nav-link>
             <x-nav-link :href="route('movimentacoes.index')" :active="request()->routeIs('movimentacoes.index')">
                 {{ __('Movimentações') }}

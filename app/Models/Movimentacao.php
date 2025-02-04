@@ -14,7 +14,7 @@ class Movimentacao extends Model
         'origem',
         'destino',
         'qntMov',
-        'tipo',
+        // 'tipo',
     ];
 
     protected $table = 'movimentacoes';

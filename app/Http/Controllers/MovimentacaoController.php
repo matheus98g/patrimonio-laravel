@@ -4,11 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\AtivoLocal;
 use App\Models\Movimentacao;
+use App\Models\Ativo;
+use App\Models\Marca;
+use App\Models\Tipo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class MovimentacaoController extends Controller
 {
+
+    public function index()
+    {
+        $movimentacoes = Movimentacao::all();
+        $ativos = Ativo::all();
+        return view('movimentacoes.index', compact('movimentacoes', 'ativos'));
+    }
+
     /**
      * Registrar uma movimentação de ativo entre locais.
      *

@@ -6,6 +6,7 @@ use App\Http\Controllers\AtivoController;
 use App\Http\Controllers\MarcaController;
 use App\Http\Controllers\TipoController;
 use App\Http\Controllers\MovimentacaoController;
+use App\Http\Controllers\LocalController;
 
 
 // Dashboard (Página inicial autenticada)
@@ -46,6 +47,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', [MovimentacaoController::class, 'store'])->name('store');
         Route::put('/update', [MovimentacaoController::class, 'update'])->name('update');
         Route::delete('/delete', [MovimentacaoController::class, 'destroy'])->name('delete');
+    });
+
+    // Locais
+    Route::prefix('locais')->name('locais.')->group(function () {
+        Route::get('/', [LocalController::class, 'index'])->name('index');
+        Route::post('/store', [LocalController::class, 'store'])->name('store');
+        Route::put('/update', [LocalController::class, 'update'])->name('update');
+        Route::delete('/delete', [LocalController::class, 'destroy'])->name('delete');
     });
 
     // Perfil do usuário

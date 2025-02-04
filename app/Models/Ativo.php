@@ -14,6 +14,7 @@ class Ativo extends Model
         'id_marca',
         'id_tipo',
         'id_user',
+        'id_local',
         'quantidade_disp',
     ];
 

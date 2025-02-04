@@ -22,30 +22,30 @@
                         <thead class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
                             <tr>
                                 {{-- <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">ID</th> --}}
+                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Data</th>
+                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Usuario</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Ativo</th>
-                                {{-- <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Usuario</th> --}}
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Descrição
                                 </th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Origem</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Destino</th>
+                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Status</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Quantidade
                                     Mov</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Quantidade
                                     Uso</th>
-                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Tipo</th>
-                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Status</th>
-                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Data</th>
+                                {{-- <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Tipo</th> --}}
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($movimentacoes as $movimentacao)
                                 <tr class="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                    {{-- <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->id }}</td> --}}
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->ativo->descricao }}</td>
-                                    {{-- <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->user->name }}</td> --}}
+                                        {{ $movimentacao->created_at }}</td>
+                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                        {{ $movimentacao->user->name ?? 'N/A' }}</td>
+                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                        {{ $movimentacao->ativo->descricao ?? 'N/A' }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $movimentacao->descricao }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
@@ -53,28 +53,27 @@
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $movimentacao->destino }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                        <span
+                                            class="{{ $movimentacao->status == 'concluido' ? 'text-green-600' : 'text-orange-500' }}">
+                                            {{ ucfirst($movimentacao->status) }}
+                                        </span>
+
+                                    </td>
+                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $movimentacao->qntMov }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $movimentacao->qntUso }}</td>
-                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->tipo }}</td>
-                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        <span
-                                            class="{{ $movimentacao->status == 1 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
-                                            {{ $movimentacao->status == 1 ? 'Ativo' : 'Inativo' }}
-                                        </span>
-                                    </td>
-                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->created_at }}</td>
                                 </tr>
                             @empty
                                 <tr>
                                     <td colspan="8"
                                         class="text-center border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        Nenhuma movimentação encontrada.</td>
+                                        Nenhuma movimentação encontrada.
+                                    </td>
                                 </tr>
                             @endforelse
                         </tbody>
+
                     </table>
                 </div>
             </div>

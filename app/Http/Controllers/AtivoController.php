@@ -39,6 +39,7 @@ class AtivoController extends Controller
             'observacao' => 'nullable|string',
             'nova_marca' => 'nullable|string|max:255',
             'novo_tipo' => 'nullable|string|max:255',
+            'local_id' => 'nullable|exists:locais,id', // Validação do local
         ]);
 
         // Lógica para adicionar uma nova marca, se fornecida
@@ -57,6 +58,9 @@ class AtivoController extends Controller
             $id_tipo = $request->id_tipo;
         }
 
+        // Definir local_id padrão se não for enviado na requisição
+        $local_id = 1;
+
         // Criação do ativo
         Ativo::create([
             'descricao' => $request->descricao,
@@ -64,11 +68,13 @@ class AtivoController extends Controller
             'id_tipo' => $id_tipo,
             'quantidade' => $request->quantidade,
             'observacao' => $request->observacao,
-            'id_user' => $request->user()->id
+            'id_user' => $request->user()->id,
+            'local_id' => $local_id
         ]);
 
         return redirect()->route('ativos.index')->with('success', 'Ativo cadastrado com sucesso!');
     }
+
 
 
     public function getAtivosEdit($id)
