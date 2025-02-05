@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use Illuminate\View\View;
 use App\Models\AtivoLocal;
 use App\Models\Movimentacao;
 use App\Models\Local;
@@ -17,11 +19,13 @@ class MovimentacaoController extends Controller
 
     public function index()
     {
-        $movimentacoes = Movimentacao::with(['ativo', 'user', 'AtivoLocalOrigem', 'AtivoLocalDestino'])->get();
+        $movimentacoes = Movimentacao::with(['ativo', 'user', 'AtivoLocalOrigem', 'AtivoLocalDestino'])
+            ->paginate(1);
         $locais = Local::all();
         $ativos = Ativo::all();
         return view('movimentacoes.index', compact('movimentacoes', 'ativos', 'locais'));
     }
+
 
     /**
      * Registrar uma movimentação de ativo entre locais.

@@ -46,7 +46,7 @@
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $movimentacao->observacao }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->loca_origem }}</td>
+                                        {{ $movimentacao->local_origem }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $movimentacao->local_destino }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
@@ -75,6 +75,9 @@
                         </tbody>
 
                     </table>
+                    <div class="pagination py-2">
+                        {{ $movimentacoes->links() }}
+                    </div>
                 </div>
             </div>
         </div>
