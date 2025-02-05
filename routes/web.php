@@ -45,6 +45,7 @@ Route::middleware('auth')->group(function () {
     // Movimentações
     Route::prefix('movimentacoes')->name('movimentacoes.')->group(function () {
         Route::get('/', [MovimentacaoController::class, 'index'])->name('index');
+        Route::get('/search', [MovimentacaoController::class, 'search'])->name('search');
         Route::post('/store', [MovimentacaoController::class, 'store'])->name('store');
         Route::put('/update', [MovimentacaoController::class, 'update'])->name('update');
         Route::delete('/delete', [MovimentacaoController::class, 'destroy'])->name('delete');

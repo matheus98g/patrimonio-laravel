@@ -8,6 +8,7 @@ use App\Models\AtivoLocal;
 use App\Models\Movimentacao;
 use App\Models\Local;
 use App\Models\Ativo;
+use App\Models\User;
 use App\Models\LocalAtivo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,14 +18,48 @@ use Illuminate\Support\Facades\DB;
 class MovimentacaoController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $movimentacoes = Movimentacao::with(['ativo', 'user', 'AtivoLocalOrigem', 'AtivoLocalDestino'])
-            ->paginate(1);
+        $movimentacoes = Movimentacao::with(['ativo', 'user', 'ativoLocalOrigem', 'ativoLocalDestino'])
+            ->paginate(15);
+
         $locais = Local::all();
         $ativos = Ativo::all();
-        return view('movimentacoes.index', compact('movimentacoes', 'ativos', 'locais'));
+
+        return view('movimentacoes.index', compact('movimentacoes', 'ativos', 'locais', 'request'));
     }
+
+    public function search(Request $request)
+    {
+        // Inicia a query utilizando Eloquent
+        $query = Movimentacao::with(['ativo', 'user', 'ativoLocalOrigem', 'ativoLocalDestino']);
+        $locais = Local::all();
+        $ativos = Ativo::all();
+        $users = User::all();
+
+        // Se houver um parâmetro 'search' na requisição, aplica os filtros
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+
+            $query->where(function ($q) use ($search) {
+                $q->where('observacao', 'like', "%{$search}%")
+                    ->orWhere('status', 'like', "%{$search}%")
+                    ->orWhere('quantidade_mov', 'like', "%{$search}%")
+                    ->orWhere('id_user', 'like', "%{$search}%")
+                    ->orWhereHas('ativo', function ($subQuery) use ($search) {
+                        $subQuery->where('descricao', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        // Pagina os resultados e mantém os filtros aplicados
+        $movimentacoes = $query->paginate(15)->appends($request->all());
+
+        return view('movimentacoes.index', compact('movimentacoes', 'request', 'ativos', 'locais', 'users'));
+    }
+
+
+
 
 
     /**

@@ -10,20 +10,34 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <!-- Botão para abrir o modal -->
-                    <div class="py-4">
-                        <x-primary-button class="px-4 py-2" data-modal-target="movimentacao-modal"
-                            data-modal-toggle="movimentacao-modal">
-                            Movimentar Ativo
-                        </x-primary-button>
+                    <div class="flex justify-between items-center">
+                        {{-- botao modal --}}
+                        <div class="py-4">
+                            <x-primary-button class="px-4 py-2" data-modal-target="movimentacao-modal"
+                                data-modal-toggle="movimentacao-modal">
+                                Movimentar Ativo
+                            </x-primary-button>
+                        </div>
+
+                        {{-- search --}}
+                        <div>
+                            <form action="{{ route('movimentacoes.search') }}" method="GET" class="flex items-center">
+                                <input type="text" name="search" placeholder="Buscar..."
+                                    value="{{ request()->input('search', old('search')) }}"
+                                    class="border text-black border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <x-primary-button type="submit" class="ml-2 px-4 py-2 rounded-md">
+                                    Pesquisar
+                                </x-primary-button>
+                            </form>
+                        </div>
                     </div>
 
                     <!-- Tabela de Movimentações -->
                     <table class="table-auto w-full border-collapse border border-gray-300 dark:border-gray-700">
                         <thead class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
                             <tr>
-                                {{-- <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">ID</th> --}}
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Data</th>
-                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Usuario</th>
+                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Usuário</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Ativo</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Observação
                                 </th>
@@ -38,17 +52,17 @@
                             @forelse ($movimentacoes as $movimentacao)
                                 <tr class="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->created_at }}</td>
+                                        {{ $movimentacao->created_at->format('d/m/Y H:i') }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $movimentacao->user->name ?? 'N/A' }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $movimentacao->ativo->descricao ?? 'N/A' }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->observacao }}</td>
+                                        {{ $movimentacao->observacao ?? '-' }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->local_origem }}</td>
+                                        {{ $movimentacao->ativoLocalOrigem->descricao ?? 'N/A' }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->local_destino }}</td>
+                                        {{ $movimentacao->ativoLocalDestino->descricao ?? 'N/A' }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         <span
                                             class="{{ $movimentacao->status == 'concluido'
@@ -62,7 +76,7 @@
                                         </span>
                                     </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->quantidade_mov }}</td>
+                                        {{ $movimentacao->quantidade_mov ?? '0' }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -73,7 +87,6 @@
                                 </tr>
                             @endforelse
                         </tbody>
-
                     </table>
                     <div class="pagination py-2">
                         {{ $movimentacoes->links() }}
