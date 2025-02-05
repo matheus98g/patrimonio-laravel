@@ -10,7 +10,7 @@ class AtivoLocal extends Model
     use HasFactory;
 
     // Definir o nome da tabela caso não seja o plural do nome do model
-    protected $table = 'ativos_locais';
+    protected $table = 'ativo_local';
 
     // Definir os campos que podem ser preenchidos via atribuição em massa
     protected $fillable = [
