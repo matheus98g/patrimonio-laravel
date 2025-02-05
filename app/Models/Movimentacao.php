@@ -9,11 +9,11 @@ class Movimentacao extends Model
     protected $fillable = [
         'id_user',
         'id_ativo',
-        'descricao',
+        'observacao',
         'status',
-        'origem',
-        'destino',
-        'qntMov',
+        'local_origem',
+        'local_destino',
+        'quantidade_mov',
         // 'tipo',
     ];
 
@@ -32,13 +32,13 @@ class Movimentacao extends Model
     }
 
     // Relacionamento com a tabela AtivoLocal (movimentações associadas a locais específicos)
-    public function ativoLocalOrigem()
+    public function AtivoLocalOrigem()
     {
-        return $this->belongsTo(AtivoLocal::class, 'origem', 'id_local'); // Relacionando a origem
+        return $this->belongsTo(AtivoLocal::class, 'local_origem', 'id_local'); // Relacionando a origem
     }
 
-    public function ativoLocalDestino()
+    public function AtivoLocalDestino()
     {
-        return $this->belongsTo(AtivoLocal::class, 'destino', 'id_local'); // Relacionando o destino
+        return $this->belongsTo(AtivoLocal::class, 'local_destino', 'id_local'); // Relacionando o destino
     }
 }

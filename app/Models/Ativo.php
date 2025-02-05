@@ -8,14 +8,15 @@ class Ativo extends Model
 {
     protected $fillable = [
         'descricao',
-        'quantidade',
+        'quantidade_total',
+        'quantidade_uso',
+        'quantidade_disp',
         'status',
         'observacao',
         'id_marca',
         'id_tipo',
         'id_user',
         'id_local',
-        'quantidade_disp',
     ];
 
     // Relacionamento com a tabela marcas
@@ -39,7 +40,7 @@ class Ativo extends Model
     // Obter todos os locais onde o ativo está presente (caso use a tabela intermediária)
     public function locais()
     {
-        return $this->belongsToMany(Local::class, 'ativo_locais', 'id_ativo', 'id_local')
+        return $this->belongsToMany(Local::class, 'ativo_local', 'id_ativo', 'id_local')
             ->withPivot('quantidade') // Inclui a quantidade de cada ativo em cada local
             ->withTimestamps();
     }

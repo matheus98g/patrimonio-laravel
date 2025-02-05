@@ -13,7 +13,7 @@
                     <div class="py-4">
                         <x-primary-button class="px-4 py-2" data-modal-target="movimentacao-modal"
                             data-modal-toggle="movimentacao-modal">
-                            Adicionar Movimentação
+                            Movimentar Ativo
                         </x-primary-button>
                     </div>
 
@@ -25,16 +25,13 @@
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Data</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Usuario</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Ativo</th>
-                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Descrição
+                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Observação
                                 </th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Origem</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Destino</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Status</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Quantidade
                                     Mov</th>
-                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Quantidade
-                                    Uso</th>
-                                {{-- <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Tipo</th> --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -47,22 +44,25 @@
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $movimentacao->ativo->descricao ?? 'N/A' }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->descricao }}</td>
+                                        {{ $movimentacao->observacao }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->origem }}</td>
+                                        {{ $movimentacao->loca_origem }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->destino }}</td>
+                                        {{ $movimentacao->local_destino }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         <span
-                                            class="{{ $movimentacao->status == 'concluido' ? 'text-green-600' : 'text-orange-500' }}">
+                                            class="{{ $movimentacao->status == 'concluido'
+                                                ? 'text-green-600'
+                                                : ($movimentacao->status == 'pendente'
+                                                    ? 'text-orange-500'
+                                                    : ($movimentacao->status == 'cancelado'
+                                                        ? 'text-red-600'
+                                                        : '')) }}">
                                             {{ ucfirst($movimentacao->status) }}
                                         </span>
-
                                     </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->qntMov }}</td>
-                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->qntUso }}</td>
+                                        {{ $movimentacao->quantidade_mov }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -103,33 +103,25 @@
             <form action="{{ route('movimentacoes.store') }}" method="POST">
                 @csrf
 
-                <!-- Usuário (Preenchido automaticamente com o usuário logado) -->
-                <div class="mb-4">
-
-                    <input type="hidden" id="id_user" name="id_user" value="{{ auth()->user()->id }}">
-                    <input type="hidden" value="{{ auth()->user()->name }}" disabled
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-
-                <!-- Ativo -->
+                <!-- Ativo  - FUTURAMENTE SUBSTTUIR POR UM LIVE SEARCH   -->
                 <div class="mb-4">
                     <label for="id_ativo"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ativo</label>
                     <select id="id_ativo" name="id_ativo"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
-                        <option value="">Selecione um ativo</option>
+                        <option value="">Selecione...</option>
                         @foreach ($ativos as $ativo)
                             <option value="{{ $ativo->id }}">{{ $ativo->descricao }}</option>
                         @endforeach
                     </select>
                 </div>
 
-                <!-- Descrição -->
+                <!-- Observação -->
                 <div class="mb-4">
-                    <label for="descricao"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descrição</label>
-                    <input type="text" id="descricao" name="descricao"
+                    <label for="observacao"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'Observação (opcional)' }}</label>
+                    <input type="text" id="observacao" name="observacao"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
                 </div>
@@ -137,46 +129,77 @@
                 <div class="flex space-x-4">
                     <!-- Origem -->
                     <div class="mb-4 flex-1">
-                        <label for="origem"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Origem</label>
-                        <input type="text" id="origem" name="origem"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label for="local_origem" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Origem
+                        </label>
+                        <select id="local_origem" name="local_origem"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required>
+                            <option value="">Selecione...</option>
+                            @foreach ($locais as $local)
+                                <option value="{{ $local->id }}">{{ $local->descricao }}</option>
+                            @endforeach
+                        </select>
                     </div>
 
                     <!-- Destino -->
                     <div class="mb-4 flex-1">
-                        <label for="destino"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Destino</label>
-                        <input type="text" id="destino" name="destino"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                </div>
-
-
-                <div class="flex space-x-4">
-                    <!-- Quantidade de Uso -->
-                    <div class="mb-4 flex-1">
-                        <label for="qntMov"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade</label>
-                        <input type="number" id="qntMov" name="qntMov"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required min="1">
-                    </div>
-
-                    <!-- Tipo -->
-                    <div class="mb-4 flex-1">
-                        <label for="tipo"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo</label>
-                        <select id="tipo" name="tipo"
+                        <label for="local_destino" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Destino
+                        </label>
+                        <select id="local_destino" name="local_destino"
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required>
-                            <option value="entrada">Entrada</option>
-                            <option value="saida">Saída</option>
-                            <option value="transferencia">Transferência</option>
+                            <option value="">Selecione...</option>
+                            @foreach ($locais as $local)
+                                <option value="{{ $local->id }}">{{ $local->descricao }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
 
+
+
+                {{-- <div class="flex space-x-4">
+                    <!-- Origem -->
+                    <div class="mb-4 flex-1">
+                        <label for="local_origem" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Origem
+                        </label>
+                        <select id="local_origem" name="local_origem"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required>
+                            <option value="">Selecione...</option>
+                            @foreach ($locais as $local)
+                                <option value="{{ $local->id }}">{{ $local->descricao }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Destino -->
+                    <div class="mb-4 flex-1">
+                        <label for="local_destino" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Destino
+                        </label>
+                        <select id="local_destino" name="local_destino"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required>
+                            <option value="">Selecione...</option>
+                            @foreach ($locais as $local)
+                                <option value="{{ $local->id }}">{{ $local->descricao }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div> --}}
+
+                <!-- Quantidade de Uso -->
+                <div class="mb-4 flex-1">
+                    <label for="quantidade_mov"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade</label>
+                    <input type="number" id="quantidade_mov" name="quantidade_mov"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required min="1">
+                </div>
 
                 <!-- Status -->
                 <div class="mb-4">
@@ -185,9 +208,9 @@
                     <select id="status" name="status"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
+                        <option value="">Selecione...</option>
                         <option value="pendente">Pendente</option>
                         <option value="concluido">Concluído</option>
-                        <option value="cancelado">Cancelado</option>
                     </select>
                 </div>
 
@@ -217,5 +240,106 @@
             });
         });
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const origemSelect = document.getElementById('local_origem');
+            const destinoSelect = document.getElementById('local_destino');
+
+            function updateDestinoOptions() {
+                const selectedOrigem = origemSelect.value;
+
+                // Primeiro, habilitar todas as opções no destino
+                Array.from(destinoSelect.options).forEach(option => {
+                    option.disabled = false;
+                });
+
+                // Se houver um local selecionado na origem, desabilitar essa opção no destino
+                if (selectedOrigem) {
+                    const optionToDisable = destinoSelect.querySelector(`option[value="${selectedOrigem}"]`);
+                    if (optionToDisable) {
+                        optionToDisable.disabled = true;
+                    }
+                }
+            }
+
+            function updateOrigemOptions() {
+                const selectedDestino = destinoSelect.value;
+
+                // Primeiro, habilitar todas as opções na origem
+                Array.from(origemSelect.options).forEach(option => {
+                    option.disabled = false;
+                });
+
+                // Se houver um local selecionado no destino, desabilitar essa opção na origem
+                if (selectedDestino) {
+                    const optionToDisable = origemSelect.querySelector(`option[value="${selectedDestino}"]`);
+                    if (optionToDisable) {
+                        optionToDisable.disabled = true;
+                    }
+                }
+            }
+
+            origemSelect.addEventListener('change', updateDestinoOptions);
+            destinoSelect.addEventListener('change', updateOrigemOptions);
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const ativoSelect = document.getElementById("id_ativo");
+            const localOrigemSelect = document.getElementById("local_origem");
+
+            ativoSelect.addEventListener("change", function() {
+                const ativoId = this.value;
+
+                if (ativoId) {
+                    fetch(`/ativos/${ativoId}/locais-disponiveis`)
+                        .then(response => response.json())
+                        .then(locais => {
+                            localOrigemSelect.innerHTML = '<option value="">Selecione...</option>';
+                            locais.forEach(local => {
+                                localOrigemSelect.innerHTML +=
+                                    `<option value="${local.id}">${local.descricao}</option>`;
+                            });
+                        })
+                        .catch(error => console.error("Erro ao buscar locais disponíveis:", error));
+                } else {
+                    localOrigemSelect.innerHTML = '<option value="">Selecione...</option>';
+                }
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const ativoSelect = document.getElementById("id_ativo");
+            const localOrigemSelect = document.getElementById("local_origem");
+            const localDestinoSelect = document.getElementById("local_destino");
+
+            function toggleOptions(selectElement) {
+                const options = selectElement.querySelectorAll("option:not([value=''])");
+                if (ativoSelect.value) {
+                    options.forEach(option => option.hidden = false);
+                } else {
+                    options.forEach(option => option.hidden = true);
+                    selectElement.value = "";
+                }
+            }
+
+            function handleAtivoChange() {
+                toggleOptions(localOrigemSelect);
+                toggleOptions(localDestinoSelect);
+            }
+
+            ativoSelect.addEventListener("change", handleAtivoChange);
+
+            // Executar ao carregar a página
+            handleAtivoChange();
+        });
+    </script>
+
+
+
 
 </x-app-layout>

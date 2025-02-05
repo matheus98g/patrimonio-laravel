@@ -4,20 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\AtivoLocal;
 use App\Models\Movimentacao;
+use App\Models\Local;
 use App\Models\Ativo;
-use App\Models\Marca;
-use App\Models\Tipo;
+use App\Models\LocalAtivo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
+
 
 class MovimentacaoController extends Controller
 {
 
     public function index()
     {
-        $movimentacoes = Movimentacao::all();
+        $movimentacoes = Movimentacao::with(['ativo', 'user', 'AtivoLocalOrigem', 'AtivoLocalDestino'])->get();
+        $locais = Local::all();
         $ativos = Ativo::all();
-        return view('movimentacoes.index', compact('movimentacoes', 'ativos'));
+        return view('movimentacoes.index', compact('movimentacoes', 'ativos', 'locais'));
     }
 
     /**
@@ -28,52 +31,48 @@ class MovimentacaoController extends Controller
      */
     public function store(Request $request)
     {
-        // Validar os dados recebidos
         $validated = $request->validate([
             'id_ativo' => 'required|exists:ativos,id',
-            'origem' => 'required|string|max:255',
-            'destino' => 'required|string|max:255',
+            'local_origem' => 'required|exists:locais,id',
+            'local_destino'   => 'required|exists:locais,id|different:local_origem',
             'quantidade_mov' => 'required|integer|min:1',
+            'observacao' => 'nullable|string|max:255',
+            'status' => 'required|in:concluido,pendente',
         ]);
 
-        // Iniciar transação para garantir integridade dos dados
         DB::beginTransaction();
 
         try {
-            // Criar o registro de movimentação
+            // Criar o registro de movimentação com usuário, status e observação
             $movimentacao = Movimentacao::create([
                 'id_ativo' => $validated['id_ativo'],
-                'origem' => $validated['origem'],
-                'destino' => $validated['destino'],
+                'local_origem' => $validated['local_origem'],
+                'local_destino' => $validated['local_destino'],
                 'quantidade_mov' => $validated['quantidade_mov'],
-                'status' => 1,  // Pode ser um status que você defina, como 'em andamento'
+                'status' => $validated['status'],
+                'observacao' => $validated['observacao'],
+                'id_user' => $request->user()->id, // Captura o usuário autenticado
             ]);
 
-            // Lógica de movimentação de ativo (ajustar as quantidades nos locais)
             $ativoLocalOrigem = AtivoLocal::where('id_ativo', $validated['id_ativo'])
-                ->where('localizacao', $validated['origem'])
+                ->where('id_local', $validated['local_origem'])
                 ->first();
 
             $ativoLocalDestino = AtivoLocal::where('id_ativo', $validated['id_ativo'])
-                ->where('localizacao', $validated['destino'])
+                ->where('id_local', $validated['local_destino'])
                 ->first();
 
-            // Verifica se o ativo existe no local de origem e se a quantidade é suficiente
             if ($ativoLocalOrigem && $ativoLocalOrigem->quantidade >= $validated['quantidade_mov']) {
-                // Subtrai a quantidade do local de origem
                 $ativoLocalOrigem->quantidade -= $validated['quantidade_mov'];
                 $ativoLocalOrigem->save();
 
-                // Se o local de destino não existir, cria um novo
                 if ($ativoLocalDestino) {
-                    // Atualiza a quantidade no destino
                     $ativoLocalDestino->quantidade += $validated['quantidade_mov'];
                     $ativoLocalDestino->save();
                 } else {
-                    // Cria um novo registro no local de destino
                     AtivoLocal::create([
                         'id_ativo' => $validated['id_ativo'],
-                        'localizacao' => $validated['destino'],
+                        'id_local' => $validated['local_destino'],
                         'quantidade' => $validated['quantidade_mov'],
                     ]);
                 }
@@ -81,16 +80,17 @@ class MovimentacaoController extends Controller
                 return response()->json(['error' => 'Quantidade insuficiente no local de origem'], 400);
             }
 
-            // Confirmar transação
             DB::commit();
 
             return response()->json(['message' => 'Movimentação registrada com sucesso', 'data' => $movimentacao]);
         } catch (\Exception $e) {
-            // Reverter transação em caso de erro
             DB::rollBack();
             return response()->json(['error' => 'Erro ao processar a movimentação', 'message' => $e->getMessage()], 500);
         }
     }
+
+
+
 
     /**
      * Exibir o histórico de movimentações de um ativo.

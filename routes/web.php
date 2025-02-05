@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', [AtivoController::class, 'store'])->name('store');
         Route::put('/{ativo}', [AtivoController::class, 'update'])->name('update'); //editar
     });
+    Route::get('/{id}/locais-disponiveis', [AtivoController::class, 'getLocaisDisponiveis']);
 
 
     // Marcas

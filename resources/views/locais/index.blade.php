@@ -27,7 +27,6 @@
                                 </th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Observação
                                 </th>
-                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -38,13 +37,7 @@
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $local->descricao }}</td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $local->observacoes }}</td>
-                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        <span
-                                            class="{{ $local->status == 1 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
-                                            {{ $local->status == 1 ? 'Ativo' : 'Inativo' }}
-                                        </span>
-                                    </td>
+                                        {{ $local->observacao }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -68,11 +61,22 @@
             <form action="{{ route('locais.store') }}" method="POST">
                 @csrf
                 <div class="mb-4">
-                    <label for="descricao"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descrição</label>
+                    <label for="descricao" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Descrição
+                    </label>
                     <input type="text" id="descricao" name="descricao"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
+                </div>
+
+                <!-- Novo campo Observações -->
+                <div class="mb-4">
+                    <label for="observacao" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Observações
+                    </label>
+                    <textarea id="observacao" name="observacao"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows="3" placeholder="Digite suas observações aqui..."></textarea>
                 </div>
 
                 <div class="flex justify-end">
@@ -83,6 +87,7 @@
             </form>
         </div>
     </div>
+
 
     <script>
         document.querySelectorAll('[data-modal-toggle="local-modal"]').forEach(button => {

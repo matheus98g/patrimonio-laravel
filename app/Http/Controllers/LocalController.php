@@ -11,24 +11,25 @@ class LocalController extends Controller
     public function index()
     {
         // Pegando todos os locais com os dados relacionados de AtivoLocal
-        $locais = Local::with('ativosLocais')->get();
-
-        $ativosLocais = AtivoLocal::all();
+        $locais = Local::all();
 
         // Retornando a view com os dados dos locais
-        return view('locais.index', compact('locais', 'ativosLocais'));
+        return view('locais.index', compact('locais'));
     }
+
 
     public function store(Request $request)
     {
-        // Validando os dados
+        // Validação dos dados, incluindo o campo observacao como opcional
         $request->validate([
-            'descricao' => 'required|string|max:255',
+            'descricao'   => 'required|string|max:255',
+            'observacao'  => 'nullable|string',
         ]);
 
-        // Criando o novo local
+        // Criação do novo local, incluindo observacao
         Local::create([
-            'descricao' => $request->descricao,
+            'descricao'  => $request->descricao,
+            'observacao' => $request->observacao,
         ]);
 
         // Redirecionando de volta para a página de locais
