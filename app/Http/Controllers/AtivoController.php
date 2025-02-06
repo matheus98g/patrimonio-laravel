@@ -8,6 +8,8 @@ use App\Models\Ativo;
 use App\Models\AtivoLocal;
 use App\Models\Marca;
 use App\Models\Tipo;
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
 
 class AtivoController extends Controller
 {
@@ -35,15 +37,21 @@ class AtivoController extends Controller
         // Validação dos dados recebidos
         $request->validate([
             'descricao'         => 'required|string|max:255',
-            'quantidade_total'  => 'required|integer|min:1',
+            'quantidade'        => 'required|integer|min:1',
             'observacao'        => 'nullable|string',
             'id_marca'          => 'nullable|exists:marcas,id',
             'id_tipo'           => 'nullable|exists:tipos,id',
             'nova_marca'        => 'nullable|string|max:255',
             'novo_tipo'         => 'nullable|string|max:255',
-            'id_local'          => 'nullable|exists:locais,id',
-            'status'            => 'required|in:ativo,inativo',
+            'id_local'          => 'nullable|integer',
+            'status'            => 'required|integer',
+            // 'imagem'            => 'nullable|image'
         ]);
+
+        // if ($request->hasFile('imagem')) {
+        //     $imagemAtivo = Storage::disk('public')->put('/', $request->file('imagem'));
+        // }
+        // var_dump(($imagemAtivo));
 
         // Criando uma nova marca, se fornecida
         if ($request->filled('nova_marca')) {
@@ -61,28 +69,27 @@ class AtivoController extends Controller
             $id_tipo = $request->id_tipo;
         }
 
-        // Se o local não for informado, definir um local padrão (ex: 1)
-        $id_local = $request->id_local ?? 1;
 
         // Criar o ativo
         $ativo = Ativo::create([
             'descricao'        => $request->descricao,
-            'quantidade_total' => $request->quantidade_total,
+            'quantidade_total' => $request->quantidade,
             'quantidade_uso'   => 0,
-            'quantidade_disp'  => $request->quantidade_total,
+            'quantidade_disp'  => $request->quantidade,
             'status'           => $request->status,
             'observacao'       => $request->observacao,
             'id_marca'         => $id_marca,
             'id_tipo'          => $id_tipo,
             'id_user'          => $request->user()->id,
-            'id_local'         => $id_local,
+            'id_local'         => $request->id_local,
+            // 'imagem_ativo' => $imagemAtivo
         ]);
 
         // **Registrar na tabela ativo_local**
         AtivoLocal::create([
             'id_ativo' => $ativo->id,
-            'id_local' => $id_local,
-            'quantidade' => $request->quantidade_total, // Grava a data atual como a movimentação inicial
+            'id_local' => $request->id_local,
+            'quantidade' => $request->quantidade, // Grava a data atual como a movimentação inicial
         ]);
 
         return redirect()->route('ativos.index')->with('success', 'Ativo cadastrado com sucesso!');
@@ -123,12 +130,12 @@ class AtivoController extends Controller
         // Exemplo simples: assumindo que a quantidade de uso permanece a mesma,
         // então a quantidade disponível passa a ser:
         //      nova quantidade_total - quantidade_uso
-        $novaQuantidadeTotal = $request->quantidade_total;
+        $novaQuantidadeTotal = $request->quantidade;
         $quantidadeUso = $ativo->quantidade_uso; // valor atual de uso
         $quantidadeDisponivel = $novaQuantidadeTotal - $quantidadeUso;
         if ($quantidadeDisponivel < 0) {
             // Se o uso exceder a nova quantidade total, lançamos erro
-            return redirect()->back()->withErrors(['quantidade_total' => 'A quantidade total não pode ser menor que a quantidade em uso.']);
+            return redirect()->back()->withErrors(['quantidade' => 'A quantidade total não pode ser menor que a quantidade em uso.']);
         }
 
         $ativo->update([

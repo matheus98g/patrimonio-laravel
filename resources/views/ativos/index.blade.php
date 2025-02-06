@@ -55,7 +55,7 @@
                                         {{ $ativo->tipo->descricao ?? 'Não encontrado' }}
                                     </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $ativo->quantidade ?? 'Não encontrado' }}
+                                        {{ $ativo->quantidade_total ?? 'Não encontrado' }}
                                     </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $ativo->quantidade_disp ?? 'Não encontrado' }}
@@ -114,6 +114,14 @@
             <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Cadastrar Ativo</h3>
             <form action="{{ route('ativos.store') }}" method="POST">
                 @csrf
+                <div class="mb-4">
+                    <input type="hidden" id="id_local" name="id_local" value="1"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-4">
+                    <input type="hidden" id="status" name="status" value="1"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
                 <div class="mb-4">
                     <label for="descricao"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descrição</label>
@@ -174,6 +182,13 @@
                     <textarea id="observacao" name="observacao"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                 </div>
+
+                {{-- <div class="mb-4">
+                    <label for="imagem"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Observação</label>
+                    <input type="file" id="imagem" name="imagem" value="1"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div> --}}
 
                 <div class="flex justify-end px-4">
                     <x-primary-button class="ml-2 px-4 py-2" type="submit">Cadastrar</x-primary-button>
