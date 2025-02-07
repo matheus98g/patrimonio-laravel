@@ -43,13 +43,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($ativos as $ativo)
+                            @foreach ($ativos as $ativo)
                                 <tr class="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
                                     id="row-{{ $ativo->id }}">
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         @if ($ativo->imagem)
                                             <img src="{{ Storage::url($ativo->imagem) }}" alt="Imagem"
-                                                style="width:400px;">
+                                                style="width:150px;">
                                         @endif
                                     </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
@@ -80,39 +80,47 @@
                                         {{ $ativo->observacao ?? 'Não encontrado' }}
                                     </td>
 
-                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        <!-- Botão para abrir o modal de edição -->
-                                        <div>
-                                            <x-secondary-button
-                                                onclick="openEditModal({ 
-                                                        id: '{{ $ativo->id }}', 
-                                                        descricao: '{{ $ativo->descricao }}', 
-                                                        id_marca: '{{ $ativo->id_marca }}', 
-                                                        id_tipo: '{{ $ativo->id_tipo }}', 
-                                                        quantidade: '{{ $ativo->quantidade }}', 
-                                                        observacao: '{{ $ativo->observacao }}' 
-                                                    })"
-                                                class="px-3 py-2 bg-blue-500 text-white rounded">
-                                                Editar
-                                            </x-secondary-button>
-                                        </div>
+                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2 ">
+                                        @if ($ativo)
+                                            <!-- Botão para abrir o modal de edição -->
+                                            <div class="flex gap-2 items-center">
 
-                                        <div>
-                                            <x-danger-button onclick="deleteAtivo('{{ $ativo->id }}', this)"
-                                                class="px-3 py-2 bg-red-500 text-white rounded">
-                                                Excluir
-                                            </x-danger-button>
-                                        </div>
+                                                <x-secondary-button
+                                                    onclick="openEditModal({ 
+                                                            id: '{{ $ativo->id }}', 
+                                                            descricao: '{{ $ativo->descricao }}', 
+                                                            id_marca: '{{ $ativo->id_marca }}', 
+                                                            id_tipo: '{{ $ativo->id_tipo }}', 
+                                                            quantidade: '{{ $ativo->quantidade }}', 
+                                                            observacao: '{{ $ativo->observacao }}' 
+                                                        })"
+                                                    class="text-white rounded">
+                                                    <i data-feather="edit" width="20"></i>
+                                                </x-secondary-button>
+
+
+
+                                                <x-danger-button onclick="deleteAtivo('{{ $ativo->id }}', this)"
+                                                    class=" bg-red-500 rounded">
+                                                    <i data-feather="x" width="20"></i>
+
+                                                </x-danger-button>
+                                            </div>
+                                        @endif
+
                                     </td>
 
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5"
-                                        class="text-center border border-gray-300 dark:border-gray-600 px-4 py-2">Nenhum
-                                        ativo encontrado.</td>
-                                </tr>
-                            @endforelse
+
+                                @if (empty($ativo))
+                                    <tr>
+                                        <td colspan="5"
+                                            class="text-center border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                            Nenhum
+                                            ativo encontrado.</td>
+                                    </tr>
+                                @endif
+                            @endforeach
                         </tbody>
                     </table>
 
@@ -175,7 +183,8 @@
                         @endforeach
                     </select>
                     <!-- Botão para cadastrar novo tipo -->
-                    <button type="button" onclick="toggleTipoForm()" class="mt-2 text-blue-500 text-sm">Cadastrar novo
+                    <button type="button" onclick="toggleTipoForm()" class="mt-2 text-blue-500 text-sm">Cadastrar
+                        novo
                         tipo</button>
                     <div id="novo-tipo-form" class="hidden mt-2">
                         <input type="text" name="novo_tipo" id="novo_tipo" placeholder="Digite o novo tipo"
@@ -215,6 +224,7 @@
     </div>
 
     <!-- Modal para editar ativo -->
+    <!-- Modal para editar ativo -->
     <div id="editar-ativo-modal" class="fixed inset-0 z-50 flex justify-center items-center hidden"
         onclick="closeModal(event)">
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96" onclick="event.stopPropagation()">
@@ -238,7 +248,7 @@
                         <option value="">Selecione uma Marca</option>
                         @foreach ($marcas as $marca)
                             <option value="{{ $marca->id }}"
-                                {{ $ativo->id_marca == $marca->id ? 'selected' : '' }}>
+                                {{ ($ativo->id_marca ?? '') == $marca->id ? 'selected' : '' }}>
                                 {{ $marca->descricao }}</option>
                         @endforeach
                     </select>
@@ -251,7 +261,8 @@
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="">Selecione um Tipo</option>
                         @foreach ($tipos as $tipo)
-                            <option value="{{ $tipo->id }}" {{ $ativo->id_tipo == $tipo->id ? 'selected' : '' }}>
+                            <option value="{{ $tipo->id }}"
+                                {{ ($ativo->id_tipo ?? '') == $tipo->id ? 'selected' : '' }}>
                                 {{ $tipo->descricao }}</option>
                         @endforeach
                     </select>
@@ -261,7 +272,7 @@
                     <label for="quantidade-edit"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade</label>
                     <input type="number" id="quantidade-edit" name="quantidade-edit"
-                        value="{{ $ativo->quantidade }}"
+                        value="{{ $ativo->quantidade ?? '' }}"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
                 </div>
@@ -270,7 +281,7 @@
                     <label for="observacao-edit"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Observação</label>
                     <textarea id="observacao-edit" name="observacao-edit"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">{{ $ativo->observacao }}</textarea>
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">{{ $ativo->observacao ?? '' }}</textarea>
                 </div>
 
                 <div class="flex justify-end">
@@ -279,7 +290,6 @@
                     <x-secondary-button class="ml-2 px-4 py-2" type="button"
                         onclick="closeModal('editar-ativo-modal')">Cancelar</x-secondary-button>
                 </div>
-
             </form>
         </div>
     </div>
