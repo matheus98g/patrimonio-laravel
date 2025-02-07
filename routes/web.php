@@ -22,7 +22,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [AtivoController::class, 'index'])->name('index');
         Route::get('/{id}/locais-disponiveis', [AtivoController::class, 'getLocaisDisponiveis']);
         Route::post('/store', [AtivoController::class, 'store'])->name('store');
-        Route::put('/{ativo}', [AtivoController::class, 'update'])->name('update'); //editar
+        Route::put('/{ativo}', [AtivoController::class, 'update'])->name('update');
+        Route::delete('/{ativo}', [AtivoController::class, 'destroy'])->name('destroy');
     });
 
 

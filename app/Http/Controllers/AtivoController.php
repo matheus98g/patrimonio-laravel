@@ -69,7 +69,7 @@ class AtivoController extends Controller
                     'tamanho'  => $imagemAtivo->getSize(),
                 ]);
 
-                $imagemAtivo = $imagemAtivo->store('public');
+                $imagemAtivo = $imagemAtivo->store('ativos', 'public');
                 if (!$imagemAtivo) {
                     throw new Exception('Falha ao salvar a imagem.');
                 }
@@ -200,5 +200,21 @@ class AtivoController extends Controller
 
 
         return response()->json($locais);
+    }
+
+    public function destroy($id)
+    {
+        $ativo = Ativo::find($id);
+
+        if (!$ativo) {
+            return response()->json(['success' => false, 'message' => 'Ativo não encontrado.'], 404);
+        }
+
+        try {
+            $ativo->delete();
+            return response()->json(['success' => true, 'message' => 'Ativo excluído com sucesso!']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Erro ao excluir o ativo.'], 500);
+        }
     }
 }

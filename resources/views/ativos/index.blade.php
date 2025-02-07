@@ -21,7 +21,7 @@
                     <table class="table-auto w-full border-collapse border border-gray-300 dark:border-gray-700">
                         <thead class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
                             <tr>
-                                {{-- <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">ID</th> --}}
+                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">#</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Descrição
                                 </th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Marca
@@ -44,7 +44,14 @@
                         </thead>
                         <tbody>
                             @forelse ($ativos as $ativo)
-                                <tr class="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <tr class="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                    id="row-{{ $ativo->id }}">
+                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                        @if ($ativo->imagem)
+                                            <img src="{{ Storage::url($ativo->imagem) }}" alt="Imagem"
+                                                style="width:400px;">
+                                        @endif
+                                    </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $ativo->descricao ?? 'Não encontrado' }}
                                     </td>
@@ -75,19 +82,27 @@
 
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         <!-- Botão para abrir o modal de edição -->
-                                        <x-secondary-button
-                                            onclick="openEditModal({ 
-                                                    id: '{{ $ativo->id }}', 
-                                                    descricao: '{{ $ativo->descricao }}', 
-                                                    id_marca: '{{ $ativo->id_marca }}', 
-                                                    id_tipo: '{{ $ativo->id_tipo }}', 
-                                                    quantidade: '{{ $ativo->quantidade }}', 
-                                                    observacao: '{{ $ativo->observacao }}' 
-                                                })"
-                                            class="px-3 py-2 bg-blue-500 text-white rounded">
-                                            Editar
-                                        </x-secondary-button>
+                                        <div>
+                                            <x-secondary-button
+                                                onclick="openEditModal({ 
+                                                        id: '{{ $ativo->id }}', 
+                                                        descricao: '{{ $ativo->descricao }}', 
+                                                        id_marca: '{{ $ativo->id_marca }}', 
+                                                        id_tipo: '{{ $ativo->id_tipo }}', 
+                                                        quantidade: '{{ $ativo->quantidade }}', 
+                                                        observacao: '{{ $ativo->observacao }}' 
+                                                    })"
+                                                class="px-3 py-2 bg-blue-500 text-white rounded">
+                                                Editar
+                                            </x-secondary-button>
+                                        </div>
 
+                                        <div>
+                                            <x-danger-button onclick="deleteAtivo('{{ $ativo->id }}', this)"
+                                                class="px-3 py-2 bg-red-500 text-white rounded">
+                                                Excluir
+                                            </x-danger-button>
+                                        </div>
                                     </td>
 
                                 </tr>
@@ -312,6 +327,43 @@
         function toggleTipoForm() {
             var tipoForm = document.getElementById('novo-tipo-form');
             tipoForm.classList.toggle('hidden');
+        }
+
+
+        function deleteAtivo(id, btn) {
+            if (!confirm('Deseja realmente excluir este ativo?')) {
+                return;
+            }
+
+            // Obtém o token CSRF a partir da meta tag
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            // Envia a requisição DELETE via Fetch API
+            fetch(`/ativos/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token,
+                        'Accept': 'application/json'
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+
+                        // Remove a linha da tabela sem recarregar a página
+                        const row = document.getElementById(`row-${id}`);
+                        if (row) {
+                            row.remove();
+                        }
+                    } else {
+                        alert(data.message || 'Falha ao excluir o ativo.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Ocorreu um erro ao tentar excluir o ativo.');
+                });
         }
     </script>
 
