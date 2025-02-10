@@ -32,10 +32,15 @@ class Ativo extends Model
         return $this->belongsTo(Tipo::class, 'id_tipo');
     }
 
-    // Relacionamento com ativos_locais (tabela intermediária)
-    public function ativosLocais()
+    // Relacionamento com local (um-para-muitos)
+    public function local()
     {
-        return $this->hasMany(AtivoLocal::class, 'id_ativo', 'id');
+        return $this->belongsTo(Local::class, 'id_local');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user');
     }
 
     // Obter todos os locais onde o ativo está presente (caso use a tabela intermediária)

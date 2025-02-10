@@ -20,10 +20,10 @@ Route::middleware('auth')->group(function () {
     // Ativos
     Route::prefix('ativos')->name('ativos.')->group(function () {
         Route::get('/', [AtivoController::class, 'index'])->name('index');
-        Route::get('/{id}/locais-disponiveis', [AtivoController::class, 'getLocaisDisponiveis']);
-        Route::post('/store', [AtivoController::class, 'store'])->name('store');
-        Route::put('/{ativo}', [AtivoController::class, 'update'])->name('update');
-        Route::delete('/{ativo}', [AtivoController::class, 'destroy'])->name('destroy');
+        Route::get('/{id}/locais-disponiveis', [AtivoController::class, 'getLocaisDisponiveis'])->name('locais');
+        Route::post('/', [AtivoController::class, 'store'])->name('store');
+        Route::put('/{id}', [AtivoController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AtivoController::class, 'destroy'])->name('destroy');
     });
 
 
