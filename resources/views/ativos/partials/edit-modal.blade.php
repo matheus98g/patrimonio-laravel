@@ -18,6 +18,7 @@
             @csrf
             @method('PUT')
 
+            <!-- Layout dos campos em coluna; para desktop, mantemos um max-width e espaçamento adequado -->
             <div class="space-y-4">
                 <!-- Campo Descrição -->
                 <div>
@@ -28,31 +29,52 @@
                         required>
                 </div>
 
+
+
                 <!-- Campo Marca -->
                 <div>
                     <label for="id_marca-edit"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Marca</label>
-                    <select name="id_marca" id="id_marca-edit"
-                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring focus:border-blue-300">
-                        <option value="">Selecione</option>
-                        @foreach ($marcas as $marca)
-                            <option value="{{ $marca->id }}">{{ $marca->descricao }}</option>
-                        @endforeach
-                    </select>
+                    <div class="relative">
+                        <select name="id_marca" id="id_marca-edit"
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring focus:border-blue-300 appearance-none pr-8">
+                            <option value="">Selecione</option>
+                            @foreach ($marcas as $marca)
+                                <option value="{{ $marca->id }}">{{ $marca->descricao }}</option>
+                            @endforeach
+                        </select>
+                        <div class="absolute top-1/2 right-3 transform -translate-y-1/2 pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Campo Tipo -->
                 <div>
                     <label for="id_tipo-edit"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo</label>
-                    <select name="id_tipo" id="id_tipo-edit"
-                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring focus:border-blue-300">
-                        <option value="">Selecione</option>
-                        @foreach ($tipos as $tipo)
-                            <option value="{{ $tipo->id }}">{{ $tipo->descricao }}</option>
-                        @endforeach
-                    </select>
+                    <div class="relative">
+                        <select name="id_tipo" id="id_tipo-edit"
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring focus:border-blue-300 appearance-none pr-8">
+                            <option value="">Selecione</option>
+                            @foreach ($tipos as $tipo)
+                                <option value="{{ $tipo->id }}">{{ $tipo->descricao }}</option>
+                            @endforeach
+                        </select>
+                        <div class="absolute top-1/2 right-3 transform -translate-y-1/2 pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                    </div>
                 </div>
+
 
                 <!-- Campo Quantidade Total -->
                 <div>
@@ -67,11 +89,20 @@
                 <div>
                     <label for="status-edit"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
-                    <select name="status" id="status-edit"
-                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring focus:border-blue-300">
-                        <option value="1">Ativo</option>
-                        <option value="0">Inativo</option>
-                    </select>
+                    <div class="relative">
+                        <select name="status" id="status-edit"
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring focus:border-blue-300 appearance-none pr-8">
+                            <option value="1">Ativo</option>
+                            <option value="0">Inativo</option>
+                        </select>
+                        <div class="absolute top-1/2 right-3 transform -translate-y-1/2 pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Campo Observação -->
@@ -82,24 +113,31 @@
                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring focus:border-blue-300"></textarea>
                 </div>
 
-                <!-- Campo Imagem com preview -->
-                <div>
+                <!-- Campo Imagem com preview e botão estilizado -->
+                <div class="mb-4">
                     <label for="imagem-edit"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Imagem</label>
-                    <img id="imagem-preview" class="mb-2 max-h-32 object-contain rounded-md hidden"
-                        alt="Pré-visualização da imagem">
-                    <input type="file" name="imagem" id="imagem-edit"
-                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring focus:border-blue-300"
-                        accept="image/*">
+                    <div class="flex flex-col items-center">
+                        <!-- Pré-visualização da imagem -->
+                        <img id="imagem-preview" class="mb-2 max-h-32 object-contain rounded-md hidden"
+                            alt="Pré-visualização da imagem">
+                        <!-- Input de arquivo oculto -->
+                        <input type="file" name="imagem" id="imagem-edit" accept="image/*" class="hidden"
+                            onchange="previewImagem(event)">
+                        <!-- Botão estilizado para disparar o input -->
+                        <x-primary-button type="button" onclick="document.getElementById('imagem-edit').click()"
+                            class="w-32 sm:w-auto px-4 py-2 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors">
+                            Editar Imagem
+                        </x-primary-button>
+                    </div>
                 </div>
             </div>
 
             <!-- Botões de Ação -->
-            <div class="flex justify-end gap-2 mt-6">
+            <div class="flex flex-col sm:flex-row justify-end gap-2 mt-6">
                 <x-primary-button type="submit">Salvar</x-primary-button>
-                <x-secondary-button type="button" onclick="closeModal('editar-ativo-modal')">
-                    Cancelar
-                </x-secondary-button>
+                <x-secondary-button type="button"
+                    onclick="closeModal('editar-ativo-modal')">Cancelar</x-secondary-button>
             </div>
         </form>
     </div>

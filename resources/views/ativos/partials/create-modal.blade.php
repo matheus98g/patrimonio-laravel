@@ -42,7 +42,8 @@
                             @endforeach
                         </select>
                         <button type="button" onclick="toggleMarcaForm()"
-                            class="px-2 text-blue-500 hover:text-blue-700 focus:outline-none">+</button>
+                            class="px-2 text-blue-500 hover:text-blue-700 focus:outline-none"><i data-feather="plus"
+                                width="20"></i></button>
                     </div>
                     <div id="nova-marca-form" class="hidden mt-2">
                         <input type="text" name="nova_marca" placeholder="Nova Marca"
@@ -63,7 +64,8 @@
                             @endforeach
                         </select>
                         <button type="button" onclick="toggleTipoForm()"
-                            class="px-2 text-blue-500 hover:text-blue-700 focus:outline-none">+</button>
+                            class="px-2 text-blue-500 hover:text-blue-700 focus:outline-none"><i data-feather="plus"
+                                width="20"></i></button>
                     </div>
                     <div id="novo-tipo-form" class="hidden mt-2">
                         <input type="text" name="novo_tipo" placeholder="Novo Tipo"
@@ -88,14 +90,36 @@
                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring focus:border-blue-300"></textarea>
                 </div>
 
+
                 <!-- Imagem -->
                 <div>
+                    <label for="imagem"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Imagem</label>
+
+                    <!-- Container para o input -->
+                    <div class="flex flex-col items-center">
+                        <!-- Input de arquivo oculto -->
+                        <input type="file" name="imagem" id="imagem" accept="image/*" class="hidden"
+                            onchange="previewImagem(event)">
+
+                        <!-- Botão estilizado para disparar o input -->
+                        <x-primary-button type="button" onclick="document.getElementById('imagem').click()"
+                            class="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors">
+                            Selecionar Imagem
+                        </x-primary-button>
+                    </div>
+                </div>
+
+
+
+                <!-- Imagem -->
+                {{-- <div>
                     <label for="imagem"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Imagem</label>
                     <input type="file" name="imagem" id="imagem"
                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring focus:border-blue-300"
                         accept="image/*">
-                </div>
+                </div> --}}
             </div>
 
             <!-- Botões de Ação -->
