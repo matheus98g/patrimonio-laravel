@@ -43,11 +43,10 @@ class Ativo extends Model
         return $this->belongsTo(User::class, 'id_user');
     }
 
-    // Obter todos os locais onde o ativo está presente (caso use a tabela intermediária)
+    // Relacionamento de muitos para muitos com a tabela 'locais' através da tabela pivô 'ativo_local'
     public function locais()
     {
         return $this->belongsToMany(Local::class, 'ativo_local', 'id_ativo', 'id_local')
-            ->withPivot('quantidade') // Inclui a quantidade de cada ativo em cada local
-            ->withTimestamps();
+            ->withPivot('quantidade');  // Adiciona o campo 'quantidade' da tabela pivô
     }
 }

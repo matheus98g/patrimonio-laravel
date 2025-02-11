@@ -14,9 +14,10 @@ class Local extends Model
 
     protected $table = 'locais';
 
-    // Relacionamento com ativos locais (um local pode ter muitos ativos locais)
-    public function ativosLocais()
+    // Relacionamento de muitos para muitos com a tabela 'ativos' através da tabela pivô 'ativo_local'
+    public function ativos()
     {
-        return $this->hasMany(AtivoLocal::class, 'id_local', 'id');
+        return $this->belongsToMany(Ativo::class, 'ativo_local', 'id_local', 'id_ativo')
+            ->withPivot('quantidade');  // Adiciona o campo 'quantidade' da tabela pivô
     }
 }

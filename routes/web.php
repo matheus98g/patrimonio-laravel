@@ -20,7 +20,7 @@ Route::middleware('auth')->group(function () {
     // Ativos
     Route::prefix('ativos')->name('ativos.')->group(function () {
         Route::get('/', [AtivoController::class, 'index'])->name('index');
-        Route::get('/{id}/locais-disponiveis', [AtivoController::class, 'getLocaisDisponiveis'])->name('locais');
+        Route::get('/{ativoId}/locais-disponiveis', [AtivoController::class, 'getLocaisDisponiveis'])->name('locais');
         Route::post('/', [AtivoController::class, 'store'])->name('store');
         Route::put('/{id}', [AtivoController::class, 'update'])->name('update');
         Route::delete('/{id}', [AtivoController::class, 'destroy'])->name('destroy');
@@ -38,7 +38,7 @@ Route::middleware('auth')->group(function () {
     // Tipos
     Route::prefix('tipos')->name('tipos.')->group(function () {
         Route::get('/', [TipoController::class, 'index'])->name('index');
-        Route::post('/store', [TipoController::class, 'store'])->name('store');
+        Route::post('/', [TipoController::class, 'store'])->name('store');
         Route::put('/update', [TipoController::class, 'update'])->name('update');
         Route::delete('/delete', [TipoController::class, 'destroy'])->name('delete');
     });

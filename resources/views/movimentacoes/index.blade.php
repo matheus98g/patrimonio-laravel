@@ -9,26 +9,44 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <!-- Botão para abrir o modal -->
-                    <div class="flex justify-between items-center">
-                        {{-- botao modal --}}
+                    <!-- Filtros e Botão para abrir o modal -->
+                    <div class="flex justify-between items-center py-4">
+                        <div class="flex space-x-4">
+                            <!-- Filtro de Status -->
+                            <select id="filter_status" name="filter_status" onchange="this.form.submit()"
+                                class="px-4 py-2 border rounded-md text-black focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Filtrar por Status</option>
+                                <option value="pendente"
+                                    {{ request()->input('filter_status') == 'pendente' ? 'selected' : '' }}>
+                                    Pendente
+                                </option>
+                                <option value="concluido"
+                                    {{ request()->input('filter_status') == 'concluido' ? 'selected' : '' }}>
+                                    Concluído
+                                </option>
+                                <option value="cancelado"
+                                    {{ request()->input('filter_status') == 'cancelado' ? 'selected' : '' }}>
+                                    Cancelado
+                                </option>
+                            </select>
+
+                            <!-- Pesquisar -->
+                            <form action="{{ route('movimentacoes.search') }}" method="GET"
+                                class="flex items-center space-x-2">
+                                <input type="text" name="search" placeholder="Buscar..."
+                                    value="{{ request()->input('search', old('search')) }}"
+                                    class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <x-primary-button type="submit" class="ml-2 px-4 py-2 rounded-md">
+                                    Pesquisar
+                                </x-primary-button>
+                            </form>
+                        </div>
+
                         <div class="py-4">
                             <x-primary-button class="px-4 py-2" data-modal-target="movimentacao-modal"
                                 data-modal-toggle="movimentacao-modal">
                                 Movimentar Ativo
                             </x-primary-button>
-                        </div>
-
-                        {{-- search --}}
-                        <div>
-                            <form action="{{ route('movimentacoes.search') }}" method="GET" class="flex items-center">
-                                <input type="text" name="search" placeholder="Buscar..."
-                                    value="{{ request()->input('search', old('search')) }}"
-                                    class="border text-black border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <x-primary-button type="submit" class="ml-2 px-4 py-2 rounded-md">
-                                    Pesquisar
-                                </x-primary-button>
-                            </form>
                         </div>
                     </div>
 
@@ -88,6 +106,8 @@
                             @endforelse
                         </tbody>
                     </table>
+
+                    <!-- Paginação -->
                     <div class="pagination py-2">
                         {{ $movimentacoes->links() }}
                     </div>
@@ -95,6 +115,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- Modal para adicionar movimentação -->
     <div id="movimentacao-modal"
@@ -119,7 +140,7 @@
             <form action="{{ route('movimentacoes.store') }}" method="POST">
                 @csrf
 
-                <!-- Ativo  - FUTURAMENTE SUBSTTUIR POR UM LIVE SEARCH   -->
+                <!-- Ativo -->
                 <div class="mb-4">
                     <label for="id_ativo"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ativo</label>
@@ -138,10 +159,10 @@
                     <label for="observacao"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'Observação (opcional)' }}</label>
                     <input type="text" id="observacao" name="observacao"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required>
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
 
+                <!-- Origem e Destino -->
                 <div class="flex space-x-4">
                     <!-- Origem -->
                     <div class="mb-4 flex-1">
@@ -174,186 +195,156 @@
                     </div>
                 </div>
 
-
-
-                {{-- <div class="flex space-x-4">
-                    <!-- Origem -->
-                    <div class="mb-4 flex-1">
-                        <label for="local_origem" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Origem
-                        </label>
-                        <select id="local_origem" name="local_origem"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required>
-                            <option value="">Selecione...</option>
-                            @foreach ($locais as $local)
-                                <option value="{{ $local->id }}">{{ $local->descricao }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Destino -->
-                    <div class="mb-4 flex-1">
-                        <label for="local_destino" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Destino
-                        </label>
-                        <select id="local_destino" name="local_destino"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required>
-                            <option value="">Selecione...</option>
-                            @foreach ($locais as $local)
-                                <option value="{{ $local->id }}">{{ $local->descricao }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div> --}}
-
                 <!-- Quantidade de Uso -->
                 <div class="mb-4 flex-1">
                     <label for="quantidade_mov"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade</label>
                     <input type="number" id="quantidade_mov" name="quantidade_mov"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required min="1">
-                </div>
-
-                <!-- Status -->
-                <div class="mb-4">
-                    <label for="status"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
-                    <select id="status" name="status"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
-                        <option value="">Selecione...</option>
-                        <option value="pendente">Pendente</option>
-                        <option value="concluido">Concluído</option>
-                    </select>
                 </div>
 
-                <!-- Botões -->
-                <div class="flex justify-end">
+                <!-- Campo Hidden para Status -->
+                <input type="hidden" name="status" value="concluido">
 
-                    <x-primary-button class="ml-2 px-4 py-2" type="submit">Adicionar</x-primary-button>
-                    <x-secondary-button class="ml-2 px-4 py-2" type="button"
-                        onclick="closeModal()">Cancelar</x-secondary-button>
+                <div class="flex justify-between items-center space-x-4 mt-4">
+                    <x-secondary-button type="button" onclick="closeModal()">
+                        Cancelar
+                    </x-secondary-button>
+                    <x-primary-button type="submit">
+                        Adicionar Movimentação
+                    </x-primary-button>
                 </div>
             </form>
+
         </div>
     </div>
 
-    <script>
-        function closeModal(event) {
-            if (!event || event.target.id === "movimentacao-modal") {
-                document.getElementById('movimentacao-modal').classList.add('hidden');
-            }
-        }
-    </script>
 
-    <script>
-        document.querySelectorAll('[data-modal-toggle="movimentacao-modal"]').forEach(button => {
-            button.addEventListener('click', () => {
-                document.getElementById('movimentacao-modal').classList.toggle('hidden');
-            });
-        });
-    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Gerenciamento das opções de 'Destino' e 'Origem'
             const origemSelect = document.getElementById('local_origem');
             const destinoSelect = document.getElementById('local_destino');
+            const ativoSelect = document.getElementById("id_ativo");
+            const localDestinoSelect = document.getElementById("local_destino");
 
+            // Função para fechar o modal
+            function closeModal(event) {
+                if (!event || event.target.id === "movimentacao-modal") {
+                    document.getElementById('movimentacao-modal').classList.add('hidden');
+                    console.log('Modal fechado');
+                }
+            }
+
+            // Abertura e fechamento do modal
+            document.querySelectorAll('[data-modal-toggle="movimentacao-modal"]').forEach(button => {
+                button.addEventListener('click', () => {
+                    document.getElementById('movimentacao-modal').classList.toggle('hidden');
+                    console.log('Modal alternado');
+                });
+            });
+
+            // Função para atualizar as opções de 'Destino' baseado na seleção de 'Origem'
             function updateDestinoOptions() {
                 const selectedOrigem = origemSelect.value;
+                console.log('Origem selecionada:', selectedOrigem);
 
-                // Primeiro, habilitar todas as opções no destino
+                // Habilita todas as opções de destino
                 Array.from(destinoSelect.options).forEach(option => {
                     option.disabled = false;
                 });
 
-                // Se houver um local selecionado na origem, desabilitar essa opção no destino
+                // Desabilita a opção de destino que já está selecionada em origem
                 if (selectedOrigem) {
                     const optionToDisable = destinoSelect.querySelector(`option[value="${selectedOrigem}"]`);
                     if (optionToDisable) {
                         optionToDisable.disabled = true;
+                        console.log('Opção de destino desabilitada para:', selectedOrigem);
                     }
                 }
             }
 
+            // Função para atualizar as opções de 'Origem' baseado na seleção de 'Destino'
             function updateOrigemOptions() {
                 const selectedDestino = destinoSelect.value;
+                console.log('Destino selecionado:', selectedDestino);
 
-                // Primeiro, habilitar todas as opções na origem
+                // Habilita todas as opções de origem
                 Array.from(origemSelect.options).forEach(option => {
                     option.disabled = false;
                 });
 
-                // Se houver um local selecionado no destino, desabilitar essa opção na origem
+                // Desabilita a opção de origem que já está selecionada em destino
                 if (selectedDestino) {
                     const optionToDisable = origemSelect.querySelector(`option[value="${selectedDestino}"]`);
                     if (optionToDisable) {
                         optionToDisable.disabled = true;
+                        console.log('Opção de origem desabilitada para:', selectedDestino);
                     }
                 }
             }
 
+            // Atualiza as opções ao alterar 'Origem' e 'Destino'
             origemSelect.addEventListener('change', updateDestinoOptions);
             destinoSelect.addEventListener('change', updateOrigemOptions);
-        });
-    </script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const ativoSelect = document.getElementById("id_ativo");
-            const localOrigemSelect = document.getElementById("local_origem");
-
+            // Atualizar as opções de local de origem com base no ativo selecionado
             ativoSelect.addEventListener("change", function() {
                 const ativoId = this.value;
+                console.log('Ativo selecionado:', ativoId);
 
                 if (ativoId) {
+                    console.log('Buscando locais disponíveis para o ativo:', ativoId);
                     fetch(`/ativos/${ativoId}/locais-disponiveis`)
                         .then(response => response.json())
                         .then(locais => {
-                            localOrigemSelect.innerHTML = '<option value="">Selecione...</option>';
+                            origemSelect.innerHTML = '<option value="">Selecione...</option>';
                             locais.forEach(local => {
-                                localOrigemSelect.innerHTML +=
+                                origemSelect.innerHTML +=
                                     `<option value="${local.id}">${local.descricao}</option>`;
+                                console.log('Local adicionado ao select de origem:', local);
                             });
                         })
-                        .catch(error => console.error("Erro ao buscar locais disponíveis:", error));
+                        .catch(error => {
+                            console.error("Erro ao buscar locais disponíveis:", error);
+                            console.log("Erro ao tentar atualizar os locais de origem.");
+                        });
                 } else {
-                    localOrigemSelect.innerHTML = '<option value="">Selecione...</option>';
+                    origemSelect.innerHTML = '<option value="">Selecione...</option>';
+                    console.log('Nenhum ativo selecionado, opções de origem resetadas');
                 }
             });
-        });
-    </script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const ativoSelect = document.getElementById("id_ativo");
-            const localOrigemSelect = document.getElementById("local_origem");
-            const localDestinoSelect = document.getElementById("local_destino");
-
+            // Função para alternar as opções nos selects de 'Origem' e 'Destino' dependendo do ativo selecionado
             function toggleOptions(selectElement) {
                 const options = selectElement.querySelectorAll("option:not([value=''])");
                 if (ativoSelect.value) {
                     options.forEach(option => option.hidden = false);
+                    console.log('Opções visíveis para o select:', selectElement.id);
                 } else {
                     options.forEach(option => option.hidden = true);
                     selectElement.value = "";
+                    console.log('Opções ocultas para o select:', selectElement.id);
                 }
             }
 
             function handleAtivoChange() {
-                toggleOptions(localOrigemSelect);
+                toggleOptions(origemSelect);
                 toggleOptions(localDestinoSelect);
             }
 
+            // Atualiza as opções ao alterar o ativo
             ativoSelect.addEventListener("change", handleAtivoChange);
 
-            // Executar ao carregar a página
+            // Executa ao carregar a página
             handleAtivoChange();
+            console.log('Página carregada e configurações de select inicializadas');
         });
     </script>
+
+
 
 
 

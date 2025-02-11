@@ -248,4 +248,33 @@ class AtivoController extends Controller
             throw new Exception('Falha ao remover imagem anterior');
         }
     }
+
+
+    public function getLocaisDisponiveis($ativoId)
+    {
+        // Buscar o ativo pelo ID
+        $ativo = Ativo::find($ativoId);
+
+        // Verificar se o ativo existe
+        if (!$ativo) {
+            Log::warning("Ativo não encontrado: ID {$ativoId}");
+            return response()->json(['error' => 'Ativo não encontrado'], 404);
+        }
+
+        // Obter os locais onde o ativo está disponível e a quantidade
+        $locais = $ativo->locais()
+            ->select('locais.id', 'locais.descricao', 'ativo_local.quantidade')
+            ->where('ativo_local.id_ativo', $ativoId)
+            ->get();
+
+        // Verificar se os locais foram encontrados
+        if ($locais->isEmpty()) {
+            Log::info("Nenhum local encontrado para o ativo ID {$ativoId}");
+        } else {
+            Log::info("Locais encontrados para o ativo ID {$ativoId}: " . $locais->count());
+        }
+
+        // Retornar os locais e quantidades em formato JSON
+        return response()->json($locais);
+    }
 }
