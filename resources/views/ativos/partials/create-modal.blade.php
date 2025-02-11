@@ -91,24 +91,28 @@
                 </div>
 
 
-                <!-- Imagem -->
                 <div>
                     <label for="imagem"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Imagem</label>
 
-                    <!-- Container para o input -->
+                    <!-- Container para o input e a pré-visualização -->
                     <div class="flex flex-col items-center">
+                        <!-- Pré-visualização da imagem -->
+                        <img id="imagem-preview" class="mb-2 max-h-32 object-contain rounded-md hidden"
+                            alt="Pré-visualização da imagem">
+
                         <!-- Input de arquivo oculto -->
                         <input type="file" name="imagem" id="imagem" accept="image/*" class="hidden"
                             onchange="previewImagem(event)">
 
                         <!-- Botão estilizado para disparar o input -->
-                        <x-primary-button type="button" onclick="document.getElementById('imagem').click()"
+                        <button type="button" onclick="document.getElementById('imagem').click()"
                             class="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors">
                             Selecionar Imagem
-                        </x-primary-button>
+                        </button>
                     </div>
                 </div>
+
 
 
 

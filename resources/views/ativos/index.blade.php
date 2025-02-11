@@ -288,6 +288,20 @@
             document.getElementById('id_tipo').disabled = !document.getElementById('novo-tipo-form').classList.contains(
                 'hidden');
         }
+
+        function previewImagem(event) {
+            const preview = document.getElementById('imagem-preview');
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden'); // Exibe a imagem
+                };
+                reader.readAsDataURL(file);
+            }
+        }
     </script>
 
 </x-app-layout>
