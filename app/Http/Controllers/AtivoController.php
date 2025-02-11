@@ -39,7 +39,6 @@ class AtivoController extends Controller
                 'nova_marca' => 'nullable|string|max:255|exclude_if:id_marca,!=,null',
                 'novo_tipo' => 'nullable|string|max:255|exclude_if:id_tipo,!=,null',
                 'imagem' => 'nullable|image|max:2048',
-                'locais' => 'nullable|array|min:1', // Certifique-se de que 'locais' é um array se for enviado
             ]);
 
             // Processar nova marca/tipo
@@ -68,22 +67,11 @@ class AtivoController extends Controller
                 'imagem' => $imagemPath,
             ]);
 
-            // Obter os locais, incluindo o local padrão (id_local = 1)
-            $locais = $request->locais ?: []; // Se não houver locais, cria um array vazio
-            if (!in_array(1, $locais)) {
-                array_push($locais, 1); // Adiciona o local padrão (id_local = 1) se não estiver presente
-            }
-
-            // Distribuir a quantidade do ativo entre os locais
-            $quantidadePorLocal = floor($request->quantidade_total / count($locais));
-
-            foreach ($locais as $id_local) {
-                AtivoLocal::create([
-                    'id_ativo' => $ativo->id,
-                    'id_local' => $id_local,
-                    'quantidade' => $quantidadePorLocal,
-                ]);
-            }
+            AtivoLocal::create([
+                'id_ativo' => $ativo->id,
+                'id_local' => $request->id_local, // local padrao: 1 (almoxarifado)
+                'quantidade' => $request->quantidade_total, // Atribui a quantidade total ao local fixo
+            ]);
 
             // Adicionar log de sucesso
             Log::info('Ativo cadastrado com sucesso. Descrição: ' . $ativo->descricao . ' ID: ' . $ativo->id);
@@ -97,6 +85,7 @@ class AtivoController extends Controller
                 ->withInput();
         }
     }
+
 
 
 
