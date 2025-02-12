@@ -261,17 +261,18 @@ class AtivoController extends Controller
             return response()->json(['error' => 'Ativo não encontrado'], 404);
         }
 
-        // Obter os locais onde o ativo está disponível e a quantidade
+        // Obter os locais onde o ativo está disponível e a quantidade maior que zero
         $locais = $ativo->locais()
             ->select('locais.id', 'locais.descricao', 'ativo_local.quantidade')
             ->where('ativo_local.id_ativo', $ativoId)
+            ->where('ativo_local.quantidade', '>', 0) // Filtra locais com quantidade > 0
             ->get();
 
         // Verificar se os locais foram encontrados
         if ($locais->isEmpty()) {
-            Log::info("Nenhum local encontrado para o ativo ID {$ativoId}");
+            Log::info("Nenhum local encontrado com quantidade disponível para o ativo ID {$ativoId}");
         } else {
-            Log::info("Locais encontrados para o ativo ID {$ativoId}: " . $locais->count());
+            Log::info("Locais encontrados com quantidade disponível para o ativo ID {$ativoId}: " . $locais->count());
         }
 
         // Retornar os locais e quantidades em formato JSON

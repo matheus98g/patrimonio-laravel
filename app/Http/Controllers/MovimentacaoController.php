@@ -61,6 +61,7 @@ class MovimentacaoController extends Controller
 
     public function store(Request $request)
     {
+        // Log dos dados recebidos do formulário
         Log::info('Dados recebidos do formulário: ', $request->all());
 
         // Validação dos dados recebidos
@@ -86,7 +87,6 @@ class MovimentacaoController extends Controller
         try {
             // Criar o registro de movimentação com usuário, status e observação
             Log::info('Criando movimentação no banco de dados...');
-
             $movimentacao = Movimentacao::create([
                 'id_ativo' => $validated['id_ativo'],
                 'local_origem' => $validated['local_origem'],
@@ -106,98 +106,84 @@ class MovimentacaoController extends Controller
                 ->first();
 
             // Log do resultado da consulta do local de origem
+            if (!$ativoLocalOrigem) {
+                Log::warning('Ativo não encontrado no local de origem.', ['id_local_origem' => $validated['local_origem']]);
+                return response()->json(['error' => 'Ativo não encontrado no local de origem.'], 404);
+            }
+
             Log::info('Ativo no local de origem encontrado:', ['ativo_local_origem' => $ativoLocalOrigem]);
 
             // Verificar se o local de origem tem a quantidade suficiente
-            if ($ativoLocalOrigem && $ativoLocalOrigem->quantidade >= $validated['quantidade_mov']) {
-                // Log de quantidade suficiente
-                Log::info('Quantidade suficiente no local de origem.', [
-                    'id_local_origem' => $validated['local_origem'],
-                    'quantidade_disponivel' => $ativoLocalOrigem->quantidade,
-                    'quantidade_requerida' => $validated['quantidade_mov']
-                ]);
-
+            if ($ativoLocalOrigem->quantidade >= $validated['quantidade_mov']) {
                 // Subtrair a quantidade no local de origem
                 $ativoLocalOrigem->quantidade -= $validated['quantidade_mov'];
                 $ativoLocalOrigem->save();
 
-                // Log de subtração no local de origem
                 Log::info('Quantidade subtraída no local de origem.', [
                     'id_local_origem' => $validated['local_origem'],
                     'quantidade_subtraida' => $validated['quantidade_mov'],
                     'novo_valor' => $ativoLocalOrigem->quantidade
                 ]);
 
-                // Verificar se o ativo já existe no local de destino
-                Log::info('Verificando o local de destino...');
-                $ativoLocalDestino = AtivoLocal::where('id_ativo', $validated['id_ativo'])
-                    ->where('id_local', $validated['local_destino'])
-                    ->first();
-
-                // Log do resultado da consulta do local de destino
-                Log::info('Ativo no local de destino encontrado:', ['ativo_local_destino' => $ativoLocalDestino]);
-
-                if ($ativoLocalDestino) {
-                    // Se o ativo já existe no destino, apenas adicionar a quantidade
-                    $ativoLocalDestino->quantidade += $validated['quantidade_mov'];
-                    $ativoLocalDestino->save();
-
-                    // Log de adição no local de destino
-                    Log::info('Quantidade adicionada no local de destino.', [
-                        'id_local_destino' => $validated['local_destino'],
-                        'quantidade_adicionada' => $validated['quantidade_mov'],
-                        'novo_valor' => $ativoLocalDestino->quantidade
-                    ]);
-                } else {
-                    // Se o ativo não existe no destino, criar um novo registro
-                    Log::info('Criando novo registro no local de destino...');
-                    AtivoLocal::create([
-                        'id_ativo' => $validated['id_ativo'],
-                        'id_local' => $validated['local_destino'],
-                        'quantidade' => $validated['quantidade_mov'],
-                    ]);
-
-                    // Log de criação no local de destino
-                    Log::info('Novo registro criado no local de destino.', [
-                        'id_local_destino' => $validated['local_destino'],
-                        'quantidade_adicionada' => $validated['quantidade_mov'],
-                    ]);
-                }
+                // Verificar e atualizar o local de destino
+                $this->updateAtivoLocal($validated['id_ativo'], $validated['local_destino'], $validated['quantidade_mov']);
 
                 DB::commit();
-
-                // Log do sucesso na transação
                 Log::info('Movimentação processada e transação comitada com sucesso.');
 
-                return response()->json(['message' => 'Movimentação registrada com sucesso', 'data' => $movimentacao]);
+                return redirect()->route('movimentacoes.index')->with('success', 'Movimentação realizada com sucesso!');
             } else {
-                // Log de erro por quantidade insuficiente
                 Log::warning('Quantidade insuficiente no local de origem.', [
                     'id_local_origem' => $validated['local_origem'],
-                    'quantidade_disponivel' => $ativoLocalOrigem ? $ativoLocalOrigem->quantidade : 0,
+                    'quantidade_disponivel' => $ativoLocalOrigem->quantidade,
                     'quantidade_requerida' => $validated['quantidade_mov']
                 ]);
-                return response()->json(['error' => 'Quantidade insuficiente no local de origem'], 400);
+                return response()->json(['error' => 'Quantidade insuficiente no local de origem.'], 400);
             }
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
-
-            // Log de erro na consulta ao banco de dados
             Log::error('Erro na consulta ao banco de dados:', ['error_message' => $e->getMessage()]);
-
-            return response()->json(['error' => 'Erro ao processar a movimentação'], 500);
+            return response()->json(['error' => 'Erro na consulta ao banco de dados.'], 500);
         } catch (\Exception $e) {
             DB::rollBack();
-
-            // Log de erro desconhecido
             Log::error('Erro desconhecido:', ['error_message' => $e->getMessage()]);
-
-            return response()->json(['error' => 'Erro ao processar a movimentação', 'message' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Erro desconhecido.'], 500);
         }
     }
 
+    private function updateAtivoLocal($idAtivo, $idLocal, $quantidadeMov)
+    {
+        Log::info('Verificando o local de destino...');
 
+        $ativoLocalDestino = AtivoLocal::where('id_ativo', $idAtivo)
+            ->where('id_local', $idLocal)
+            ->first();
 
+        Log::info('Ativo no local de destino encontrado:', ['ativo_local_destino' => $ativoLocalDestino]);
+
+        if ($ativoLocalDestino) {
+            // Se o ativo já existe no destino, apenas adicionar a quantidade
+            $ativoLocalDestino->quantidade += $quantidadeMov;
+            $ativoLocalDestino->save();
+            Log::info('Quantidade adicionada no local de destino.', [
+                'id_local_destino' => $idLocal,
+                'quantidade_adicionada' => $quantidadeMov,
+                'novo_valor' => $ativoLocalDestino->quantidade
+            ]);
+        } else {
+            // Se o ativo não existe no destino, criar um novo registro
+            Log::info('Criando novo registro no local de destino...');
+            AtivoLocal::create([
+                'id_ativo' => $idAtivo,
+                'id_local' => $idLocal,
+                'quantidade' => $quantidadeMov,
+            ]);
+            Log::info('Novo registro criado no local de destino.', [
+                'id_local_destino' => $idLocal,
+                'quantidade_adicionada' => $quantidadeMov,
+            ]);
+        }
+    }
 
     public function showHistorico($id_ativo)
     {
