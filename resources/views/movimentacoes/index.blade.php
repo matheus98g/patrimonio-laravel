@@ -55,15 +55,15 @@
                         <thead class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
                             <tr>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Data</th>
-                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Usuário</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Ativo</th>
-                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Observação
-                                </th>
-                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Origem</th>
-                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Destino</th>
-                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Status</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Quantidade
                                     Mov</th>
+                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Origem</th>
+                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Destino</th>
+                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Observação
+                                </th>
+                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Usuário</th>
+                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -73,13 +73,10 @@
                                         {{ $movimentacao->created_at->format('d/m/Y H:i') }}
                                     </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->user->name ?? 'N/A' }}
-                                    </td>
-                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $movimentacao->ativo->descricao ?? 'N/A' }}
                                     </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->observacao ?? '-' }}
+                                        {{ $movimentacao->quantidade_mov ?? '0' }}
                                     </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $locais[$movimentacao->local_origem]->descricao ?? 'Local não encontrado' }}
@@ -89,13 +86,16 @@
                                     </td>
 
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                        {{ $movimentacao->observacao ?? '-' }}
+                                    </td>
+                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                        {{ $movimentacao->user->name ?? 'N/A' }}
+                                    </td>
+                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         <span
                                             class="{{ $movimentacao->status == 'concluido' ? 'text-green-600' : ($movimentacao->status == 'pendente' ? 'text-orange-500' : ($movimentacao->status == 'cancelado' ? 'text-red-600' : '')) }}">
                                             {{ ucfirst($movimentacao->status) }}
                                         </span>
-                                    </td>
-                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->quantidade_mov ?? '0' }}
                                     </td>
                                 </tr>
                             @empty
