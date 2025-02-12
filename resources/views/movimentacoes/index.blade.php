@@ -216,137 +216,130 @@
                     </x-primary-button>
                 </div>
             </form>
-
         </div>
-    </div>
 
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Gerenciamento das opções de 'Destino' e 'Origem'
+                const origemSelect = document.getElementById('local_origem');
+                const destinoSelect = document.getElementById('local_destino');
+                const ativoSelect = document.getElementById("id_ativo");
+                const localDestinoSelect = document.getElementById("local_destino");
 
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Gerenciamento das opções de 'Destino' e 'Origem'
-            const origemSelect = document.getElementById('local_origem');
-            const destinoSelect = document.getElementById('local_destino');
-            const ativoSelect = document.getElementById("id_ativo");
-            const localDestinoSelect = document.getElementById("local_destino");
-
-            // Função para fechar o modal
-            function closeModal(event) {
-                if (!event || event.target.id === "movimentacao-modal") {
-                    document.getElementById('movimentacao-modal').classList.add('hidden');
-                    console.log('Modal fechado');
-                }
-            }
-
-            // Abertura e fechamento do modal
-            document.querySelectorAll('[data-modal-toggle="movimentacao-modal"]').forEach(button => {
-                button.addEventListener('click', () => {
-                    document.getElementById('movimentacao-modal').classList.toggle('hidden');
-                    console.log('Modal alternado');
-                });
-            });
-
-            // Função para atualizar as opções de 'Destino' baseado na seleção de 'Origem'
-            function updateDestinoOptions() {
-                const selectedOrigem = origemSelect.value;
-                console.log('Origem selecionada:', selectedOrigem);
-
-                // Habilita todas as opções de destino
-                Array.from(destinoSelect.options).forEach(option => {
-                    option.disabled = false;
-                });
-
-                // Desabilita a opção de destino que já está selecionada em origem
-                if (selectedOrigem) {
-                    const optionToDisable = destinoSelect.querySelector(`option[value="${selectedOrigem}"]`);
-                    if (optionToDisable) {
-                        optionToDisable.disabled = true;
-                        console.log('Opção de destino desabilitada para:', selectedOrigem);
+                // Função para fechar o modal
+                window.closeModal = function(event) {
+                    // Verifica se o evento de clique foi no próprio modal ou no botão de cancelar
+                    if (!event || event.target.id === "movimentacao-modal" || event.target.closest(
+                            '#movimentacao-modal') === null) {
+                        document.getElementById('movimentacao-modal').classList.add('hidden');
+                        console.log('Modal fechado');
                     }
                 }
-            }
 
-            // Função para atualizar as opções de 'Origem' baseado na seleção de 'Destino'
-            function updateOrigemOptions() {
-                const selectedDestino = destinoSelect.value;
-                console.log('Destino selecionado:', selectedDestino);
-
-                // Habilita todas as opções de origem
-                Array.from(origemSelect.options).forEach(option => {
-                    option.disabled = false;
+                // Abertura e fechamento do modal
+                document.querySelectorAll('[data-modal-toggle="movimentacao-modal"]').forEach(button => {
+                    button.addEventListener('click', () => {
+                        document.getElementById('movimentacao-modal').classList.toggle('hidden');
+                        console.log('Modal alternado');
+                    });
                 });
 
-                // Desabilita a opção de origem que já está selecionada em destino
-                if (selectedDestino) {
-                    const optionToDisable = origemSelect.querySelector(`option[value="${selectedDestino}"]`);
-                    if (optionToDisable) {
-                        optionToDisable.disabled = true;
-                        console.log('Opção de origem desabilitada para:', selectedDestino);
+                // Função para atualizar as opções de 'Destino' baseado na seleção de 'Origem'
+                function updateDestinoOptions() {
+                    const selectedOrigem = origemSelect.value;
+                    console.log('Origem selecionada:', selectedOrigem);
+
+                    // Habilita todas as opções de destino
+                    Array.from(destinoSelect.options).forEach(option => {
+                        option.disabled = false;
+                    });
+
+                    // Desabilita a opção de destino que já está selecionada em origem
+                    if (selectedOrigem) {
+                        const optionToDisable = destinoSelect.querySelector(`option[value="${selectedOrigem}"]`);
+                        if (optionToDisable) {
+                            optionToDisable.disabled = true;
+                            console.log('Opção de destino desabilitada para:', selectedOrigem);
+                        }
                     }
                 }
-            }
 
-            // Atualiza as opções ao alterar 'Origem' e 'Destino'
-            origemSelect.addEventListener('change', updateDestinoOptions);
-            destinoSelect.addEventListener('change', updateOrigemOptions);
+                // Função para atualizar as opções de 'Origem' baseado na seleção de 'Destino'
+                function updateOrigemOptions() {
+                    const selectedDestino = destinoSelect.value;
+                    console.log('Destino selecionado:', selectedDestino);
 
-            // Atualizar as opções de local de origem com base no ativo selecionado
-            ativoSelect.addEventListener("change", function() {
-                const ativoId = this.value;
-                console.log('Ativo selecionado:', ativoId);
+                    // Habilita todas as opções de origem
+                    Array.from(origemSelect.options).forEach(option => {
+                        option.disabled = false;
+                    });
 
-                if (ativoId) {
-                    console.log('Buscando locais disponíveis para o ativo:', ativoId);
-                    fetch(`/ativos/${ativoId}/locais-disponiveis`)
-                        .then(response => response.json())
-                        .then(locais => {
-                            origemSelect.innerHTML = '<option value="">Selecione...</option>';
-                            locais.forEach(local => {
-                                origemSelect.innerHTML +=
-                                    `<option value="${local.id}">${local.descricao}</option>`;
-                                console.log('Local adicionado ao select de origem:', local);
+                    // Desabilita a opção de origem que já está selecionada em destino
+                    if (selectedDestino) {
+                        const optionToDisable = origemSelect.querySelector(`option[value="${selectedDestino}"]`);
+                        if (optionToDisable) {
+                            optionToDisable.disabled = true;
+                            console.log('Opção de origem desabilitada para:', selectedDestino);
+                        }
+                    }
+                }
+
+                // Atualiza as opções ao alterar 'Origem' e 'Destino'
+                origemSelect.addEventListener('change', updateDestinoOptions);
+                destinoSelect.addEventListener('change', updateOrigemOptions);
+
+                // Atualizar as opções de local de origem com base no ativo selecionado
+                ativoSelect.addEventListener("change", function() {
+                    const ativoId = this.value;
+                    console.log('Ativo selecionado:', ativoId);
+
+                    if (ativoId) {
+                        console.log('Buscando locais disponíveis para o ativo:', ativoId);
+                        fetch(`/ativos/${ativoId}/locais-disponiveis`)
+                            .then(response => response.json())
+                            .then(locais => {
+                                origemSelect.innerHTML = '<option value="">Selecione...</option>';
+                                locais.forEach(local => {
+                                    origemSelect.innerHTML +=
+                                        `<option value="${local.id}">${local.descricao}</option>`;
+                                    console.log('Local adicionado ao select de origem:', local);
+                                });
+                            })
+                            .catch(error => {
+                                console.error("Erro ao buscar locais disponíveis:", error);
+                                console.log("Erro ao tentar atualizar os locais de origem.");
                             });
-                        })
-                        .catch(error => {
-                            console.error("Erro ao buscar locais disponíveis:", error);
-                            console.log("Erro ao tentar atualizar os locais de origem.");
-                        });
-                } else {
-                    origemSelect.innerHTML = '<option value="">Selecione...</option>';
-                    console.log('Nenhum ativo selecionado, opções de origem resetadas');
+                    } else {
+                        origemSelect.innerHTML = '<option value="">Selecione...</option>';
+                        console.log('Nenhum ativo selecionado, opções de origem resetadas');
+                    }
+                });
+
+                // Função para alternar as opções nos selects de 'Origem' e 'Destino' dependendo do ativo selecionado
+                function toggleOptions(selectElement) {
+                    const options = selectElement.querySelectorAll("option:not([value=''])");
+                    if (ativoSelect.value) {
+                        options.forEach(option => option.hidden = false);
+                        console.log('Opções visíveis para o select:', selectElement.id);
+                    } else {
+                        options.forEach(option => option.hidden = true);
+                        selectElement.value = "";
+                        console.log('Opções ocultas para o select:', selectElement.id);
+                    }
                 }
+
+                function handleAtivoChange() {
+                    toggleOptions(origemSelect);
+                    toggleOptions(localDestinoSelect);
+                }
+
+                // Atualiza as opções ao alterar o ativo
+                ativoSelect.addEventListener("change", handleAtivoChange);
+
+                // Executa ao carregar a página
+                handleAtivoChange();
+                console.log('Página carregada e configurações de select inicializadas');
             });
-
-            // Função para alternar as opções nos selects de 'Origem' e 'Destino' dependendo do ativo selecionado
-            function toggleOptions(selectElement) {
-                const options = selectElement.querySelectorAll("option:not([value=''])");
-                if (ativoSelect.value) {
-                    options.forEach(option => option.hidden = false);
-                    console.log('Opções visíveis para o select:', selectElement.id);
-                } else {
-                    options.forEach(option => option.hidden = true);
-                    selectElement.value = "";
-                    console.log('Opções ocultas para o select:', selectElement.id);
-                }
-            }
-
-            function handleAtivoChange() {
-                toggleOptions(origemSelect);
-                toggleOptions(localDestinoSelect);
-            }
-
-            // Atualiza as opções ao alterar o ativo
-            ativoSelect.addEventListener("change", handleAtivoChange);
-
-            // Executa ao carregar a página
-            handleAtivoChange();
-            console.log('Página carregada e configurações de select inicializadas');
-        });
-    </script>
-
-
-
-
-
+        </script>
 
 </x-app-layout>
