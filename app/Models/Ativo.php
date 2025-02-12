@@ -16,7 +16,6 @@ class Ativo extends Model
         'id_marca',
         'id_tipo',
         'id_user',
-        'id_local',
         'imagem'
     ];
 
@@ -30,12 +29,6 @@ class Ativo extends Model
     public function tipo()
     {
         return $this->belongsTo(Tipo::class, 'id_tipo');
-    }
-
-    // Relacionamento com local (um-para-muitos)
-    public function local()
-    {
-        return $this->belongsTo(Local::class, 'id_local');
     }
 
     public function user()

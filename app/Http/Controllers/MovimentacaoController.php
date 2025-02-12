@@ -21,14 +21,25 @@ class MovimentacaoController extends Controller
 
     public function index(Request $request)
     {
+        // Paginação com as relações necessárias, incluindo ativo_local
         $movimentacoes = Movimentacao::with(['ativo', 'user', 'ativoLocalOrigem', 'ativoLocalDestino'])
             ->paginate(15);
 
-        $locais = Local::all();
+        // Consultar todos os locais (tabela 'local')
+        $locais = Local::all()->keyBy('id'); // Indexando pelos 'id' para fácil acesso
+
+        // Consultar todos os ativos
         $ativos = Ativo::all();
 
-        return view('movimentacoes.index', compact('movimentacoes', 'ativos', 'locais', 'request'));
+        // Verifique se os dados estão sendo carregados corretamente
+        Log::info('Locais carregados:', ['locais' => $locais]);
+        Log::info('Ativos carregados:', ['ativos' => $ativos]);
+
+        // Retornar a view com as variáveis necessárias
+        return view('movimentacoes.index', compact('movimentacoes', 'ativos', 'locais'));
     }
+
+
 
     public function search(Request $request)
     {

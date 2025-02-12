@@ -70,31 +70,33 @@
                             @forelse ($movimentacoes as $movimentacao)
                                 <tr class="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->created_at->format('d/m/Y H:i') }}</td>
+                                        {{ $movimentacao->created_at->format('d/m/Y H:i') }}
+                                    </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->user->name ?? 'N/A' }}</td>
+                                        {{ $movimentacao->user->name ?? 'N/A' }}
+                                    </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->ativo->descricao ?? 'N/A' }}</td>
+                                        {{ $movimentacao->ativo->descricao ?? 'N/A' }}
+                                    </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->observacao ?? '-' }}</td>
+                                        {{ $movimentacao->observacao ?? '-' }}
+                                    </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->ativoLocalOrigem->descricao ?? 'N/A' }}</td>
+                                        {{ $locais[$movimentacao->local_origem]->descricao ?? 'Local não encontrado' }}
+                                    </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->ativoLocalDestino->descricao ?? 'N/A' }}</td>
+                                        {{ $locais[$movimentacao->local_destino]->descricao ?? 'Local não encontrado' }}
+                                    </td>
+
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         <span
-                                            class="{{ $movimentacao->status == 'concluido'
-                                                ? 'text-green-600'
-                                                : ($movimentacao->status == 'pendente'
-                                                    ? 'text-orange-500'
-                                                    : ($movimentacao->status == 'cancelado'
-                                                        ? 'text-red-600'
-                                                        : '')) }}">
+                                            class="{{ $movimentacao->status == 'concluido' ? 'text-green-600' : ($movimentacao->status == 'pendente' ? 'text-orange-500' : ($movimentacao->status == 'cancelado' ? 'text-red-600' : '')) }}">
                                             {{ ucfirst($movimentacao->status) }}
                                         </span>
                                     </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $movimentacao->quantidade_mov ?? '0' }}</td>
+                                        {{ $movimentacao->quantidade_mov ?? '0' }}
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
@@ -106,6 +108,7 @@
                             @endforelse
                         </tbody>
                     </table>
+
 
                     <!-- Paginação -->
                     <div class="pagination py-2">
