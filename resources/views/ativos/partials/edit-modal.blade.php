@@ -76,11 +76,11 @@
                 </div>
 
 
-                <!-- Campo Quantidade Total -->
+                <!-- Campo Quantidade -->
                 <div>
-                    <label for="quantidade_total-edit"
+                    <label for="quantidade"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade Total</label>
-                    <input type="number" name="quantidade_total" id="quantidade_total-edit"
+                    <input type="number" name="quantidade" id="quantidade-edit"
                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring focus:border-blue-300"
                         min="1" required>
                 </div>

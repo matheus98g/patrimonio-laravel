@@ -26,7 +26,6 @@
                                     <th class="p-3 text-left text-sm">Marca</th>
                                     <th class="p-3 text-left text-sm">Tipo</th>
                                     <th class="p-3 text-left text-sm">Quantidade Total</th>
-                                    <th class="p-3 text-left text-sm">Quantidade Disp</th>
                                     <th class="p-3 text-left text-sm">Status</th>
                                     <th class="p-3 text-left text-sm">Cadastrado em</th>
                                     <th class="p-3 text-left text-sm">Obs</th>
@@ -59,10 +58,7 @@
                                             {{ optional($ativo->tipo)->descricao ?? 'N/A' }}
                                         </td>
                                         <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                            {{ $ativo->quantidade_total }}
-                                        </td>
-                                        <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                            {{ $ativo->quantidade_disp }}
+                                            {{ $ativo->quantidade }}
                                         </td>
                                         <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                             <span class="{{ $ativo->status ? 'text-green-600' : 'text-red-600' }}">
@@ -83,7 +79,7 @@
                                                         'descricao' => $ativo->descricao,
                                                         'id_marca' => $ativo->id_marca,
                                                         'id_tipo' => $ativo->id_tipo,
-                                                        'quantidade_total' => $ativo->quantidade_total,
+                                                        'quantidade' => $ativo->quantidade,
                                                         'observacao' => $ativo->observacao,
                                                         'status' => $ativo->status,
                                                         'imagem_url' => $ativo->imagem ? Storage::url($ativo->imagem) : null,
@@ -148,15 +144,9 @@
                                             </span>
                                         </div>
                                         <div class="flex justify-between">
-                                            <span class="text-gray-600 dark:text-gray-400">Quantidade Total:</span>
+                                            <span class="text-gray-600 dark:text-gray-400">Quantidade:</span>
                                             <span class="text-gray-900 dark:text-gray-100">
                                                 {{ $ativo->quantidade_total }}
-                                            </span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span class="text-gray-600 dark:text-gray-400">Disponível:</span>
-                                            <span class="text-gray-900 dark:text-gray-100">
-                                                {{ $ativo->quantidade_disp }}
                                             </span>
                                         </div>
                                         <div class="flex justify-between">
@@ -222,7 +212,7 @@
             document.getElementById('descricao-edit').value = data.descricao;
             document.getElementById('id_marca-edit').value = data.id_marca;
             document.getElementById('id_tipo-edit').value = data.id_tipo;
-            document.getElementById('quantidade_total-edit').value = data.quantidade_total;
+            document.getElementById('quantidade-edit').value = data.quantidade;
             document.getElementById('observacao-edit').value = data.observacao;
             document.getElementById('status-edit').value = data.status;
 

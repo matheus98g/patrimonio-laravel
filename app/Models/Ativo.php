@@ -8,9 +8,7 @@ class Ativo extends Model
 {
     protected $fillable = [
         'descricao',
-        'quantidade_total',
-        'quantidade_uso',
-        'quantidade_disp',
+        'quantidade',
         'status',
         'observacao',
         'id_marca',
@@ -37,7 +35,7 @@ class Ativo extends Model
     }
 
     // Relacionamento de muitos para muitos com a tabela 'locais' através da tabela pivô 'ativo_local'
-    public function locais()
+    public function local()
     {
         return $this->belongsToMany(Local::class, 'ativo_local', 'id_ativo', 'id_local')
             ->withPivot('quantidade');  // Adiciona o campo 'quantidade' da tabela pivô

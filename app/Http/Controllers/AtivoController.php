@@ -32,7 +32,7 @@ class AtivoController extends Controller
         try {
             $request->validate([
                 'descricao' => 'required|string|max:255',
-                'quantidade_total' => 'required|integer|min:1',
+                'quantidade' => 'required|integer|min:1',
                 'observacao' => 'nullable|string',
                 'id_marca' => 'nullable|exists:marcas,id',
                 'id_tipo' => 'nullable|exists:tipos,id',
@@ -57,8 +57,7 @@ class AtivoController extends Controller
             // Criar ativo
             $ativo = Ativo::create([
                 'descricao' => $request->descricao,
-                'quantidade_total' => $request->quantidade_total,
-                'quantidade_disp' => $request->quantidade_total,
+                'quantidade' => $request->quantidade, // Usando apenas a quantidade
                 'status' => 1, // Ativo por padrão
                 'observacao' => $request->observacao,
                 'id_marca' => $id_marca,
@@ -67,10 +66,11 @@ class AtivoController extends Controller
                 'imagem' => $imagemPath,
             ]);
 
+            // Criar vínculo do ativo com o local, utilizando a quantidade total
             AtivoLocal::create([
                 'id_ativo' => $ativo->id,
-                'id_local' => $request->id_local, // local padrao: 1 (almoxarifado)
-                'quantidade' => $request->quantidade_total, // Atribui a quantidade total ao local fixo
+                'id_local' => $request->id_local, // local padrão: 1 (almoxarifado)
+                'quantidade' => $request->quantidade, // Atribui a quantidade total ao local fixo
             ]);
 
             // Adicionar log de sucesso
@@ -86,40 +86,31 @@ class AtivoController extends Controller
         }
     }
 
-
-
-
-
     public function update(Request $request, $id)
     {
         try {
             $request->validate([
                 'descricao' => 'required|string|max:255',
-                'quantidade_total' => 'required|integer|min:1',
+                'quantidade' => 'required|integer|min:1',
                 'observacao' => 'nullable|string',
                 'id_marca' => 'required|exists:marcas,id',
                 'id_tipo' => 'required|exists:tipos,id',
                 'status' => 'required|boolean',
-                // 'id_local' => 'required|exists:locais,id',
                 'imagem' => 'nullable|image|max:2048',
             ]);
 
             $ativo = Ativo::findOrFail($id);
             $dados = $request->only([
                 'descricao',
-                'quantidade_total',
+                'quantidade', // Atualizando apenas a quantidade
                 'observacao',
                 'id_marca',
                 'id_tipo',
                 'status',
-                // 'id_local'
             ]);
 
-            // Atualizar quantidades
-            $dados['quantidade_disp'] = max(
-                0,
-                $request->quantidade_total - $ativo->quantidade_uso
-            );
+            // Atualizar a quantidade
+            $dados['quantidade'] = max(0, $request->quantidade);
 
             // Fluxo seguro para substituição de imagem
             if ($request->hasFile('imagem')) {
@@ -136,11 +127,12 @@ class AtivoController extends Controller
 
             $ativo->update($dados);
 
-            // // Atualizar localização
-            // AtivoLocal::updateOrCreate(
-            //     ['id_ativo' => $ativo->id],
-            //     ['id_local' => $request->id_local, 'quantidade' => $request->quantidade_total]
-            // );
+            // Atualizar o vínculo do ativo no local
+            $ativoLocal = AtivoLocal::where('id_ativo', $id)->first();
+            if ($ativoLocal) {
+                $ativoLocal->quantidade = $request->quantidade; // Atualiza a quantidade no local
+                $ativoLocal->save();
+            }
 
             return redirect()->route('ativos.index')
                 ->with('success', 'Ativo atualizado com sucesso!');
@@ -151,6 +143,7 @@ class AtivoController extends Controller
                 ->withInput();
         }
     }
+
 
     public function destroy($id)
     {
