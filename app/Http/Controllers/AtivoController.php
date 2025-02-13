@@ -253,15 +253,20 @@ class AtivoController extends Controller
         // Verificar se o ativo existe
         if (!$ativo) {
             Log::warning("Ativo não encontrado: ID {$ativoId}");
-            return response()->json(['error' => 'Ativo não encontrado'], 404);
         }
 
-        // Obter os locais onde o ativo está disponível e a quantidade maior que zero
+        // Obter os locais e formatar a resposta concatenando descrição e quantidade
         $locais = $ativo->local()
             ->select('locais.id', 'locais.descricao', 'ativo_local.quantidade')
             ->where('ativo_local.id_ativo', $ativoId)
             ->where('ativo_local.quantidade', '>', 0) // Filtra locais com quantidade > 0
-            ->get();
+            ->get()
+            ->map(function ($local) {
+                return [
+                    'id' => $local->id,
+                    'descricao' => "{$local->descricao} ({$local->quantidade})" // Concatena nome + quantidade
+                ];
+            });
 
         // Verificar se os locais foram encontrados
         if ($locais->isEmpty()) {
@@ -270,7 +275,7 @@ class AtivoController extends Controller
             Log::info("Locais encontrados com quantidade disponível para o ativo ID {$ativoId}: " . $locais->count());
         }
 
-        // Retornar os locais e quantidades em formato JSON
+        // Retornar os locais formatados
         return response()->json($locais);
     }
 }
