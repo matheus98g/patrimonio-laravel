@@ -2,20 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use App\Models\Local;
 use App\Models\AtivoLocal;
 use Illuminate\Http\Request;
 
 class LocalController extends Controller
 {
+    // public function index()
+    // {
+    //     // Pegando todos os locais com os dados relacionados de AtivoLocal
+    //     $locais = Local::all();
+
+    //     // Retornando a view com os dados dos locais
+    //     return view('locais.index', compact('locais'));
+    // }
+
     public function index()
     {
-        // Pegando todos os locais com os dados relacionados de AtivoLocal
-        $locais = Local::all();
+        $locais = DB::table('locais')
+            ->leftJoin('ativo_local', 'locais.id', '=', 'ativo_local.id_local')
+            ->leftJoin('ativos', 'ativo_local.id_ativo', '=', 'ativos.id')
+            ->select(
+                'locais.id as id_local',
+                'locais.descricao as local_descricao',
+                DB::raw('GROUP_CONCAT(CONCAT(ativos.descricao, " (", ativo_local.quantidade, ")") SEPARATOR ", ") as ativos')
+            )
+            ->whereNotNull('ativo_local.quantidade')
+            ->where('ativo_local.quantidade', '>', 0)
+            ->groupBy('locais.id', 'locais.descricao')
+            ->havingRaw('LENGTH(ativos) > 0') // Garante que só exiba locais com ativos válidos
+            ->get();
 
-        // Retornando a view com os dados dos locais
         return view('locais.index', compact('locais'));
     }
+
+
 
 
     public function store(Request $request)

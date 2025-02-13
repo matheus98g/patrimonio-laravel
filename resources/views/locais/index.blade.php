@@ -25,25 +25,28 @@
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">ID</th>
                                 <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Descrição
                                 </th>
-                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Observação
-                                </th>
+                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Ativos</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($locais as $local)
                                 <tr class="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $local->id }}</td>
+                                        {{ $local->id_local }}
+                                    </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $local->descricao }}</td>
+                                        {{ $local->local_descricao }}
+                                    </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $local->observacao }}</td>
+                                        {{ $local->ativos ?? 'Nenhum ativo cadastrado' }}
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
                                     <td colspan="3"
                                         class="text-center border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        Nenhum local encontrado.</td>
+                                        Nenhum local encontrado.
+                                    </td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -69,16 +72,6 @@
                         required>
                 </div>
 
-                <!-- Novo campo Observações -->
-                <div class="mb-4">
-                    <label for="observacao" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Observações
-                    </label>
-                    <textarea id="observacao" name="observacao"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        rows="3" placeholder="Digite suas observações aqui..."></textarea>
-                </div>
-
                 <div class="flex justify-end">
                     <x-primary-button type="submit" class="px-4 py-2">Cadastrar</x-primary-button>
                     <x-secondary-button type="button" class="ml-2 px-4 py-2"
@@ -87,7 +80,6 @@
             </form>
         </div>
     </div>
-
 
     <script>
         document.querySelectorAll('[data-modal-toggle="local-modal"]').forEach(button => {
