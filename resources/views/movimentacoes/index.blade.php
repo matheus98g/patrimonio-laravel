@@ -7,47 +7,81 @@
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+
+            <!-- Card de Filtros -->
+            <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg mb-6 p-6">
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Filtrar Movimentações</h3>
+                <form action="{{ route('movimentacoes.search') }}" method="POST" class="flex flex-wrap gap-4">
+                    @csrf
+
+                    {{-- <!-- Filtro de Status -->
+                    <select id="filter_status" name="filter_status" onchange="this.form.submit()"
+                        class="px-4 py-2 border rounded-md text-black focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Filtrar por Status</option>
+                        <option value="pendente" {{ request('filter_status') == 'pendente' ? 'selected' : '' }}>
+                            Pendente
+                        </option>
+                        <option value="concluido" {{ request('filter_status') == 'concluido' ? 'selected' : '' }}>
+                            Concluído
+                        </option>
+                        <option value="cancelado" {{ request('filter_status') == 'cancelado' ? 'selected' : '' }}>
+                            Cancelado
+                        </option>
+                    </select> --}}
+
+                    <select name="local_origem"
+                        class="px-4 py-2 border rounded-md text-black focus:ring-2 focus:ring-blue-500">
+                        <option value="">Selecione...</option>
+                        @foreach ($locais as $local)
+                            <option value="{{ $local->id }}"
+                                {{ request('local_origem') == $local->id ? 'selected' : '' }}>
+                                {{ $local->descricao }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <select name="local_destino"
+                        class="px-4 py-2 border rounded-md text-black focus:ring-2 focus:ring-blue-500">
+                        <option value="">Selecione...</option>
+                        @foreach ($locais as $local)
+                            <option value="{{ $local->id }}"
+                                {{ request('local_destino') == $local->id ? 'selected' : '' }}>
+                                {{ $local->descricao }}
+                            </option>
+                        @endforeach
+                    </select>
+
+
+                    <!-- Campo de Pesquisa e Botão de Limpar -->
+                    <div class="flex items-center space-x-2">
+                        <!-- Campo de pesquisa -->
+                        <input type="text" name="search" placeholder="Buscar..." value="{{ request('search') }}"
+                            class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                        <!-- Botão de Pesquisar -->
+                        <x-primary-button type="submit" class="px-4 py-2 rounded-md">
+                            Pesquisar
+                        </x-primary-button>
+
+                        <a href="{{ route('movimentacoes.index') }}">
+                            <x-secondary-button class="px-4 py-2 bg-gray-500 text-white rounded-md">
+                                Limpar Filtros
+                            </x-secondary-button>
+                        </a>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Card de Movimentações -->
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <!-- Filtros e Botão para abrir o modal -->
                     <div class="flex justify-between items-center py-4">
-                        <div class="flex space-x-4">
-                            <!-- Filtro de Status -->
-                            <select id="filter_status" name="filter_status" onchange="this.form.submit()"
-                                class="px-4 py-2 border rounded-md text-black focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="">Filtrar por Status</option>
-                                <option value="pendente"
-                                    {{ request()->input('filter_status') == 'pendente' ? 'selected' : '' }}>
-                                    Pendente
-                                </option>
-                                <option value="concluido"
-                                    {{ request()->input('filter_status') == 'concluido' ? 'selected' : '' }}>
-                                    Concluído
-                                </option>
-                                <option value="cancelado"
-                                    {{ request()->input('filter_status') == 'cancelado' ? 'selected' : '' }}>
-                                    Cancelado
-                                </option>
-                            </select>
-
-                            <!-- Pesquisar -->
-                            <form action="{{ route('movimentacoes.search') }}" method="GET"
-                                class="flex items-center space-x-2">
-                                <input type="text" name="search" placeholder="Buscar..."
-                                    value="{{ request()->input('search', old('search')) }}"
-                                    class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <x-primary-button type="submit" class="ml-2 px-4 py-2 rounded-md">
-                                    Pesquisar
-                                </x-primary-button>
-                            </form>
-                        </div>
-
-                        <div class="py-4">
-                            <x-primary-button class="px-4 py-2" data-modal-target="movimentacao-modal"
-                                data-modal-toggle="movimentacao-modal">
-                                Movimentar Ativo
-                            </x-primary-button>
-                        </div>
+                        <h3 class="text-lg font-semibold">Movimentações</h3>
+                        <x-primary-button class="px-4 py-2" data-modal-target="movimentacao-modal"
+                            data-modal-toggle="movimentacao-modal">
+                            Movimentar Ativo
+                        </x-primary-button>
                     </div>
 
                     <!-- Tabela de Movimentações -->
@@ -79,12 +113,11 @@
                                         {{ $movimentacao->quantidade_mov ?? '0' }}
                                     </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $locais[$movimentacao->local_origem]->descricao ?? 'Local não encontrado' }}
+                                        {{ $movimentacao->origem->descricao ?? 'Local não encontrado' }}
                                     </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $locais[$movimentacao->local_destino]->descricao ?? 'Local não encontrado' }}
+                                        {{ $movimentacao->destino->descricao ?? 'Local não encontrado' }}
                                     </td>
-
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $movimentacao->observacao ?? '-' }}
                                     </td>
@@ -93,7 +126,7 @@
                                     </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         <span
-                                            class="{{ $movimentacao->status == 'concluido' ? 'text-green-600' : ($movimentacao->status == 'pendente' ? 'text-orange-500' : ($movimentacao->status == 'cancelado' ? 'text-red-600' : '')) }}">
+                                            class="{{ $movimentacao->status == 'concluido' ? 'text-green-600' : ($movimentacao->status == 'pendente' ? 'text-orange-500' : 'text-red-600') }}">
                                             {{ ucfirst($movimentacao->status) }}
                                         </span>
                                     </td>
@@ -108,7 +141,6 @@
                             @endforelse
                         </tbody>
                     </table>
-
 
                     <!-- Paginação -->
                     <div class="pagination py-2">

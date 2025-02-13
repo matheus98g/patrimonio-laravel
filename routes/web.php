@@ -7,7 +7,7 @@ use App\Http\Controllers\MarcaController;
 use App\Http\Controllers\TipoController;
 use App\Http\Controllers\MovimentacaoController;
 use App\Http\Controllers\LocalController;
-
+use App\Http\Controllers\ProdutoController;
 
 // Dashboard (Página inicial autenticada)
 Route::get('/', function () {
@@ -46,10 +46,10 @@ Route::middleware('auth')->group(function () {
     // Movimentações
     Route::prefix('movimentacoes')->name('movimentacoes.')->group(function () {
         Route::get('/', [MovimentacaoController::class, 'index'])->name('index');
-        Route::get('/search', [MovimentacaoController::class, 'search'])->name('search');
+        Route::post('/search', [MovimentacaoController::class, 'search'])->name('search');
         Route::post('/store', [MovimentacaoController::class, 'store'])->name('store');
-        Route::put('/update', [MovimentacaoController::class, 'update'])->name('update');
-        Route::delete('/delete', [MovimentacaoController::class, 'destroy'])->name('delete');
+        // Route::put('/update', [MovimentacaoController::class, 'update'])->name('update');
+        Route::delete('/', [MovimentacaoController::class, 'destroy'])->name('delete');
     });
 
     // Locais
@@ -65,6 +65,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [ProfileController::class, 'edit'])->name('edit');
         Route::patch('/', [ProfileController::class, 'update'])->name('update');
         Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
+    });
+
+
+    Route::prefix('produtos')->name('produtos.')->group(function () {
+        Route::get('/', [ProdutoController::class, 'index'])->name('index');
+        Route::patch('/', [ProdutoController::class, 'update'])->name('update');
+        Route::delete('/', [ProdutoController::class, 'destroy'])->name('destroy');
     });
 });
 

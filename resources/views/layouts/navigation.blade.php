@@ -55,6 +55,10 @@
                     <x-nav-link :href="route('movimentacoes.index')" :active="request()->routeIs('movimentacoes.index')">
                         {{ __('Movimentações') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="route('produtos.index')" :active="request()->routeIs('produtos.index')">
+                        {{ __('Produtos') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -132,6 +136,10 @@
             </x-nav-link>
             <x-nav-link :href="route('movimentacoes.index')" :active="request()->routeIs('movimentacoes.index')">
                 {{ __('Movimentações') }}
+            </x-nav-link>
+
+            <x-nav-link :href="route('produtos.index')" :active="request()->routeIs('produtos.index')">
+                {{ __('Produtos') }}
             </x-nav-link>
         </div>
     </div>

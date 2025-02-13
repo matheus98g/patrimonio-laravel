@@ -31,15 +31,15 @@ class Movimentacao extends Model
         return $this->belongsTo(User::class, 'id_user', 'id');
     }
 
-    public function ativoLocalOrigem()
+    public function origem()
     {
         // Relacionando com a tabela 'ativo_local' para o local de origem
-        return $this->belongsTo(AtivoLocal::class, 'local_origem', 'id_local');
+        return $this->belongsTo(Local::class, 'local_origem', 'id');
     }
 
-    public function ativoLocalDestino()
+    public function destino()
     {
         // Relacionando com a tabela 'ativo_local' para o local de destino
-        return $this->belongsTo(AtivoLocal::class, 'local_destino', 'id_local');
+        return $this->belongsTo(Local::class, 'local_destino', 'id');
     }
 }

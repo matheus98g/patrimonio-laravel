@@ -22,7 +22,7 @@ class MovimentacaoController extends Controller
     public function index(Request $request)
     {
         // Paginação com as relações necessárias, incluindo ativo_local
-        $movimentacoes = Movimentacao::with(['ativo', 'user', 'ativoLocalOrigem', 'ativoLocalDestino'])
+        $movimentacoes = Movimentacao::with(['ativo', 'user', 'origem', 'destino'])
             ->orderBy('created_at', 'DESC')
             ->paginate(15);
 
@@ -44,32 +44,59 @@ class MovimentacaoController extends Controller
 
     public function search(Request $request)
     {
-        // Inicia a query utilizando Eloquent
-        $query = Movimentacao::with(['ativo', 'user', 'ativoLocalOrigem', 'ativoLocalDestino']);
-        $locais = Local::all();
+        // Inicia a query carregando os relacionamentos
+        $query = Movimentacao::with(['ativo', 'user', 'origem', 'destino']);
+
+        // Carrega os dados para os filtros
+        $locais = Local::all(); // Certifique-se de que a tabela 'locais' contém registros
         $ativos = Ativo::all();
         $users = User::all();
 
-        // Se houver um parâmetro 'search' na requisição, aplica os filtros
+        // Verifique se os dados estão sendo carregados corretamente
+        Log::info('Locais carregados para filtro:', ['locais' => $locais]);
+        Log::info('Ativos carregados para filtro:', ['ativos' => $ativos]);
+
+        // Aplica o filtro de busca geral
         if ($request->filled('search')) {
             $search = $request->input('search');
 
             $query->where(function ($q) use ($search) {
                 $q->where('observacao', 'like', "%{$search}%")
                     ->orWhere('status', 'like', "%{$search}%")
-                    ->orWhere('quantidade_mov', 'like', "%{$search}%")
                     ->orWhere('id_user', 'like', "%{$search}%")
                     ->orWhereHas('ativo', function ($subQuery) use ($search) {
+                        $subQuery->where('descricao', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('origem', function ($subQuery) use ($search) {
+                        $subQuery->where('descricao', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('destino', function ($subQuery) use ($search) {
                         $subQuery->where('descricao', 'like', "%{$search}%");
                     });
             });
         }
 
-        // Pagina os resultados e mantém os filtros aplicados
+        // Aplica filtro por local de origem
+        if ($request->filled('local_origem')) {
+            $query->where('local_origem', $request->input('local_origem'));
+        }
+
+        // Aplica filtro por local de destino
+        if ($request->filled('local_destino')) {
+            $query->where('local_destino', $request->input('local_destino'));
+        }
+
+        $query->orderBy('created_at', 'desc');
+
+        // Paginação mantendo filtros aplicados
         $movimentacoes = $query->paginate(15)->appends($request->all());
 
         return view('movimentacoes.index', compact('movimentacoes', 'request', 'ativos', 'locais', 'users'));
     }
+
+
+
+
 
     public function store(Request $request)
     {
