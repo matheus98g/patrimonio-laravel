@@ -151,12 +151,14 @@ class AtivoController extends Controller
             $ativo = Ativo::findOrFail($id);
 
             // Remover relacionamentos
-            $ativo->locais()->delete();
+            $ativo->local()->delete();
 
             // Deletar imagem
             $this->deletarImagemAntiga($ativo->imagem);
 
             $ativo->delete();
+
+            Log::info('Ativo excluido com sucesso.');
 
             return response()->json([
                 'success' => true,
@@ -255,7 +257,7 @@ class AtivoController extends Controller
         }
 
         // Obter os locais onde o ativo está disponível e a quantidade maior que zero
-        $locais = $ativo->locais()
+        $locais = $ativo->local()
             ->select('locais.id', 'locais.descricao', 'ativo_local.quantidade')
             ->where('ativo_local.id_ativo', $ativoId)
             ->where('ativo_local.quantidade', '>', 0) // Filtra locais com quantidade > 0

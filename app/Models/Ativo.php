@@ -38,6 +38,6 @@ class Ativo extends Model
     public function local()
     {
         return $this->belongsToMany(Local::class, 'ativo_local', 'id_ativo', 'id_local')
-            ->withPivot('quantidade');  // Adiciona o campo 'quantidade' da tabela pivô
+            ->withPivot('quantidade');
     }
 }

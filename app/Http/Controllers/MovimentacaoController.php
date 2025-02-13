@@ -23,6 +23,7 @@ class MovimentacaoController extends Controller
     {
         // Paginação com as relações necessárias, incluindo ativo_local
         $movimentacoes = Movimentacao::with(['ativo', 'user', 'ativoLocalOrigem', 'ativoLocalDestino'])
+            ->orderBy('created_at', 'DESC')
             ->paginate(15);
 
         // Consultar todos os locais (tabela 'local')
@@ -125,41 +126,25 @@ class MovimentacaoController extends Controller
             Log::info('Ativo no local de origem encontrado:', ['ativo_local_origem' => $ativoLocalOrigem]);
 
             // Verificar se o local de origem tem a quantidade suficiente
-            if ($ativoLocalOrigem->quantidade_disp >= $validated['quantidade_mov']) {
+            if ($ativoLocalOrigem->quantidade >= $validated['quantidade_mov']) {
                 // Subtrair a quantidade do local de origem
-                $ativoLocalOrigem->quantidade_disp -= $validated['quantidade_mov'];
+                $ativoLocalOrigem->quantidade -= $validated['quantidade_mov'];
                 $ativoLocalOrigem->save();
 
                 Log::info('Quantidade subtraída no local de origem.', [
                     'quantidade_subtraida' => $validated['quantidade_mov'],
-                    'novo_valor_disp' => $ativoLocalOrigem->quantidade_disp
-                ]);
-            } elseif ($ativoLocalOrigem->quantidade_uso >= $validated['quantidade_mov']) {
-                // Se não tiver no estoque disponível, verifica o uso
-                $ativoLocalOrigem->quantidade_uso -= $validated['quantidade_mov'];
-                $ativoLocalOrigem->save();
-
-                Log::info('Quantidade subtraída do uso no local de origem.', [
-                    'quantidade_subtraida' => $validated['quantidade_mov'],
-                    'novo_valor_uso' => $ativoLocalOrigem->quantidade_uso
+                    'novo_valor_quantidade' => $ativoLocalOrigem->quantidade
                 ]);
             } else {
                 Log::warning('Quantidade insuficiente no local de origem.', [
-                    'quantidade_disp' => $ativoLocalOrigem->quantidade_disp,
-                    'quantidade_uso' => $ativoLocalOrigem->quantidade_uso,
+                    'quantidade' => $ativoLocalOrigem->quantidade,
                     'quantidade_requerida' => $validated['quantidade_mov']
                 ]);
                 return response()->json(['error' => 'Quantidade insuficiente no local de origem.'], 400);
             }
 
-            // Atualizar a quantidade de uso no local de destino
-            $this->updateQuantidadeUso($validated['id_ativo'], $validated['quantidade_mov'], $validated['local_destino']);
-
-            // Atualizar a quantidade total
-            $this->updateQuantidadeTotal($validated['id_ativo']);
-
-            // Verificar e atualizar o local de destino
-            $this->updateAtivoLocal($validated['id_ativo'], $validated['local_destino'], $validated['quantidade_mov']);
+            // Atualizar a quantidade no local de destino
+            $this->updateQuantidade($validated['id_ativo'], $validated['quantidade_mov'], $validated['local_destino']);
 
             DB::commit();
             Log::info('Movimentação processada e transação comitada com sucesso.');
@@ -176,10 +161,10 @@ class MovimentacaoController extends Controller
         }
     }
 
-    private function updateQuantidadeUso($idAtivo, $quantidadeMov, $idLocalDestino)
+    private function updateQuantidade($idAtivo, $quantidadeMov, $idLocalDestino)
     {
-        // Verifica e atualiza a quantidade_uso no local de destino
-        Log::info('Atualizando a quantidade em uso no local de destino...');
+        // Verifica e atualiza a quantidade no local de destino
+        Log::info('Atualizando a quantidade no local de destino...');
 
         $ativoLocalDestino = AtivoLocal::where('id_ativo', $idAtivo)
             ->where('id_local', $idLocalDestino)
@@ -187,75 +172,27 @@ class MovimentacaoController extends Controller
 
         if ($ativoLocalDestino) {
             // Se o ativo já existe no local de destino, apenas adiciona a quantidade
-            $ativoLocalDestino->quantidade_uso += $quantidadeMov;
+            $ativoLocalDestino->quantidade += $quantidadeMov;
             $ativoLocalDestino->save();
 
-            Log::info('Quantidade em uso no local de destino atualizada.', [
+            Log::info('Quantidade no local de destino atualizada.', [
                 'id_local_destino' => $idLocalDestino,
-                'quantidade_uso_atualizada' => $ativoLocalDestino->quantidade_uso
+                'quantidade_atualizada' => $ativoLocalDestino->quantidade
             ]);
         } else {
             // Se o ativo não existe no destino, cria um novo registro
             AtivoLocal::create([
                 'id_ativo' => $idAtivo,
                 'id_local' => $idLocalDestino,
-                'quantidade_uso' => $quantidadeMov,
+                'quantidade' => $quantidadeMov,
             ]);
-            Log::info('Novo registro de quantidade em uso criado no local de destino.', [
-                'id_local_destino' => $idLocalDestino,
-                'quantidade_uso_adicionada' => $quantidadeMov,
-            ]);
-        }
-    }
-
-    private function updateQuantidadeTotal($idAtivo)
-    {
-        // Atualiza a quantidade total (quantidade_disp + quantidade_uso)
-        $ativo = Ativo::find($idAtivo);
-        if ($ativo) {
-            $ativo->quantidade_total = $ativo->quantidade_disp + $ativo->quantidade_uso;
-            $ativo->save();
-
-            Log::info('Quantidade total atualizada para o ativo:', [
-                'id_ativo' => $idAtivo,
-                'quantidade_total' => $ativo->quantidade_total
-            ]);
-        }
-    }
-
-    private function updateAtivoLocal($idAtivo, $idLocalDestino, $quantidadeMov)
-    {
-        Log::info('Verificando o local de destino...');
-
-        $ativoLocalDestino = AtivoLocal::where('id_ativo', $idAtivo)
-            ->where('id_local', $idLocalDestino)
-            ->first();
-
-        Log::info('Ativo no local de destino encontrado:', ['ativo_local_destino' => $ativoLocalDestino]);
-
-        if ($ativoLocalDestino) {
-            // Se o ativo já existe no destino, apenas adiciona a quantidade
-            $ativoLocalDestino->quantidade_disp += $quantidadeMov;
-            $ativoLocalDestino->save();
-            Log::info('Quantidade adicionada no local de destino.', [
-                'id_local_destino' => $idLocalDestino,
-                'quantidade_adicionada' => $quantidadeMov,
-                'novo_valor_disp' => $ativoLocalDestino->quantidade_disp
-            ]);
-        } else {
-            // Se o ativo não existe no destino, cria um novo registro
-            Log::info('Criando novo registro no local de destino...');
-            AtivoLocal::create([
-                'id_ativo' => $idAtivo,
-                'id_local' => $idLocalDestino,
-                'quantidade_disp' => $quantidadeMov,
-            ]);
-            Log::info('Novo registro criado no local de destino.', [
+            Log::info('Novo registro de quantidade criado no local de destino.', [
                 'id_local_destino' => $idLocalDestino,
                 'quantidade_adicionada' => $quantidadeMov,
             ]);
         }
     }
+
 
 
 
