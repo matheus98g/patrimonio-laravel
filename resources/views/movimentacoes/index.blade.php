@@ -14,22 +14,7 @@
                 <form action="{{ route('movimentacoes.search') }}" method="POST" class="flex flex-wrap gap-4">
                     @csrf
 
-                    {{-- <!-- Filtro de Status -->
-                    <select id="filter_status" name="filter_status" onchange="this.form.submit()"
-                        class="px-4 py-2 border rounded-md text-black focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">Filtrar por Status</option>
-                        <option value="pendente" {{ request('filter_status') == 'pendente' ? 'selected' : '' }}>
-                            Pendente
-                        </option>
-                        <option value="concluido" {{ request('filter_status') == 'concluido' ? 'selected' : '' }}>
-                            Concluído
-                        </option>
-                        <option value="cancelado" {{ request('filter_status') == 'cancelado' ? 'selected' : '' }}>
-                            Cancelado
-                        </option>
-                    </select> --}}
-
-                    <select name="local_origem"
+                    {{-- <select name="local_origem"
                         class="px-4 py-2 border rounded-md text-black focus:ring-2 focus:ring-blue-500">
                         <option value="">Selecione...</option>
                         @foreach ($locais as $local)
@@ -40,6 +25,7 @@
                         @endforeach
                     </select>
 
+
                     <select name="local_destino"
                         class="px-4 py-2 border rounded-md text-black focus:ring-2 focus:ring-blue-500">
                         <option value="">Selecione...</option>
@@ -49,7 +35,35 @@
                                 {{ $local->descricao }}
                             </option>
                         @endforeach
-                    </select>
+                    </select> --}}
+
+                    <div class="mb-4">
+                        <label for="local_origem" class="block text-sm font-medium text-gray-400">Origem</label>
+                        <select name="local_origem"
+                            class="w-full px-4 py-2 mt-1 border rounded-md text-black focus:ring-2 focus:ring-blue-500">
+                            <option value="">Selecione...</option>
+                            @foreach ($locais as $local)
+                                <option value="{{ $local->id }}"
+                                    {{ request('local_origem') == $local->id ? 'selected' : '' }}>
+                                    {{ $local->descricao }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="local_destino" class="block text-sm font-medium text-gray-400">Destino</label>
+                        <select name="local_destino"
+                            class="w-full px-4 py-2 mt-1 border rounded-md text-black focus:ring-2 focus:ring-blue-500">
+                            <option value="">Selecione...</option>
+                            @foreach ($locais as $local)
+                                <option value="{{ $local->id }}"
+                                    {{ request('local_destino') == $local->id ? 'selected' : '' }}>
+                                    {{ $local->descricao }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
 
                     <!-- Campo de Pesquisa e Botão de Limpar -->
