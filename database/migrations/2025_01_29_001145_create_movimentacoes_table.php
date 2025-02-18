@@ -11,18 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ativos_locais', function (Blueprint $table) {
+        Schema::create('movimentacoes', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('id_user')->constrained('users')->onDelete('cascade');
             $table->foreignId('id_ativo')->constrained('ativos')->onDelete('cascade');
-            $table->string('localizacao');
-            $table->integer('quantidade')->default(0)->check('quantidade >= 0');
+            $table->string('status');
+            $table->string('local_origem');
+            $table->string('local_destino');
+            $table->integer('quantidade_mov')->default(0)->check('quantidade >= 0');
             $table->timestamps();
 
-            // Índice para melhorar performance nas consultas
-            $table->unique(['id_ativo', 'localizacao']);  // Garantir que cada ativo só tenha um registro por local
-
-            // Índice para facilitar consultas por ativo
-            $table->index('id_ativo');
+            
         });
     }
 

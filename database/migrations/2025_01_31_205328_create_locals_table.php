@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('locais', function (Blueprint $table) {
             $table->id(); // ID único para o local
-            $table->string('nome')->unique(); // Nome do local (ex: "Armazém A")
-            $table->string('descricao')->nullable(); // Descrição do local
+            $table->string('descricao')->unique(); // Nome do local (ex: "Armazém A")
+            $table->string('observacao')->nullable(); // Descrição do local
             $table->timestamps(); // Timestamps para controle de criação e atualização
         });
     }

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('ativos_locais', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_ativo')->constrained('ativos')->onDelete('cascade');
-            $table->string('localizacao');
+            $table->foreignId('id_local')->constrained('locais')->onDelete('cascade');
             $table->integer('quantidade')->default(0)->check('quantidade >= 0');
             $table->timestamps();
         });
