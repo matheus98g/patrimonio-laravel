@@ -37,6 +37,7 @@ export default {
         './resources/**/*.js',
         './resources/**/*.vue',
     ],
+    arkMode: 'class',
 
     theme: {
         extend: {
@@ -55,4 +56,6 @@ export default {
     },
 
     plugins: [forms],
+
+    
 };

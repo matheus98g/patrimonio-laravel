@@ -129,10 +129,10 @@
                                 </div>
 
                                 <!-- Conteúdo Expandido com transição -->
-                                <div x-show="open" x-transition:enter="transition ease-out duration-300"
+                                <div x-show="open" x-transition:enter="transition ease-out duration-150"
                                     x-transition:enter-start="opacity-0 transform -translate-y-2"
                                     x-transition:enter-end="opacity-100 transform translate-y-0"
-                                    x-transition:leave="transition ease-in duration-300"
+                                    x-transition:leave="transition ease-in duration-150"
                                     x-transition:leave-start="opacity-100 transform translate-y-0"
                                     x-transition:leave-end="opacity-0 transform -translate-y-2"
                                     class="p-4 border-t border-gray-200 dark:border-gray-600">
@@ -146,7 +146,7 @@
                                         <div class="flex justify-between">
                                             <span class="text-gray-600 dark:text-gray-400">Quantidade:</span>
                                             <span class="text-gray-900 dark:text-gray-100">
-                                                {{ $ativo->quantidade_total }}
+                                                {{ $ativo->quantidade }}
                                             </span>
                                         </div>
                                         <div class="flex justify-between">
@@ -170,7 +170,7 @@
                                                 'status' => $ativo->status,
                                                 'imagem_url' => $ativo->imagem ? Storage::url($ativo->imagem) : null,
                                             ]) }})"
-                                            class="text-white rounded">
+                                            class="text-gray-900 rounded">
                                             Editar
                                         </x-secondary-button>
 
