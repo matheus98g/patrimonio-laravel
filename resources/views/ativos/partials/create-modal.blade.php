@@ -136,9 +136,9 @@
             </div>
 
             <!-- Botões de Ação -->
-            <div class="flex justify-end gap-2 mt-6">
-                <x-primary-button type="submit">Cadastrar</x-primary-button>
+            <div class="flex justify-center gap-2 mt-6">
                 <x-secondary-button type="button" onclick="closeModal('ativo-modal')">Cancelar</x-secondary-button>
+                <x-primary-button type="submit">Cadastrar</x-primary-button>
             </div>
         </form>
     </div>

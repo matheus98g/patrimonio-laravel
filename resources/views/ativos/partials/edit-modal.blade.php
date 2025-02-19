@@ -143,10 +143,10 @@
             </div>
 
             <!-- Botões de Ação -->
-            <div class="flex flex-col sm:flex-row justify-end gap-2 mt-6">
-                <x-primary-button type="submit">Salvar</x-primary-button>
+            <div class="flex justify-center gap-2 mt-6">
                 <x-secondary-button type="button"
                     onclick="closeModal('editar-ativo-modal')">Cancelar</x-secondary-button>
+                <x-primary-button type="submit">Salvar</x-primary-button>
             </div>
         </form>
     </div>
