@@ -89,7 +89,7 @@
                 <div>
                     <label for="quantidade_min"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade Minima</label>
-                    <input type="number" name="quantidade" id="quantidade_min-edit"
+                    <input type="number" name="quantidade_min" id="quantidade_min-edit"
                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring focus:border-blue-300"
                         min="1" required>
                 </div>

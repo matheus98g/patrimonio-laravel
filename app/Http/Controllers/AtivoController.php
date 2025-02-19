@@ -89,64 +89,85 @@ class AtivoController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        try {
-            $request->validate([
-                'descricao' => 'required|string|max:255',
-                'quantidade' => 'required|integer|min:1',
-                'quantidade_min' => 'nullable|integer|min:1',
-                'observacao' => 'nullable|string',
-                'id_marca' => 'required|exists:marcas,id',
-                'id_tipo' => 'required|exists:tipos,id',
-                'status' => 'required|boolean',
-                'imagem' => 'nullable|image|max:2048',
-            ]);
+{
+    try {
+        Log::info("Iniciando atualização do ativo ID: {$id}", ['request_data' => $request->all()]);
 
-            $ativo = Ativo::findOrFail($id);
-            $dados = $request->only([
-                'descricao',
-                'quantidade',
-                'quantidade_min', 
-                'observacao',
-                'id_marca',
-                'id_tipo',
-                'status',
-            ]);
+        $request->validate([
+            'descricao' => 'required|string|max:255',
+            'quantidade' => 'required|integer|min:1',
+            'quantidade_min' => 'nullable|integer|min:1',
+            'observacao' => 'nullable|string',
+            'id_marca' => 'required|exists:marcas,id',
+            'id_tipo' => 'required|exists:tipos,id',
+            'status' => 'required|boolean',
+            'imagem' => 'nullable|image|max:2048',
+        ]);
 
-            // Atualizar a quantidade
-            $dados['quantidade'] = max(0, $request->quantidade);
+        $ativo = Ativo::findOrFail($id);
+        Log::info("Ativo encontrado", ['ativo' => $ativo->toArray()]);
 
-            // Fluxo seguro para substituição de imagem
-            if ($request->hasFile('imagem')) {
-                try {
-                    $novaImagem = $this->uploadImagem($request);
-                    $this->deletarImagemAntiga($ativo->imagem);
-                    $dados['imagem'] = $novaImagem;
-                } catch (Exception $e) {
-                    return redirect()->back()
-                        ->withErrors(['imagem' => $e->getMessage()])
-                        ->withInput();
-                }
+        $dados = $request->only([
+            'descricao',
+            'quantidade',
+            'quantidade_min', 
+            'observacao',
+            'id_marca',
+            'id_tipo',
+            'status',
+        ]);
+
+        // Atualizar a quantidade
+        $dados['quantidade'] = max(0, $request->quantidade);
+        $dados['quantidade_min'] = $request->quantidade_min !== null ? max(0, $request->quantidade_min) : null;
+        Log::info("Dados extraídos para atualização", ['dados' => $dados]);
+
+
+        // Fluxo seguro para substituição de imagem
+        if ($request->hasFile('imagem')) {
+            try {
+                Log::info("Imagem enviada, iniciando upload");
+                $novaImagem = $this->uploadImagem($request);
+                Log::info("Imagem enviada com sucesso", ['nova_imagem' => $novaImagem]);
+
+                $this->deletarImagemAntiga($ativo->imagem);
+                Log::info("Imagem antiga deletada", ['imagem_antiga' => $ativo->imagem]);
+
+                $dados['imagem'] = $novaImagem;
+            } catch (Exception $e) {
+                Log::error("Erro no upload da imagem: " . $e->getMessage());
+                return redirect()->back()
+                    ->withErrors(['imagem' => $e->getMessage()])
+                    ->withInput();
             }
-
-            $ativo->update($dados);
-
-            // Atualizar o vínculo do ativo no local
-            $ativoLocal = AtivoLocal::where('id_ativo', $id)->first();
-            if ($ativoLocal) {
-                $ativoLocal->quantidade = $request->quantidade; // Atualiza a quantidade no local
-                $ativoLocal->save();
-            }
-
-            return redirect()->route('ativos.index')
-                ->with('success', 'Ativo atualizado com sucesso!');
-        } catch (Exception $e) {
-            Log::error('Erro ao atualizar ativo: ' . $e->getMessage());
-            return redirect()->back()
-                ->withErrors(['error' => 'Erro ao atualizar ativo: ' . $e->getMessage()])
-                ->withInput();
         }
+
+        // Atualiza o ativo no banco
+        Log::info("Atualizando ativo no banco...");
+        $ativo->update($dados);
+        Log::info("Ativo atualizado com sucesso", ['ativo_atualizado' => $ativo->toArray()]);
+
+        // Atualizar o vínculo do ativo no local
+        $ativoLocal = AtivoLocal::where('id_ativo', $id)->first();
+        if ($ativoLocal) {
+            Log::info("Ativo encontrado no AtivoLocal, atualizando quantidade", ['ativo_local' => $ativoLocal->toArray()]);
+            $ativoLocal->quantidade = $request->quantidade;
+            $ativoLocal->save();
+            Log::info("Quantidade do AtivoLocal atualizada", ['novo_valor' => $ativoLocal->quantidade]);
+        } else {
+            Log::warning("AtivoLocal não encontrado para o ativo ID: {$id}");
+        }
+
+        return redirect()->route('ativos.index')
+            ->with('success', 'Ativo atualizado com sucesso!');
+    } catch (Exception $e) {
+        Log::error('Erro ao atualizar ativo: ' . $e->getMessage(), ['stack' => $e->getTraceAsString()]);
+        return redirect()->back()
+            ->withErrors(['error' => 'Erro ao atualizar ativo: ' . $e->getMessage()])
+            ->withInput();
     }
+}
+
 
 
     public function destroy($id)
