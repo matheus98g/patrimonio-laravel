@@ -14,7 +14,8 @@ class Ativo extends Model
         'id_marca',
         'id_tipo',
         'id_user',
-        'imagem'
+        'imagem',
+        'quantidade_min'
     ];
 
     // Relacionamento com a tabela marcas

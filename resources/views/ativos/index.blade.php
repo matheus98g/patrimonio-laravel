@@ -150,6 +150,12 @@
                                             </span>
                                         </div>
                                         <div class="flex justify-between">
+                                            <span class="text-gray-600 dark:text-gray-400">Quantidade Mínima:</span>
+                                            <span class="text-gray-900 dark:text-gray-100">
+                                                {{ $ativo->quantidade_min }}
+                                            </span>
+                                        </div>
+                                        <div class="flex justify-between">
                                             <span class="text-gray-600 dark:text-gray-400">Status:</span>
                                             <span class="{{ $ativo->status ? 'text-green-600' : 'text-red-600' }}">
                                                 {{ $ativo->status ? 'Ativo' : 'Inativo' }}
@@ -213,6 +219,7 @@
             document.getElementById('id_marca-edit').value = data.id_marca;
             document.getElementById('id_tipo-edit').value = data.id_tipo;
             document.getElementById('quantidade-edit').value = data.quantidade;
+            document.getElementById('quantidade_min-edit').value = data.quantidade_min;
             document.getElementById('observacao-edit').value = data.observacao;
             document.getElementById('status-edit').value = data.status;
 

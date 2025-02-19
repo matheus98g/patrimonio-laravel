@@ -33,6 +33,7 @@ class AtivoController extends Controller
             $request->validate([
                 'descricao' => 'required|string|max:255',
                 'quantidade' => 'required|integer|min:1',
+                'quantidade_min' => 'nullable|integer|min:1',
                 'observacao' => 'nullable|string',
                 'id_marca' => 'nullable|exists:marcas,id',
                 'id_tipo' => 'nullable|exists:tipos,id',
@@ -57,8 +58,9 @@ class AtivoController extends Controller
             // Criar ativo
             $ativo = Ativo::create([
                 'descricao' => $request->descricao,
-                'quantidade' => $request->quantidade, // Usando apenas a quantidade
-                'status' => 1, // Ativo por padrão
+                'quantidade' => $request->quantidade, 
+                'quantidade_min' => $request->quantidade_min, 
+                'status' => 1, 
                 'observacao' => $request->observacao,
                 'id_marca' => $id_marca,
                 'id_tipo' => $id_tipo,
@@ -92,6 +94,7 @@ class AtivoController extends Controller
             $request->validate([
                 'descricao' => 'required|string|max:255',
                 'quantidade' => 'required|integer|min:1',
+                'quantidade_min' => 'nullable|integer|min:1',
                 'observacao' => 'nullable|string',
                 'id_marca' => 'required|exists:marcas,id',
                 'id_tipo' => 'required|exists:tipos,id',
@@ -102,7 +105,8 @@ class AtivoController extends Controller
             $ativo = Ativo::findOrFail($id);
             $dados = $request->only([
                 'descricao',
-                'quantidade', // Atualizando apenas a quantidade
+                'quantidade',
+                'quantidade_min', 
                 'observacao',
                 'id_marca',
                 'id_tipo',
