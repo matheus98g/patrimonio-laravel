@@ -18,12 +18,11 @@ class ProdutoController extends Controller
 {
     public function index(Request $request)
     {
-        $search = $request->input('search'); // Obtém o termo de pesquisa da requisição
+        $search = $request->input('search'); 
 
-        $mercadoLivreService = new MercadoLivreService(); // Instancia o serviço
-        $produtosList = $mercadoLivreService->searchProduto($search); // Busca produtos na API
+        $mercadoLivreService = new MercadoLivreService();
+        $produtosList = $mercadoLivreService->searchProduto($search);
 
-        // Retorna a view passando os produtos e o termo pesquisado
         return view('produtos.index', compact('produtosList', 'search'));
     }
 }

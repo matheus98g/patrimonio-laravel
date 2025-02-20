@@ -143,7 +143,7 @@
             </div>
 
             <!-- Botões de Ação -->
-            <div class="flex justify-center gap-2 mt-6">
+            <div class="flex justify-between items-center space-x-4 mt-4">
                 <x-secondary-button type="button"
                     onclick="closeModal('editar-ativo-modal')">Cancelar</x-secondary-button>
                 <x-primary-button type="submit">Salvar</x-primary-button>

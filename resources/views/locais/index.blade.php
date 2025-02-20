@@ -35,8 +35,10 @@
                                         {{ $local->id_local }}
                                     </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                        {{ $local->local_descricao }}
+                                        <div>{{ $local->local_descricao }}</div>
+                                        <div><small class="text-gray-400">{{ $local->local_observacao }}</small></div>
                                     </td>
+
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                         {{ $local->ativos ?? 'Nenhum ativo cadastrado' }}
                                     </td>
@@ -65,9 +67,18 @@
                 @csrf
                 <div class="mb-4">
                     <label for="descricao" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Descrição
+                        Nome do Local
                     </label>
                     <input type="text" id="descricao" name="descricao"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="observacao" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Observação
+                    </label>
+                    <input type="text" id="observacao" name="observacao"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
                 </div>

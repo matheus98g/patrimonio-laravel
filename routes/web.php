@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AtivoController;
 use App\Http\Controllers\MarcaController;
@@ -8,16 +7,16 @@ use App\Http\Controllers\TipoController;
 use App\Http\Controllers\MovimentacaoController;
 use App\Http\Controllers\LocalController;
 use App\Http\Controllers\ProdutoController;
+use Illuminate\Support\Facades\Route;
 
-// Dashboard (Página inicial autenticada)
+
 Route::get('/', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Grupo de rotas protegidas por autenticação
 Route::middleware('auth')->group(function () {
 
-    // Ativos
+// Ativos
     Route::prefix('ativos')->name('ativos.')->group(function () {
         Route::get('/', [AtivoController::class, 'index'])->name('index');
         Route::get('/{ativoId}/locais-disponiveis', [AtivoController::class, 'getLocaisDisponiveis'])->name('locais');
@@ -27,7 +26,6 @@ Route::middleware('auth')->group(function () {
     });
 
 
-    // Marcas
     Route::prefix('marcas')->name('marcas.')->group(function () {
         Route::get('/', [MarcaController::class, 'index'])->name('index');
         Route::post('/store', [MarcaController::class, 'store'])->name('store');
@@ -73,7 +71,10 @@ Route::middleware('auth')->group(function () {
         Route::patch('/', [ProdutoController::class, 'update'])->name('update');
         Route::delete('/', [ProdutoController::class, 'destroy'])->name('destroy');
     });
+
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Importa as rotas de autenticação padrão do Laravel
 require __DIR__ . '/auth.php';
