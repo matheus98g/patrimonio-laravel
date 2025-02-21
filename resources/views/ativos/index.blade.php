@@ -25,7 +25,8 @@
                                     <th class="p-3 text-left text-sm">Descrição</th>
                                     <th class="p-3 text-left text-sm">Marca</th>
                                     <th class="p-3 text-left text-sm">Tipo</th>
-                                    <th class="p-3 text-left text-sm">Quantidade Total</th>
+                                    <th class="p-3 text-left text-sm">Disponivel</th>
+                                    <th class="p-3 text-left text-sm">Total</th>
                                     <th class="p-3 text-left text-sm">Status</th>
                                     <th class="p-3 text-left text-sm">Cadastrado em</th>
                                     <th class="p-3 text-left text-sm">Obs</th>
@@ -58,6 +59,16 @@
                                             {{ optional($ativo->tipo)->descricao ?? 'N/A' }}
                                         </td>
                                         <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                            @php
+                                                $quantidadeEmUso =
+                                                    optional($ativosEmUso->firstWhere('id_ativo', $ativo->id))
+                                                        ->quantidade_em_uso ?? 0;
+                                            @endphp
+                                            {{ $quantidadeEmUso }}
+                                        </td>
+                                        <td
+                                            class="border
+                                            border-gray-300 dark:border-gray-600 px-4 py-2">
                                             {{ $ativo->quantidade }}
                                         </td>
                                         <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">

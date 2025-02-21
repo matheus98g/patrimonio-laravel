@@ -182,7 +182,7 @@
     <!-- Modal para adicionar local -->
     <div id="local-modal" class="fixed inset-0 z-50 flex justify-center items-center hidden"
         onclick="closeModal(event)">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full sm:w-96" onclick="event.stopPropagation()">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96" onclick="event.stopPropagation()">
             <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Adicionar Local</h3>
             <form action="{{ route('locais.store') }}" method="POST">
                 @csrf
@@ -219,5 +219,29 @@
                 document.getElementById('local-modal').classList.toggle('hidden');
             });
         });
+
+        async function deleteLocal(id) {
+            if (!confirm('Tem certeza que deseja excluir este Local?')) return;
+
+            try {
+                const response = await fetch(`/locais/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    document.getElementById(`row-${id}`).remove();
+                } else {
+                    alert(result.message || 'Erro ao excluir local');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro na requisição');
+            }
+        }
     </script>
 </x-app-layout>

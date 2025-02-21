@@ -55,7 +55,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [LocalController::class, 'index'])->name('index');
         Route::post('/store', [LocalController::class, 'store'])->name('store');
         Route::put('/update', [LocalController::class, 'update'])->name('update');
-        Route::delete('/delete', [LocalController::class, 'destroy'])->name('delete');
+        Route::delete('/{id}', [LocalController::class, 'destroy'])->name('delete');
     });
 
     // Perfil do usuário
