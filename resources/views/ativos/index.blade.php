@@ -27,6 +27,7 @@
                                     <th class="p-3 text-left text-sm">Tipo</th>
                                     <th class="p-3 text-left text-sm">Disponivel</th>
                                     <th class="p-3 text-left text-sm">Total</th>
+                                    <th class="p-3 text-left text-sm">Mínimo</th>
                                     <th class="p-3 text-left text-sm">Status</th>
                                     <th class="p-3 text-left text-sm">Cadastrado em</th>
                                     <th class="p-3 text-left text-sm">Obs</th>
@@ -60,16 +61,21 @@
                                         </td>
                                         <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                             @php
-                                                $quantidadeEmUso =
-                                                    optional($ativosEmUso->firstWhere('id_ativo', $ativo->id))
-                                                        ->quantidade_em_uso ?? 0;
+                                                $quantidadeDisp =
+                                                    optional($ativosDisp->firstWhere('id_ativo', $ativo->id))
+                                                        ->quantidade_disp ?? 0;
                                             @endphp
-                                            {{ $quantidadeEmUso }}
+                                            {{ $quantidadeDisp }}
                                         </td>
                                         <td
                                             class="border
                                             border-gray-300 dark:border-gray-600 px-4 py-2">
                                             {{ $ativo->quantidade }}
+                                        </td>
+                                        <td
+                                            class="border
+                                            border-gray-300 dark:border-gray-600 px-4 py-2">
+                                            {{ $ativo->quantidade_min }}
                                         </td>
                                         <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                             <span class="{{ $ativo->status ? 'text-green-600' : 'text-red-600' }}">
@@ -226,8 +232,11 @@
             const form = document.getElementById('editForm');
             form.action = `/ativos/${data.id}`;
 
+            console.log(data)
+
             // Preencher campos do formulário
             document.getElementById('descricao-edit').value = data.descricao;
+            document.getElementById('imagem-preview').value = data.imagem_url;
             document.getElementById('id_marca-edit').value = data.id_marca;
             document.getElementById('id_tipo-edit').value = data.id_tipo;
             document.getElementById('quantidade-edit').value = data.quantidade;
@@ -240,6 +249,7 @@
             if (data.imagem_url) {
                 imgPreview.src = data.imagem_url;
                 imgPreview.classList.remove('hidden');
+                console.log("Imagem renderizada com src:", imgPreview.src);
             } else {
                 imgPreview.classList.add('hidden');
             }

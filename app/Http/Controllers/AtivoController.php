@@ -24,15 +24,15 @@ class AtivoController extends Controller
         $marcas = Marca::all();
         $tipos = Tipo::all();
 
-        $ativosEmUso = DB::table('ativo_local')
-            ->select('id_ativo', DB::raw('SUM(quantidade) AS quantidade_em_uso'))
+        $ativosDisp = DB::table('ativo_local')
+            ->select('id_ativo', DB::raw('SUM(quantidade) AS quantidade_disp'))
             ->where('id_local', '=', 1)
             ->groupBy('id_ativo')
             ->get();
 
         // var_dump($ativosEmUso);
 
-        return view('ativos.index', compact('ativos', 'marcas', 'tipos', 'ativosEmUso'));
+        return view('ativos.index', compact('ativos', 'marcas', 'tipos', 'ativosDisp'));
     }
 
 
