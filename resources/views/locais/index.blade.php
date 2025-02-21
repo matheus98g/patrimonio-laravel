@@ -153,7 +153,7 @@
                                         </td>
 
                                         <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                            {{ $local->ativos ?? 'Nenhum ativo cadastrado' }}
+                                            {{ $local->ativos ?? '--Local vazio--' }}
                                         </td>
                                         
                                         <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
