@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Local;
 use App\Models\AtivoLocal;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Exception;
 
 class LocalController extends Controller
 {
@@ -42,5 +44,27 @@ class LocalController extends Controller
         ]);
 
         return redirect()->route('locais.index')->with('success', 'Local criado com sucesso!');
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $local = Local::findOrFail($id);
+
+            $local->delete();
+
+            Log::info('Local excluido com sucesso.');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Local excluído com sucesso!'
+            ]);
+        } catch (Exception $e) {
+            Log::error('Erro ao excluir local: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao excluir local!'
+            ], 500);
+        }
     }
 }
