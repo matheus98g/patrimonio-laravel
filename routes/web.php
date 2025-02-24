@@ -62,7 +62,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/', [ProdutoController::class, 'destroy'])->name('destroy');
     });
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit')->middleware(['password.confirm']);
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
