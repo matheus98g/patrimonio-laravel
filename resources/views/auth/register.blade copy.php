@@ -40,14 +40,8 @@
         </div>
 
         <div class="flex items-center justify-end mt-4">
-            {{-- <a class="ms-2 text-sm text-gray-600 dark:text-gray-400" href="{{ route('login') }}">
+            <a class="ms-2 text-sm text-gray-600 dark:text-gray-400" href="{{ route('login') }}">
                 {{ __('Já tem uma conta?') }}
-            </a> --}}
-
-            <a href="{{ route('dashboard') }}">
-                <x-secondary-button class="ms-4">
-                    {{ __('Voltar a Dashboard') }}
-                </x-secondary-button>
             </a>
 
             <x-primary-button class="ms-4">

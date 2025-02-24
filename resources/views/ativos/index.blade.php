@@ -81,6 +81,12 @@
                                             <span class="{{ $ativo->status ? 'text-green-600' : 'text-red-600' }}">
                                                 {{ $ativo->status ? 'Ativo' : 'Inativo' }}
                                             </span>
+                                            @if ($quantidadeDisp <= $ativo->quantidade_min)
+                                            <br>
+                                                <span class="text-red-600">
+                                                    {{ 'Estoque Abaixo do Mínimo!' }}
+                                                </span>
+                                            @endif
                                         </td>
                                         <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                             {{ $ativo->created_at->format('d/m/Y H:i') }}
@@ -161,6 +167,12 @@
                                             </span>
                                         </div>
                                         <div class="flex justify-between">
+                                            <span class="text-gray-600 dark:text-gray-400">Quantidade mínima:</span>
+                                            <span class="text-gray-900 dark:text-gray-100">
+                                                {{ $ativo->quantidade_disp }}
+                                            </span>
+                                        </div>
+                                        <div class="flex justify-between">
                                             <span class="text-gray-600 dark:text-gray-400">Quantidade:</span>
                                             <span class="text-gray-900 dark:text-gray-100">
                                                 {{ $ativo->quantidade }}
@@ -177,6 +189,12 @@
                                             <span class="{{ $ativo->status ? 'text-green-600' : 'text-red-600' }}">
                                                 {{ $ativo->status ? 'Ativo' : 'Inativo' }}
                                             </span>
+                                            @if ($quantidadeDisp <= $ativo->quantidade_min)
+                                            <br>
+                                                <span class="text-red-600">
+                                                    {{ 'Estoque Abaixo do Mínimo!' }}
+                                                </span>
+                                            @endif
                                         </div>
                                     </div>
 
