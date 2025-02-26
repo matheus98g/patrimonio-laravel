@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ativos_locais', function (Blueprint $table) {
+        Schema::create('permissions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_ativo')->constrained('ativos')->onDelete('cascade');
-            $table->foreignId('id_local')->constrained('locais')->onDelete('cascade');
-            $table->integer('quantidade')->default(0)->check('quantidade >= 0');
+            $table->string('name')->unique();
             $table->timestamps();
         });
     }
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ativo_locals');
+        Schema::dropIfExists('permissions');
     }
 };
