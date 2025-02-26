@@ -167,15 +167,20 @@
                                             </span>
                                         </div>
                                         <div class="flex justify-between">
-                                            <span class="text-gray-600 dark:text-gray-400">Quantidade mínima:</span>
+                                            <span class="text-gray-600 dark:text-gray-400">Quantidade Total:</span>
                                             <span class="text-gray-900 dark:text-gray-100">
-                                                {{ $ativo->quantidade_disp }}
+                                                {{ $ativo->quantidade }}
                                             </span>
                                         </div>
                                         <div class="flex justify-between">
-                                            <span class="text-gray-600 dark:text-gray-400">Quantidade:</span>
+                                            <span class="text-gray-600 dark:text-gray-400">Quantidade Disponivel:</span>
                                             <span class="text-gray-900 dark:text-gray-100">
-                                                {{ $ativo->quantidade }}
+                                                @php
+                                                $quantidadeDisp =
+                                                    optional($ativosDisp->firstWhere('id_ativo', $ativo->id))
+                                                        ->quantidade_disp ?? 0;
+                                                @endphp
+                                            {{ $quantidadeDisp }}
                                             </span>
                                         </div>
                                         <div class="flex justify-between">

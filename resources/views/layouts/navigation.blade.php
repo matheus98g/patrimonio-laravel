@@ -150,6 +150,9 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('register')" :active="request()->routeIs('register')">
+                {{ __('Cadastrar Usuario') }}
+            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('ativos.index')" :active="request()->routeIs('ativos.index')">
                 {{ __('Ativos') }}
             </x-responsive-nav-link>
@@ -165,7 +168,6 @@
             <x-responsive-nav-link :href="route('movimentacoes.index')" :active="request()->routeIs('movimentacoes.index')">
                 {{ __('Movimentações') }}
             </x-responsive-nav-link>
-
             <x-responsive-nav-link :href="route('produtos.index')" :active="request()->routeIs('produtos.index')">
                 {{ __('Produtos') }}
             </x-responsive-nav-link>
