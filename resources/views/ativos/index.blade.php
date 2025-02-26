@@ -29,8 +29,8 @@
                                     <th class="p-3 text-left text-sm">Total</th>
                                     <th class="p-3 text-left text-sm">Mínimo</th>
                                     <th class="p-3 text-left text-sm">Status</th>
-                                    <th class="p-3 text-left text-sm">Cadastrado em</th>
-                                    <th class="p-3 text-left text-sm">Obs</th>
+                                    {{-- <th class="p-3 text-left text-sm">Cadastrado em</th>
+                                    <th class="p-3 text-left text-sm">Obs</th> --}}
                                     <th class="p-3 text-left text-sm">Ações</th>
                                 </tr>
                             </thead>
@@ -78,24 +78,42 @@
                                             {{ $ativo->quantidade_min }}
                                         </td>
                                         <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                            <span class="{{ $ativo->status ? 'text-green-600' : 'text-red-600' }}">
-                                                {{ $ativo->status ? 'Ativo' : 'Inativo' }}
-                                            </span>
-                                            @if ($quantidadeDisp <= $ativo->quantidade_min)
-                                            <br>
-                                                <span class="text-red-600">
-                                                    {{ 'Estoque Abaixo do Mínimo!' }}
+                                            <div class="flex justify-start items-center space-x-2">
+                                                <!-- Conditionally render status text -->
+                                                <span class="{{ $ativo->status ? 'text-green-600' : 'text-red-600' }}">
+                                                    {{-- {{ $ativo->status ? 'Ativo' : 'Inativo' }} --}}
                                                 </span>
-                                            @endif
-                                        </td>
-                                        <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                            {{ $ativo->created_at->format('d/m/Y H:i') }}
+                                                
+                                                <!-- Conditionally display the icon with tooltip -->
+                                                <div class="relative group inline-block">
+                                                    <i data-feather="{{ $ativo->status ? 'check-circle' : 'x-circle' }}" class="{{ $ativo->status ? 'text-green-600' : 'text-red-600' }}"></i>
+                                                    <!-- Tooltip (appears on hover) -->
+                                                    <div class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block px-2 py-1 text-sm text-gray-500 bg-black rounded-md">
+                                                        {{ $ativo->status ? 'Ativo' : 'Inativo' }}
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- If quantity is below minimum, show an alert icon with tooltip -->
+                                                @if ($quantidadeDisp <= $ativo->quantidade_min)
+                                                    <div class="relative group">
+                                                        <i data-feather="alert-circle" class="text-red-500"></i>
+                                                        <div class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block px-2 py-1 text-sm text-gray-500 bg-black rounded-md">
+                                                            Estoque abaixo do mínimo!
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </td>                                       
+                                        
+                                        
+                                        {{-- <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                            {{ $ativo->created_at->format('d/m/Y') }}
                                         </td>
                                         <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                             {{ $ativo->observacao ?? 'N/A' }}
-                                        </td>
+                                        </td> --}}
                                         <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                            <div class="flex gap-2 items-center">
+                                            <div class="flex gap-2 items-center justify-center">
                                                 <x-secondary-button
                                                     onclick="openEditModal({{ json_encode([
                                                         'id' => $ativo->id,

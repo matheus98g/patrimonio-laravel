@@ -37,7 +37,7 @@ export default {
         './resources/**/*.js',
         './resources/**/*.vue',
     ],
-    arkMode: 'class',
+    darkMode: 'class',
 
     theme: {
         extend: {
