@@ -35,6 +35,14 @@ class AtivoController extends Controller
         return view('ativos.index', compact('ativos', 'marcas', 'tipos', 'ativosDisp'));
     }
 
+    public function show($id)
+    {
+        $ativo = Ativo::findOrFail($id);
+
+        return response()->json($ativo);
+    }
+
+
 
 
 

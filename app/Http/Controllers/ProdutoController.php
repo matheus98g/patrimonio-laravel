@@ -25,4 +25,12 @@ class ProdutoController extends Controller
 
         return view('produtos.index', compact('produtosList', 'search'));
     }
+
+    public function getProdutoByAtivo($descricao)
+    {
+        $mercadoLivreService = new MercadoLivreService();
+        $produtosList = $mercadoLivreService->searchProduto($descricao);
+
+        return view('produtos.index', compact('produtosList'));
+    }
 }

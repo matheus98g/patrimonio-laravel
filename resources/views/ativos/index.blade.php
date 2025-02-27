@@ -114,27 +114,29 @@
                                         </td> --}}
                                         <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                             <div class="flex gap-2 items-center justify-center">
-                                                <x-secondary-button
-                                                    onclick="openEditModal({{ json_encode([
-                                                        'id' => $ativo->id,
-                                                        'descricao' => $ativo->descricao,
-                                                        'id_marca' => $ativo->id_marca,
-                                                        'id_tipo' => $ativo->id_tipo,
-                                                        'quantidade' => $ativo->quantidade,
-                                                        'observacao' => $ativo->observacao,
-                                                        'status' => $ativo->status,
-                                                        'imagem_url' => $ativo->imagem ? Storage::url($ativo->imagem) : null,
-                                                    ]) }})"
-                                                    class="text-white rounded">
+                                                <!-- Formulário para buscar o produto -->
+                                                <form method="GET" action="{{ route('produtos.search', ['descricao' => $ativo->descricao]) }}" class="flex space-x-2 w-full max-w-lg">
+                                                    <input type="hidden" name="descricao" value="{{ $ativo->descricao }}">
+                                                    <x-secondary-button type="submit" class="text-white rounded">
+                                                        <i data-feather="search" width="20"></i> Buscar Produto
+                                                    </x-secondary-button>
+                                                </form>
+
+                                                <!-- Botão de editar -->
+                                                <x-secondary-button onclick="openEditModal({{ $ativo->id }})" class="text-white rounded">
                                                     <i data-feather="edit" width="20"></i>
                                                 </x-secondary-button>
 
-                                                <x-danger-button onclick="deleteAtivo('{{ $ativo->id }}')"
-                                                    class="bg-red-500 rounded">
+                                                <!-- Botão de excluir -->
+                                                <x-danger-button onclick="deleteAtivo('{{ $ativo->id }}')" class="bg-red-500 rounded">
                                                     <i data-feather="x" width="20"></i>
                                                 </x-danger-button>
                                             </div>
                                         </td>
+
+
+
+
                                     </tr>
                                 @empty
                                     <tr>
@@ -247,7 +249,7 @@
                                 </div>
                             </div>
                         @empty
-                            <div class="text-center p-4 text-gray-500">
+                                       <div class="text-center p-4 text-gray-500">
                                 Nenhum ativo encontrado.
                             </div>
                         @endforelse
@@ -268,35 +270,45 @@
             document.getElementById('ativo-modal').classList.remove('hidden');
         }
 
-        // Funções do Modal de Edição
-        function openEditModal(data) {
-            const form = document.getElementById('editForm');
-            form.action = `/ativos/${data.id}`;
+       function openEditModal(id) {
+        const form = document.getElementById('editForm');
+        form.action = `/ativos/${id}`;  
 
-            console.log(data)
+        fetch(`/ativos/${id}`)  
+            .then(response => response.json()) 
+            .then(data => {
+                console.log(data); 
 
-            // Preencher campos do formulário
-            document.getElementById('descricao-edit').value = data.descricao;
-            document.getElementById('imagem-preview').value = data.imagem_url;
-            document.getElementById('id_marca-edit').value = data.id_marca;
-            document.getElementById('id_tipo-edit').value = data.id_tipo;
-            document.getElementById('quantidade-edit').value = data.quantidade;
-            document.getElementById('quantidade_min-edit').value = data.quantidade_min;
-            document.getElementById('observacao-edit').value = data.observacao;
-            document.getElementById('status-edit').value = data.status;
+                // Preencher campos do formulário com os dados da resposta
+                document.getElementById('descricao-edit').value = data.descricao || '';
+                document.getElementById('imagem-preview').value = data.imagem_url || '';
+                document.getElementById('id_marca-edit').value = data.id_marca || '';
+                document.getElementById('id_tipo-edit').value = data.id_tipo || '';
+                document.getElementById('quantidade-edit').value = data.quantidade || '';
+                document.getElementById('quantidade_min-edit').value = data.quantidade_min || '';
+                document.getElementById('observacao-edit').value = data.observacao || '';
+                document.getElementById('status-edit').value = data.status || '';
 
-            // Exibir imagem atual
-            const imgPreview = document.getElementById('imagem-preview');
-            if (data.imagem_url) {
-                imgPreview.src = data.imagem_url;
-                imgPreview.classList.remove('hidden');
-                console.log("Imagem renderizada com src:", imgPreview.src);
-            } else {
-                imgPreview.classList.add('hidden');
-            }
+                // Exibir imagem se houver
+                const imgPreview = document.getElementById('imagem-preview');
+                if (data.imagem_url) {
+                    imgPreview.src = data.imagem_url;
+                    imgPreview.classList.remove('hidden');
+                    console.log("Imagem renderizada com src:", imgPreview.src);
+                } else {
+                    imgPreview.classList.add('hidden');
+                }
 
-            document.getElementById('editar-ativo-modal').classList.remove('hidden');
-        }
+                // Exibir o modal
+                document.getElementById('editar-ativo-modal').classList.remove('hidden');
+            })
+            .catch(error => {
+                console.error('Erro ao buscar os dados:', error);
+                // Pode tratar um erro aqui, mostrando uma mensagem ao usuário se necessário
+            });
+         }
+
+
 
         function closeModal(modalId) {
             document.getElementById(modalId).classList.add('hidden');
@@ -362,6 +374,8 @@
                 reader.readAsDataURL(file);
             }
         }
+
+        
     </script>
 
 </x-app-layout>
