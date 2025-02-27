@@ -59,7 +59,6 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('produtos')->name('produtos.')->group(function () {
     Route::get('/', [ProdutoController::class, 'index'])->name('index');
-    Route::get('/{descricao}', [ProdutoController::class, 'getProdutoByAtivo'])->name('search');
     Route::patch('/', [ProdutoController::class, 'update'])->name('update');
     Route::delete('/', [ProdutoController::class, 'destroy'])->name('destroy');
 });

@@ -114,12 +114,10 @@
                                         </td> --}}
                                         <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                             <div class="flex gap-2 items-center justify-center">
-                                                <!-- Formulário para buscar o produto -->
-                                                <form method="GET" action="{{ route('produtos.search', ['descricao' => $ativo->descricao]) }}" class="flex space-x-2 w-full max-w-lg">
-                                                    <input type="hidden" name="descricao" value="{{ $ativo->descricao }}">
-                                                    <x-secondary-button type="submit" class="text-white rounded">
-                                                        <i data-feather="search" width="20"></i> Buscar Produto
-                                                    </x-secondary-button>
+                                                <!-- Formulário para buscar o produto com a descrição do ativo -->
+                                                <form method="GET" action="{{ route('produtos.index') }}" class="flex space-x-2 w-full max-w-lg">
+                                                    <input type="hidden" name="search" value="{{ $ativo->descricao }}"> <!-- Passando a descrição do ativo -->
+                                                    <x-primary-button type="submit">Procurar na Loja</x-primary-button>
                                                 </form>
 
                                                 <!-- Botão de editar -->
@@ -133,6 +131,7 @@
                                                 </x-danger-button>
                                             </div>
                                         </td>
+
 
 
 
