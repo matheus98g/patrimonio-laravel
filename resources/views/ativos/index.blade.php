@@ -117,7 +117,7 @@
                                                 <!-- Formulário para buscar o produto com a descrição do ativo -->
                                                 <form method="GET" action="{{ route('produtos.index') }}" class="flex space-x-2 w-full max-w-lg">
                                                     <input type="hidden" name="search" value="{{ $ativo->descricao }}"> <!-- Passando a descrição do ativo -->
-                                                    <x-primary-button type="submit">Procurar na Loja</x-primary-button>
+                                                    <x-secondary-button type="submit"><i data-feather="dollar-sign" width="20"></i></x-secondary-button>
                                                 </form>
 
                                                 <!-- Botão de editar -->
