@@ -110,18 +110,23 @@
                                         </td>
                                         <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                             <div class="flex gap-2 items-center justify-center">
-                                                <form method="GET" action="{{ route('produtos.index') }}"
-                                                    class="flex space-x-2 w-full max-w-lg">
+                                                <!-- Botão de busca de produtos -->
+                                                <form method="GET" action="{{ route('produtos.index') }}" class="flex space-x-2 w-full max-w-lg">
                                                     <input type="hidden" name="search" value="{{ $ativo->descricao }}">
-                                                    <x-secondary-button type="submit"><i data-feather="dollar-sign"
-                                                            width="20"></i></x-secondary-button>
+                                                    <x-secondary-button type="submit" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600">
+                                                        <i data-feather="dollar-sign" width="20"></i>
+                                                    </x-secondary-button>
                                                 </form>
-                                                <x-secondary-button onclick="openEditModal({{ $ativo->id }})"
-                                                    class="text-white rounded">
+
+                                                <!-- Botão de editar -->
+                                                <x-secondary-button onclick="openEditModal({{ $ativo->id }})" 
+                                                    class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 rounded">
                                                     <i data-feather="edit" width="20"></i>
                                                 </x-secondary-button>
-                                                <x-danger-button onclick="deleteAtivo('{{ $ativo->id }}')"
-                                                    class="bg-red-500 rounded">
+
+                                                <!-- Botão de excluir -->
+                                                <x-danger-button onclick="deleteAtivo('{{ $ativo->id }}')" 
+                                                    class="bg-red-500 dark:bg-red-600 text-white hover:bg-red-600 dark:hover:bg-red-700 rounded">
                                                     <i data-feather="x" width="20"></i>
                                                 </x-danger-button>
                                             </div>
@@ -239,7 +244,7 @@
                     </div>
 
                     <div class="mt-6 flex justify-center">
-                        {{ $ativos->links('pagination::tailwind') }}
+                        {{ $ativos->links() }}
                     </div>
                 </div>
             </div>
