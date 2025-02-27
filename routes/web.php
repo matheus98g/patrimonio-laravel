@@ -58,10 +58,10 @@ Route::middleware('auth')->group(function () {
 
 
     Route::prefix('produtos')->name('produtos.')->group(function () {
-    Route::get('/', [ProdutoController::class, 'index'])->name('index');
-    Route::patch('/', [ProdutoController::class, 'update'])->name('update');
-    Route::delete('/', [ProdutoController::class, 'destroy'])->name('destroy');
-});
+        Route::get('/', [ProdutoController::class, 'index'])->name('index');
+        Route::patch('/', [ProdutoController::class, 'update'])->name('update');
+        Route::delete('/', [ProdutoController::class, 'destroy'])->name('destroy');
+    });
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit')->middleware(['password.confirm']);

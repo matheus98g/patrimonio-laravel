@@ -9,8 +9,24 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
+                    <!-- Formulário de busca -->
+                        <div class="mb-6">
+                            <form method="GET" action="{{ route('ativos.index') }}" class="flex gap-2">
+                                <input 
+                                    type="text" 
+                                    name="search" 
+                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500" 
+                                    placeholder="Buscar ativos por descrição, observação, status..." 
+                                    value="{{ request('search') }}"
+                                >
+                                <x-primary-button type="submit" class="shrink-0">
+                                    Buscar
+                                </x-primary-button>
+                            </form>
+                        </div>
+
                     <!-- Botão para abrir o modal de criação -->
-                    <div class="py-6 ">
+                    <div class="py-6">
                         <x-primary-button onclick="openCreateModal()" class="px-4 bg-green-500 text-white rounded-lg">
                             Adicionar Ativo
                         </x-primary-button>
@@ -29,8 +45,6 @@
                                     <th class="p-3 text-left text-sm">Total</th>
                                     <th class="p-3 text-left text-sm">Mínimo</th>
                                     <th class="p-3 text-left text-sm">Status</th>
-                                    {{-- <th class="p-3 text-left text-sm">Cadastrado em</th>
-                                    <th class="p-3 text-left text-sm">Obs</th> --}}
                                     <th class="p-3 text-left text-sm">Ações</th>
                                 </tr>
                             </thead>
@@ -67,33 +81,23 @@
                                             @endphp
                                             {{ $quantidadeDisp }}
                                         </td>
-                                        <td
-                                            class="border
-                                            border-gray-300 dark:border-gray-600 px-4 py-2">
+                                        <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                             {{ $ativo->quantidade }}
                                         </td>
-                                        <td
-                                            class="border
-                                            border-gray-300 dark:border-gray-600 px-4 py-2">
+                                        <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                             {{ $ativo->quantidade_min }}
                                         </td>
                                         <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                             <div class="flex justify-start items-center space-x-2">
-                                                <!-- Conditionally render status text -->
                                                 <span class="{{ $ativo->status ? 'text-green-600' : 'text-red-600' }}">
-                                                    {{-- {{ $ativo->status ? 'Ativo' : 'Inativo' }} --}}
                                                 </span>
-                                                
-                                                <!-- Conditionally display the icon with tooltip -->
                                                 <div class="relative group inline-block">
-                                                    <i data-feather="{{ $ativo->status ? 'check-circle' : 'x-circle' }}" class="{{ $ativo->status ? 'text-green-600' : 'text-red-600' }}"></i>
-                                                    <!-- Tooltip (appears on hover) -->
+                                                    <i data-feather="{{ $ativo->status ? 'check-circle' : 'x-circle' }}"
+                                                        class="{{ $ativo->status ? 'text-green-600' : 'text-red-600' }}"></i>
                                                     <div class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block px-2 py-1 text-sm text-gray-500 bg-black rounded-md">
                                                         {{ $ativo->status ? 'Ativo' : 'Inativo' }}
                                                     </div>
                                                 </div>
-                                                
-                                                <!-- If quantity is below minimum, show an alert icon with tooltip -->
                                                 @if ($quantidadeDisp <= $ativo->quantidade_min)
                                                     <div class="relative group">
                                                         <i data-feather="alert-circle" class="text-red-500"></i>
@@ -103,43 +107,29 @@
                                                     </div>
                                                 @endif
                                             </div>
-                                        </td>                                       
-                                        
-                                        
-                                        {{-- <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                            {{ $ativo->created_at->format('d/m/Y') }}
                                         </td>
                                         <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                            {{ $ativo->observacao ?? 'N/A' }}
-                                        </td> --}}
-                                        <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                             <div class="flex gap-2 items-center justify-center">
-                                                <!-- Formulário para buscar o produto com a descrição do ativo -->
-                                                <form method="GET" action="{{ route('produtos.index') }}" class="flex space-x-2 w-full max-w-lg">
-                                                    <input type="hidden" name="search" value="{{ $ativo->descricao }}"> <!-- Passando a descrição do ativo -->
-                                                    <x-secondary-button type="submit"><i data-feather="dollar-sign" width="20"></i></x-secondary-button>
+                                                <form method="GET" action="{{ route('produtos.index') }}"
+                                                    class="flex space-x-2 w-full max-w-lg">
+                                                    <input type="hidden" name="search" value="{{ $ativo->descricao }}">
+                                                    <x-secondary-button type="submit"><i data-feather="dollar-sign"
+                                                            width="20"></i></x-secondary-button>
                                                 </form>
-
-                                                <!-- Botão de editar -->
-                                                <x-secondary-button onclick="openEditModal({{ $ativo->id }})" class="text-white rounded">
+                                                <x-secondary-button onclick="openEditModal({{ $ativo->id }})"
+                                                    class="text-white rounded">
                                                     <i data-feather="edit" width="20"></i>
                                                 </x-secondary-button>
-
-                                                <!-- Botão de excluir -->
-                                                <x-danger-button onclick="deleteAtivo('{{ $ativo->id }}')" class="bg-red-500 rounded">
+                                                <x-danger-button onclick="deleteAtivo('{{ $ativo->id }}')"
+                                                    class="bg-red-500 rounded">
                                                     <i data-feather="x" width="20"></i>
                                                 </x-danger-button>
                                             </div>
                                         </td>
-
-
-
-
-
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="text-center p-4">Nenhum ativo encontrado.</td>
+                                        <td colspan="9" class="text-center p-4">Nenhum ativo encontrado.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -151,7 +141,6 @@
                         @forelse ($ativos as $ativo)
                             <div x-data="{ open: false }"
                                 class="bg-white dark:bg-gray-700 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600">
-                                <!-- Header do Card -->
                                 <div @click="open = !open"
                                     class="p-4 flex items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
                                     <div class="flex-shrink-0 w-16 h-16 mr-4">
@@ -169,8 +158,6 @@
                                         </p>
                                     </div>
                                 </div>
-
-                                <!-- Conteúdo Expandido com transição -->
                                 <div x-show="open" x-transition:enter="transition ease-out duration-150"
                                     x-transition:enter-start="opacity-0 transform -translate-y-2"
                                     x-transition:enter-end="opacity-100 transform translate-y-0"
@@ -195,11 +182,11 @@
                                             <span class="text-gray-600 dark:text-gray-400">Quantidade Disponivel:</span>
                                             <span class="text-gray-900 dark:text-gray-100">
                                                 @php
-                                                $quantidadeDisp =
-                                                    optional($ativosDisp->firstWhere('id_ativo', $ativo->id))
-                                                        ->quantidade_disp ?? 0;
+                                                    $quantidadeDisp =
+                                                        optional($ativosDisp->firstWhere('id_ativo', $ativo->id))
+                                                            ->quantidade_disp ?? 0;
                                                 @endphp
-                                            {{ $quantidadeDisp }}
+                                                {{ $quantidadeDisp }}
                                             </span>
                                         </div>
                                         <div class="flex justify-between">
@@ -214,15 +201,13 @@
                                                 {{ $ativo->status ? 'Ativo' : 'Inativo' }}
                                             </span>
                                             @if ($quantidadeDisp <= $ativo->quantidade_min)
-                                            <br>
+                                                <br>
                                                 <span class="text-red-600">
                                                     {{ 'Estoque Abaixo do Mínimo!' }}
                                                 </span>
                                             @endif
                                         </div>
                                     </div>
-
-                                    <!-- Ações -->
                                     <div class="flex justify-end gap-2 mt-4">
                                         <x-secondary-button
                                             onclick="openEditModal({{ json_encode([
@@ -239,7 +224,6 @@
                                             class="text-gray-900 rounded">
                                             Editar
                                         </x-secondary-button>
-
                                         <x-danger-button onclick="deleteAtivo('{{ $ativo->id }}')"
                                             class="text-sm px-3 py-1.5">
                                             Excluir
@@ -248,12 +232,15 @@
                                 </div>
                             </div>
                         @empty
-                                       <div class="text-center p-4 text-gray-500">
+                            <div class="text-center p-4 text-gray-500">
                                 Nenhum ativo encontrado.
                             </div>
                         @endforelse
                     </div>
 
+                    <div class="mt-6 flex justify-center">
+                        {{ $ativos->links('pagination::tailwind') }}
+                    </div>
                 </div>
             </div>
         </div>

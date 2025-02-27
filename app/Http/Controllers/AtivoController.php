@@ -8,6 +8,8 @@ use App\Models\Ativo;
 use App\Models\AtivoLocal;
 use App\Models\Marca;
 use App\Models\Tipo;
+use App\Models\Local;
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -15,11 +17,60 @@ use Exception;
 
 class AtivoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $ativos = Ativo::with(['marca', 'tipo', 'local', 'user'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $search = $request->input('search');
+
+        // Carrega apenas os campos necessários nos relacionamentos, especificando a tabela
+        $query = Ativo::with([
+            'marca' => function ($query) {
+                $query->select('marcas.id', 'marcas.descricao');
+            },
+            'tipo' => function ($query) {
+                $query->select('tipos.id', 'tipos.descricao');
+            },
+            'local' => function ($query) {
+                $query->select('locais.id', 'locais.descricao');
+            },
+            'user' => function ($query) {
+                $query->select('users.id', 'users.name');
+            }
+        ])->orderBy('created_at', 'desc');
+
+        // Pega o usuário autenticado atual
+        $user = auth()->user();
+        $userName = $user ? $user->name : 'Usuário não autenticado';
+
+        // Log com o termo de pesquisa e nome do usuário
+        \Log::info('Pesquisa realizada em ativos:', [
+            'termo' => $search,
+            'user' => $userName
+        ]);
+
+        // Aplica o filtro de busca
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('descricao', 'like', "%{$search}%")
+                    ->orWhere('observacao', 'like', "%{$search}%")
+                    ->orWhere('status', 'like', "%{$search}%")
+                    ->orWhere('quantidade', '=', (int) $search)
+                    ->orWhere('quantidade_min', '=', (int) $search)
+                    ->orWhere('id_marca', '=', (int) $search)
+                    ->orWhere('id_tipo', '=', (int) $search)
+                    ->orWhere('id_user', '=', (int) $search)
+                    ->orWhereHas('marca', function ($subQuery) use ($search) {
+                        $subQuery->where('descricao', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('tipo', function ($subQuery) use ($search) {
+                        $subQuery->where('descricao', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('user', function ($subQuery) use ($search) {
+                        $subQuery->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        $ativos = $query->paginate(50)->appends($request->all());
 
         $marcas = Marca::all();
         $tipos = Tipo::all();
@@ -30,20 +81,49 @@ class AtivoController extends Controller
             ->groupBy('id_ativo')
             ->get();
 
-        // var_dump($ativosEmUso);
-
         return view('ativos.index', compact('ativos', 'marcas', 'tipos', 'ativosDisp'));
     }
 
     public function show($id)
     {
         $ativo = Ativo::findOrFail($id);
-
         return response()->json($ativo);
     }
 
 
+    // public function search(Request $request)
+    // {
+    //     $search = $request->input('search');
 
+    //     $query = Ativo::with(['marca', 'tipo', 'local', 'user'])
+    //         ->orderBy('created_at', 'desc');
+
+    //     if ($search) {
+    //         $query->where(function ($q) use ($search) {
+    //             $q->where('descricao', 'like', '%' . $search . '%')
+    //                 ->orWhere('observacao', 'like', '%' . $search . '%')
+    //                 ->orWhere('status', 'like', '%' . $search . '%')
+    //                 ->orWhere('id_marca', '=', (int) $search)
+    //                 ->orWhere('id_tipo', '=', (int) $search)
+    //                 ->orWhere('id_user', '=', (int) $search);
+    //         });
+    //     }
+
+    //     // Substituí get() por paginate() para habilitar links()
+    //     $ativos = $query->paginate(10);
+
+    //     // Mantive suas outras variáveis
+    //     $marcas = Marca::all();
+    //     $tipos = Tipo::all();
+
+    //     $ativosDisp = DB::table('ativo_local')
+    //         ->select('id_ativo', DB::raw('SUM(quantidade) AS quantidade_disp'))
+    //         ->where('id_local', '=', 1)
+    //         ->groupBy('id_ativo')
+    //         ->get();
+
+    //     return view('ativos.index', compact('ativos', 'marcas', 'tipos', 'ativosDisp'));
+    // }
 
 
     public function store(Request $request)
