@@ -128,8 +128,8 @@
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Imagem</label>
                     <div class="flex flex-col items-center">
                         <!-- Pré-visualização da imagem -->
-                        <img id="imagem-preview" class="mb-2 max-h-32 object-contain rounded-md hidden"
-                            alt="Pré-visualização da imagem">
+                        <img id="imagem-preview-edit" class="mb-2 max-h-32 object-contain rounded-md hidden"
+                            alt="Pré-visualização da imagem" >
                         <!-- Input de arquivo oculto -->
                         <input type="file" name="imagem" id="imagem-edit" accept="image/*" class="hidden"
                             onchange="previewImagem(event)">

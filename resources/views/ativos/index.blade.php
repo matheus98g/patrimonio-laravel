@@ -273,7 +273,6 @@
 
                 // Preencher campos do formulário com os dados da resposta
                 document.getElementById('descricao-edit').value = data.descricao || '';
-                document.getElementById('imagem-preview').value = data.imagem_url || '';
                 document.getElementById('id_marca-edit').value = data.id_marca || '';
                 document.getElementById('id_tipo-edit').value = data.id_tipo || '';
                 document.getElementById('quantidade-edit').value = data.quantidade || '';
@@ -282,14 +281,16 @@
                 document.getElementById('status-edit').value = data.status || '';
 
                 // Exibir imagem se houver
-                const imgPreview = document.getElementById('imagem-preview');
-                if (data.imagem_url) {
-                    imgPreview.src = data.imagem_url;
+                const imgPreview = document.getElementById('imagem-preview-edit');
+
+                if (data.imagem) {
+                    imgPreview.setAttribute("src", `${window.location.origin}/storage/${data.imagem}`);
                     imgPreview.classList.remove('hidden');
                     console.log("Imagem renderizada com src:", imgPreview.src);
                 } else {
                     imgPreview.classList.add('hidden');
                 }
+
 
                 // Exibir o modal
                 document.getElementById('editar-ativo-modal').classList.remove('hidden');
@@ -366,8 +367,7 @@
                 reader.readAsDataURL(file);
             }
         }
-
-        
+ 
     </script>
 
 </x-app-layout>
