@@ -280,15 +280,18 @@
                 document.getElementById('observacao-edit').value = data.observacao || '';
                 document.getElementById('status-edit').value = data.status || '';
 
-                // Exibir imagem se houver
                 const imgPreview = document.getElementById('imagem-preview-edit');
+                const imgMessage = document.getElementById('imagem-message-edit'); // Elemento de texto para a mensagem
 
                 if (data.imagem) {
                     imgPreview.setAttribute("src", `${window.location.origin}/storage/${data.imagem}`);
                     imgPreview.classList.remove('hidden');
+                    imgMessage.classList.add('hidden'); // Esconde a mensagem
                     console.log("Imagem renderizada com src:", imgPreview.src);
                 } else {
-                    imgPreview.classList.add('hidden');
+                    imgPreview.classList.add('hidden'); // Esconde a imagem
+                    imgMessage.classList.remove('hidden'); // Exibe a mensagem
+                    imgMessage.textContent = "Nenhuma imagem disponível.";
                 }
 
 

@@ -124,22 +124,31 @@
 
                 <!-- Campo Imagem com preview e botão estilizado -->
                 <div class="mb-4">
-                    <label for="imagem-edit"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Imagem</label>
+                    <label for="imagem-edit" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Imagem
+                    </label>
                     <div class="flex flex-col items-center">
                         <!-- Pré-visualização da imagem -->
                         <img id="imagem-preview-edit" class="mb-2 max-h-32 object-contain rounded-md hidden"
-                            alt="Pré-visualização da imagem" >
+                            alt="Pré-visualização da imagem">
+                        
+                        <!-- Mensagem quando não houver imagem -->
+                        <p id="imagem-message-edit" class="text-gray-500 italic py-4">Nenhuma imagem disponível.</p>
+
                         <!-- Input de arquivo oculto -->
                         <input type="file" name="imagem" id="imagem-edit" accept="image/*" class="hidden"
                             onchange="previewImagem(event)">
+                        
                         <!-- Botão estilizado para disparar o input -->
-                        <x-primary-button type="button" onclick="document.getElementById('imagem-edit').click()"
+                        <div class="py-4">
+                            <x-primary-button type="button" onclick="document.getElementById('imagem-edit').click()"
                             class="w-32 sm:w-auto px-4 py-2 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors">
                             Editar Imagem
-                        </x-primary-button>
+                            </x-primary-button>
+                        </div>
                     </div>
                 </div>
+
             </div>
 
             <!-- Botões de Ação -->
