@@ -257,10 +257,40 @@
     @include('ativos.partials.edit-modal')
 
     <script>
-        // Funções do Modal de Criação
+    // cadastrar ativo
+
         function openCreateModal() {
             document.getElementById('ativo-modal').classList.remove('hidden');
         }
+
+        
+        function toggleMarcaForm() {
+            document.getElementById('nova-marca-form').classList.toggle('hidden');
+            document.getElementById('id_marca').disabled = !document.getElementById('nova-marca-form').classList.contains(
+                'hidden');
+        }
+
+        function toggleTipoForm() {
+            document.getElementById('novo-tipo-form').classList.toggle('hidden');
+            document.getElementById('id_tipo').disabled = !document.getElementById('novo-tipo-form').classList.contains(
+                'hidden');
+        }
+
+        function previewImagem(event) {
+            const preview = document.getElementById('imagem-preview');
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden'); // Exibe a imagem
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // editar ativo
 
        function openEditModal(id) {
         const form = document.getElementById('editForm');
@@ -335,41 +365,6 @@
             }
         }
 
-        // Preview de imagem no edit
-        document.getElementById('imagem-edit').addEventListener('change', function(e) {
-            const reader = new FileReader();
-            reader.onload = function() {
-                document.getElementById('imagem-preview').src = reader.result;
-                document.getElementById('imagem-preview').classList.remove('hidden');
-            }
-            reader.readAsDataURL(e.target.files[0]);
-        });
-
-        function toggleMarcaForm() {
-            document.getElementById('nova-marca-form').classList.toggle('hidden');
-            document.getElementById('id_marca').disabled = !document.getElementById('nova-marca-form').classList.contains(
-                'hidden');
-        }
-
-        function toggleTipoForm() {
-            document.getElementById('novo-tipo-form').classList.toggle('hidden');
-            document.getElementById('id_tipo').disabled = !document.getElementById('novo-tipo-form').classList.contains(
-                'hidden');
-        }
-
-        function previewImagem(event) {
-            const preview = document.getElementById('imagem-preview');
-            const file = event.target.files[0];
-
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.classList.remove('hidden'); // Exibe a imagem
-                };
-                reader.readAsDataURL(file);
-            }
-        }
  
     </script>
 
