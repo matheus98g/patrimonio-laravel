@@ -84,6 +84,27 @@ class AtivoController extends Controller
         return view('ativos.index', compact('ativos', 'marcas', 'tipos', 'ativosDisp'));
     }
 
+    // public function show($id)
+    // {
+    //     $ativo = Ativo::findOrFail($id);
+    //     return response()->json($ativo);
+    // }
+
+    public function showDetails($id)
+    {
+        $ativo = Ativo::FindOrFail($id);
+        $marcas = Marca::all();
+        $tipos = Tipo::all();
+
+        $ativosDisp = DB::table('ativo_local')
+            ->select('id_ativo', DB::raw('SUM(quantidade) AS quantidade_disp'))
+            ->where('id_local', '=', 1)
+            ->groupBy('id_ativo')
+            ->get();
+
+        return view('ativos.show', compact('ativo', 'marcas', 'tipos', 'ativosDisp'));
+    }
+
     public function show($id)
     {
         $ativo = Ativo::findOrFail($id);

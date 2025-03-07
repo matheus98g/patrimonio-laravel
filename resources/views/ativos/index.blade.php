@@ -110,7 +110,7 @@
                                             </div>
                                         </td>
                                         <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                                            <div class="flex gap-2 items-center justify-center">
+                                            <div class="flex gap-3 items-center justify-center">
                                                 <!-- Botão de busca de produtos -->
                                                 <form method="GET" action="{{ route('produtos.index') }}" class="flex space-x-2 w-full max-w-lg">
                                                     <input type="hidden" name="search" value="{{ $ativo->descricao }}">
@@ -130,6 +130,13 @@
                                                     class="bg-red-500 dark:bg-red-600 text-white hover:bg-red-600 dark:hover:bg-red-700 rounded">
                                                     <i data-feather="x" width="20"></i>
                                                 </x-danger-button>
+
+                                                 <!-- Botão de detalhes -->
+                                                <x-secondary-button onclick="openDetailsAtivo({{ $ativo->id }})" 
+                                                    class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 rounded">
+                                                    <i data-feather="more-vertical" width="20"></i>
+                                                </x-secondary-button>
+                                                
                                             </div>
                                         </td>
                                     </tr>
@@ -364,6 +371,11 @@
                 alert('Erro na requisição');
             }
         }
+
+        function openDetailsAtivo(id) {
+        let url = `/ativos/details/${id}`; // Monta a URL da rota
+        window.location.href = url; // Redireciona para a página de detalhes
+    }
 
  
     </script>

@@ -19,6 +19,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('ativos')->name('ativos.')->group(function () {
         Route::get('/', [AtivoController::class, 'index'])->name('index');
+        Route::get('/details/{id}', [AtivoController::class, 'showDetails'])->name('show.details');
         Route::get('/{id}', [AtivoController::class, 'show'])->name('show');
         Route::get('/{ativoId}/locais-disponiveis', [AtivoController::class, 'getLocaisDisponiveis'])->name('locais');
         Route::post('/', [AtivoController::class, 'store'])->name('store');
