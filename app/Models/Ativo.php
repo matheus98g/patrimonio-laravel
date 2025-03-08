@@ -41,4 +41,9 @@ class Ativo extends Model
         return $this->belongsToMany(Local::class, 'ativo_local', 'id_ativo', 'id_local')
             ->withPivot('quantidade');
     }
+
+    public function movimentacoes()
+    {
+        return $this->hasMany(Movimentacao::class, 'id_ativo');
+    }
 }
