@@ -36,9 +36,9 @@ return [
     ],
 
     'recaptcha' => [
-        'site_key' => env('6Lell_EqAAAAABGMtT6KDKsCe6vGqjqCyM09IKm8'),
-        'secret_key' => env('6Lell_EqAAAAABBAHDJ6g4G_KMBoL7aSNtOQ_ZAU'),
-        'min_score' => env('RECAPTCHA_MIN_SCORE', 0.5),
+        'site_key' => env('RECAPTCHA_SITE_KEY'),
+        'secret_key' => env('RECAPTCHA_SECRET_KEY'),
+        'min_score' => 0.5,
     ],
 
 

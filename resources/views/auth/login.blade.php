@@ -58,7 +58,7 @@
     </div>
 
     <!-- reCAPTCHA Script -->
-    <script src="https://www.google.com/recaptcha/api.js?render='{{ config('services.recaptcha.site_key') }}'"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
     <script>
         document.getElementById('login-form').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -70,5 +70,39 @@
             });
         });
     </script>
+
+    {{-- <!-- reCAPTCHA Script -->
+    <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
+    <script>
+        // Verificando se a chave do site está sendo carregada corretamente
+        console.log('reCAPTCHA site key:', '{{ config("services.recaptcha.site_key") }}');
+        
+        // Adicionando listener para o submit do formulário
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault(); // Previne o envio do formulário até que o token seja obtido
+            console.log('Formulário enviado, aguardando token do reCAPTCHA...');
+            
+            // Chamando o reCAPTCHA para obter o token
+            grecaptcha.ready(function() {
+                console.log('reCAPTCHA está pronto para execução...');
+                
+                grecaptcha.execute('{{ config("services.recaptcha.site_key") }}', { action: 'login' }).then(function(token) {
+                    // Verificando o token gerado
+                    console.log('Token do reCAPTCHA obtido:', token);
+                    
+                    // Atribuindo o token ao campo oculto do formulário
+                    document.getElementById('recaptcha-token').value = token;
+
+                    // Enviando o formulário
+                    console.log('Formulário submetido com token.');
+                    document.getElementById('login-form').submit();
+                }).catch(function(error) {
+                    // Caso ocorra algum erro ao obter o token
+                    console.error('Erro ao executar o reCAPTCHA:', error);
+                });
+            });
+        });
+    </script> --}}
+
 
 </x-guest-layout>
