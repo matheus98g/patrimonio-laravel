@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'recaptcha' => [
+        'site_key' => env('6Lell_EqAAAAABGMtT6KDKsCe6vGqjqCyM09IKm8'),
+        'secret_key' => env('6Lell_EqAAAAABBAHDJ6g4G_KMBoL7aSNtOQ_ZAU'),
+    ],
+
+
 ];
