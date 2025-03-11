@@ -29,7 +29,7 @@ class AtivoController extends Controller
             'tipo' => function ($query) {
                 $query->select('tipos.id', 'tipos.descricao');
             },
-            'local' => function ($query) {
+            'locais' => function ($query) {
                 $query->select('locais.id', 'locais.descricao');
             },
             'user' => function ($query) {
@@ -92,7 +92,7 @@ class AtivoController extends Controller
 
     public function showDetails($id)
     {
-        $ativo = Ativo::with('movimentacoes', 'local')->findOrFail($id); // Corrigido 'locais'
+        $ativo = Ativo::with('movimentacoes', 'locais')->findOrFail($id); // Corrigido 'locais'
         $marcas = Marca::all();
         $tipos = Tipo::all();
 
@@ -407,7 +407,7 @@ class AtivoController extends Controller
         }
 
         // Obter os locais e formatar a resposta concatenando descrição e quantidade
-        $locais = $ativo->local()
+        $locais = $ativo->locais()
             ->select('locais.id', 'locais.descricao', 'ativo_local.quantidade')
             ->where('ativo_local.id_ativo', $ativoId)
             ->where('ativo_local.quantidade', '>', 0) // Filtra locais com quantidade > 0
@@ -429,4 +429,54 @@ class AtivoController extends Controller
         // Retornar os locais formatados
         return response()->json($locais);
     }
+
+    // public function getLocaisDisponiveis($ativoId)
+    // {
+    //     Log::info("Iniciando busca de locais para o ativo ID {$ativoId}");
+
+    //     // Buscar o ativo pelo ID
+    //     $ativo = Ativo::find($ativoId);
+
+    //     // Verificar se o ativo existe
+    //     if (!$ativo) {
+    //         Log::warning("Ativo não encontrado: ID {$ativoId}");
+    //         return response()->json(['error' => 'Ativo não encontrado.'], 404);
+    //     }
+
+    //     Log::info("Ativo encontrado: {$ativo->descricao} (ID: {$ativo->id})");
+
+    //     // Verificar se o relacionamento com locais está carregando corretamente
+    //     if (!method_exists($ativo, 'local')) {
+    //         Log::error("Método locais() não encontrado no modelo Ativo.");
+    //         return response()->json(['error' => 'Erro interno no servidor.'], 500);
+    //     }
+
+    //     // Obter os locais e formatar a resposta concatenando descrição e quantidade
+    //     $locais = $ativo->local()
+    //         ->select('local.id', 'local.descricao', 'ativo_local.quantidade')
+    //         ->where('ativo_local.quantidade', '>', 0) // Filtra locais com quantidade > 0
+    //         ->get();
+
+    //     Log::info("Consulta ao banco executada. Registros retornados: " . $locais->count());
+
+    //     // Verificar se os locais foram encontrados
+    //     if ($locais->isEmpty()) {
+    //         Log::info("Nenhum local encontrado com quantidade disponível para o ativo ID {$ativoId}");
+    //         return response()->json([]);
+    //     }
+
+    //     // Formatar a resposta
+    //     $response = $locais->map(function ($local) {
+    //         return [
+    //             'id' => $local->id,
+    //             'descricao' => "{$local->descricao} ({$local->quantidade})" // Concatena nome + quantidade
+    //         ];
+    //     });
+
+    //     Log::info("Locais encontrados para o ativo ID {$ativoId}: ", $response->toArray());
+
+    //     // Retornar os locais formatados
+    //     return response()->json($response);
+    // }
+
 }

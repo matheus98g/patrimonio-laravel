@@ -36,7 +36,7 @@ class Ativo extends Model
     }
 
     // Relacionamento de muitos para muitos com a tabela 'locais' através da tabela pivô 'ativo_local'
-    public function local()
+    public function locais()
     {
         return $this->belongsToMany(Local::class, 'ativo_local', 'id_ativo', 'id_local')
             ->withPivot('quantidade');

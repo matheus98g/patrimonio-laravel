@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        // Register any custom Artisan commands here
+        Commands\RefreshMercadoLivreToken::class
     ];
 
     /**
@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // Example: $schedule->command('inspire')->hourly();
+        $schedule->command('mercado_livre_token:refresh')->everyFiveHours();
     }
 
     /**
