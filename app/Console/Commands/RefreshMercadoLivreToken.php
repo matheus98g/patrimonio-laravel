@@ -8,8 +8,8 @@ use App\Http\Services\MercadoLivreService;
 
 class RefreshMercadoLivreToken extends Command
 {
-    protected $signature = 'mercado_livre_token:refresh'; // Nome do comando para rodar no cron
-    protected $description = 'Renova o token do Mercado Livre'; // Descrição do comando
+    protected $signature = 'mercado_livre_token:refresh';
+    protected $description = 'Renova o token do Mercado Livre';
 
     public function __construct()
     {
@@ -18,10 +18,9 @@ class RefreshMercadoLivreToken extends Command
 
     public function handle()
     {
-        // Chama o método renovarToken
         $mercadoLivreService = new MercadoLivreService();
         $mercadoLivreService->refreshToken();
         
-        $this->info('Token renovado com sucesso!');
+        $this->info('Token MercadoLivre renovado com sucesso!');
     }
 }
