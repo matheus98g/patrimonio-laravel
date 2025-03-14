@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('mercado_livre_token:refresh')->everyFiveHours();
+        $schedule->command('mercado_livre_token:refresh')->everyMinute()->evenInMaintenanceMode();
     }
 
     /**
