@@ -6346,3 +6346,26 @@
   6   artisan:13
       Illuminate\Foundation\Application::handleCommand()
 
+
+   BadMethodCallException 
+
+  Method Illuminate\Console\Scheduling\Event::everyFiveHours does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Macroable/Traits/Macroable.php:115
+    111▕      */
+    112▕     public function __call($method, $parameters)
+    113▕     {
+    114▕         if (! static::hasMacro($method)) {
+  ➜ 115▕             throw new BadMethodCallException(sprintf(
+    116▕                 'Method %s::%s does not exist.', static::class, $method
+    117▕             ));
+    118▕         }
+    119▕
+
+  1   routes/console.php:10
+      Illuminate\Console\Scheduling\Event::__call()
+      [2m+4 vendor frames [22m
+
+  6   artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
