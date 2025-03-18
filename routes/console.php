@@ -1,10 +1,7 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
+use App\Console\Commands\RefreshMercadoLivreToken;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schedule;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote')->hourly();
-
-\Illuminate\Support\Facades\Schedule::command('mercado_livre_token:refresh')->everyFiveHours();
+Schedule::command(RefreshMercadoLivreToken::class)->everyFourHours();
