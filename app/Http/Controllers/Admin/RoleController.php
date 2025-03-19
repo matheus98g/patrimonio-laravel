@@ -3,21 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Role;
+use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
     public function index()
     {
-        $roles = Role::all(); // Obter todos os papéis
-        return response()->json($roles); // Retorna todos os papéis
+        $roles = Role::all();
+        return response()->json($roles);
     }
 
     public function show($roleId)
     {
-        $role = Role::findOrFail($roleId); // Encontra o papel pelo ID
-        return response()->json($role); // Retorna o papel específico
+        $role = Role::findOrFail($roleId);
+        return response()->json($role);
     }
 
     public function store(Request $request)
@@ -27,24 +27,31 @@ class RoleController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $role = Role::create($request->all()); // Cria um novo papel
-        return response()->json($role, 201); // Retorna o papel recém-criado
+        $role = Role::create($request->all());
+        return response()->json($role, 201);
     }
 
     public function update(Request $request, $roleId)
     {
-        $role = Role::findOrFail($roleId); // Encontra o papel pelo ID
-
-        $role->update($request->all()); // Atualiza o papel com os dados recebidos
-        return response()->json($role); // Retorna o papel atualizado
+        $role = Role::findOrFail($roleId);
+        $role->update($request->all());
+        return response()->json($role);
     }
 
     public function destroy($roleId)
     {
-        $role = Role::findOrFail($roleId); // Encontra o papel pelo ID
+        $role = Role::findOrFail($roleId);
+        $role->delete();
+        return response()->json(null, 204);
+    }
 
-        $role->delete(); // Deleta o papel
-        return response()->json(null, 204); // Retorna uma resposta sem conteúdo (204)
+    public function createAlunoRole()
+    {
+        $role = Role::firstOrCreate([
+            'name' => 'aluno',
+        ], [
+            'description' => 'Role for students',
+        ]);
+        return response()->json($role);
     }
 }
-
