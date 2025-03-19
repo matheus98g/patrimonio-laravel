@@ -70,7 +70,7 @@ Route::middleware('auth')->group(function () {
     
     Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
 
-        Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/', [AdminController::class, 'index'])->name('dashboard');
 
         Route::prefix('roles')->name('roles.')->group(function () {
             Route::get('/', [RoleController::class, 'index'])->name('index');

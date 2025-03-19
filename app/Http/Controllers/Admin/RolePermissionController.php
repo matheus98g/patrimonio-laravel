@@ -3,63 +3,29 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
+use App\Models\Permission;
 use Illuminate\Http\Request;
 
 class RolePermissionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function assignPermission(Request $request, $roleId)
     {
-        //
+        $role = Role::findOrFail($roleId); // Encontra o papel pelo ID
+        $permission = Permission::findOrFail($request->permission_id); // Encontra a permissão pelo ID
+
+        // Atribui a permissão ao papel
+        $role->permissions()->attach($permission);
+        return response()->json($role->permissions); // Retorna as permissões do papel
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function removePermission(Request $request, $roleId)
     {
-        //
-    }
+        $role = Role::findOrFail($roleId); // Encontra o papel pelo ID
+        $permission = Permission::findOrFail($request->permission_id); // Encontra a permissão pelo ID
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        // Remove a permissão do papel
+        $role->permissions()->detach($permission);
+        return response()->json($role->permissions); // Retorna as permissões restantes do papel
     }
 }
