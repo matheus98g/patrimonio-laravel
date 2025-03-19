@@ -14,10 +14,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/', function () {return view('dashboard');})->name('dashboard');
 
     Route::prefix('ativos')->name('ativos.')->group(function () {
-        Route::get('/', [AtivoController::class, 'index'])->name('index')->middleware(['role:admin|permission:view-ativos']);
-        Route::get('/details/{id}', [AtivoController::class, 'showDetails'])->name('show.details')->middleware(['role:admin|permission:view-ativos']);
-        Route::get('/{id}', [AtivoController::class, 'show'])->name('show')->middleware(['role:admin|permission:view-ativos']);
-        Route::get('/{ativoId}/locais-disponiveis', [AtivoController::class, 'getLocaisDisponiveis'])->name('locais')->middleware(['role:admin|permission:view-ativos']);
+        Route::middleware(['role:admin|permission:view-ativos'])->group(function () {
+            Route::get('/', [AtivoController::class, 'index'])->name('index');
+            Route::get('/details/{id}', [AtivoController::class, 'showDetails'])->name('show.details');
+            Route::get('/{id}', [AtivoController::class, 'show'])->name('show');
+            Route::get('/{ativoId}/locais-disponiveis', [AtivoController::class, 'getLocaisDisponiveis'])->name('locais');
+        });
         Route::middleware(['role:admin|permission:create-ativos'])->group(function () {
             Route::post('/', [AtivoController::class, 'store'])->name('store');
         });
