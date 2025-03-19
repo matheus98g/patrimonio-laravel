@@ -23,9 +23,10 @@
                 </div>
 
                 <!-- Navigation Links -->
+
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ ('Dashboard') }}
+                    <x-nav-link :href="route('userRolePermission.index')" :active="request()->routeIs('userRolePermission.index')">
+                        {{ ('Admin') }}
                     </x-nav-link>
                 </div>
 
