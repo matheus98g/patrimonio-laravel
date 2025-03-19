@@ -7,7 +7,9 @@ use App\Http\Controllers\TipoController;
 use App\Http\Controllers\MovimentacaoController;
 use App\Http\Controllers\LocalController;
 use App\Http\Controllers\ProdutoController;
+use App\Http\Controllers\Admin\UserRolePermissionController;
 use Illuminate\Support\Facades\Route;
+
 
 
 Route::get('/', function () {
@@ -15,7 +17,6 @@ Route::get('/', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-
 
     Route::prefix('ativos')->name('ativos.')->group(function () {
         Route::get('/', [AtivoController::class, 'index'])->name('index');
@@ -26,7 +27,6 @@ Route::middleware('auth')->group(function () {
         Route::put('/{id}', [AtivoController::class, 'update'])->name('update');
         Route::delete('/{id}', [AtivoController::class, 'destroy'])->name('destroy');
     });
-
 
     Route::prefix('marcas')->name('marcas.')->group(function () {
         Route::get('/', [MarcaController::class, 'index'])->name('index');
@@ -69,5 +69,16 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
+Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+
+    Route::get('users/assign-role-permission', [UserRolePermissionController::class, 'index'])->name('userRolePermission.index');
+    
+    Route::post('users/{userId}/assign-role', [UserRolePermissionController::class, 'assignRole'])->name('assignRole');
+    
+    Route::post('users/{userId}/assign-permission', [UserRolePermissionController::class, 'assignPermission'])->name('assignPermission');
+});
+
 
 require __DIR__ . '/auth.php';

@@ -49,10 +49,6 @@ class RefreshMercadoLivreToken extends Command
     public function handle()
     {
         try {
-            Log::info('Iniciando execução do comando mercado_livre_token:refresh', [
-                'timestamp' => now(),
-            ]);
-
             $this->mercadoLivreService->refreshToken();
 
             Log::info('Token renovado com sucesso', [
