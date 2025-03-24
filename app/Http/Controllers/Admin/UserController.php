@@ -5,30 +5,68 @@ namespace App\Http\Controllers\Admin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Log;
+use Exception;
 
 class UserController extends Controller
 {
 
+
     public function index()
     {
-        $users = User::all();
-        return view('admin.users.index', compact('users'));
+        $usuarios = User::with(['roles', 'permissions'])->get();
+        
+        return view('admin.users.index', compact('usuarios'));
     }
-    public function edit(User $user)
+
+    public function edit($id)
     {
-        return view('admin.users.edit', compact('user'));
+        $usuario = User::findOrFail($id);
+        
+        $roles = Role::all();
+        $permissions = Permission::all();
+        
+        return view('admin.users.edit', compact('usuario', 'roles', 'permissions'));
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-        ]);
+        try {
+            $usuario = User::findOrFail($id);
 
-        $user->update($request->all());
+            $request->validate([
+                'roles' => 'array|exists:roles,name',
+                'permissions' => 'array|exists:permissions,id',
+            ]);
 
-        return redirect()->route('admin.users.index')->with('success', 'Usuário atualizado com sucesso!');
+            Log::info('Iniciando a atualização de acessos do usuário', ['user_id' => $usuario->id]);
+
+            $usuario->syncRoles($request->input('roles', []));
+            Log::info('Cargos sincronizados com sucesso', ['user_id' => $usuario->id, 'roles' => $request->input('roles', [])]);
+
+            $permissionIds = $request->input('permissions', []);
+            $permissionNames = Permission::whereIn('id', $permissionIds)->pluck('name')->toArray();
+            $usuario->syncPermissions($permissionNames);
+            Log::info('Permissões sincronizadas com sucesso', ['user_id' => $usuario->id, 'permissions' => $permissionNames]);
+
+            return redirect()->route('admin.users.index')->with('success', 'Acessos do usuário atualizados com sucesso!');
+        } catch (Exception $e) {
+            Log::error('Erro ao atualizar acessos do usuário', [
+                'user_id' => $id,
+                'error_message' => $e->getMessage(),
+                'stack_trace' => $e->getTraceAsString()
+            ]);
+
+            return redirect()->route('admin.users.index')->with('error', 'Ocorreu um erro ao atualizar os acessos do usuário. Tente novamente mais tarde.');
+        }
     }
+
+
+
+
+
+
 
 }

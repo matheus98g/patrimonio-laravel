@@ -29,8 +29,8 @@ return [
     ],
 
     'table_names' => [
-        'roles' => 'role',
-        'permissions' => 'permission',
+        'roles' => 'roles',
+        'permissions' => 'permissions',
         'model_has_roles' => 'user_role',
         'model_has_permissions' => 'user_permission',
         'role_has_permissions' => 'role_permission',

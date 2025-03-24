@@ -35,9 +35,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 
     Route::prefix('users')->name('users.')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
-        Route::get('{user}/edit', [UserController::class, 'edit'])->name('edit');
-        Route::put('{user}', [UserController::class, 'update'])->name('update');
-        Route::delete('{user}', [UserController::class, 'destroy'])->name('destroy');
+        Route::get('{userId}/edit', [UserController::class, 'edit'])->name('edit');
+        Route::put('{userId}', [UserController::class, 'update'])->name('update');
+        Route::delete('{userId}', [UserController::class, 'destroy'])->name('destroy');
     });
 
 });
