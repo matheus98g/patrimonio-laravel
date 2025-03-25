@@ -42,7 +42,7 @@ class AtivoController extends Controller
         $userName = $user ? $user->name : 'Usuário não autenticado';
 
         // Log com o termo de pesquisa e nome do usuário
-        \Log::info('Pesquisa realizada em ativos:', [
+        Log::info('Pesquisa realizada em ativos:', [
             'termo' => $search,
             'user' => $userName
         ]);

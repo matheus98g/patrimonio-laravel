@@ -11,7 +11,7 @@ class RoleController extends Controller
     public function index()
     {
         $roles = Role::all();
-        return response()->json($roles);
+        return view('admin.roles.index', compact('roles'));
     }
 
     public function show($roleId)

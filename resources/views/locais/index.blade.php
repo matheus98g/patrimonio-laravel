@@ -200,8 +200,7 @@
                         Observação
                     </label>
                     <input type="text" id="observacao" name="observacao"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required>
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
 
                 <div class="flex justify-end">

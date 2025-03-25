@@ -11,21 +11,19 @@ class RolePermissionController extends Controller
 {
     public function assignPermission(Request $request, $roleId)
     {
-        $role = Role::findOrFail($roleId); // Encontra o papel pelo ID
-        $permission = Permission::findOrFail($request->permission_id); // Encontra a permissão pelo ID
+        $role = Role::findOrFail($roleId);
+        $permission = Permission::findOrFail($request->permission_id); 
 
-        // Atribui a permissão ao papel
         $role->permissions()->attach($permission);
-        return response()->json($role->permissions); // Retorna as permissões do papel
+        return response()->json($role->permissions);
     }
 
     public function removePermission(Request $request, $roleId)
     {
-        $role = Role::findOrFail($roleId); // Encontra o papel pelo ID
-        $permission = Permission::findOrFail($request->permission_id); // Encontra a permissão pelo ID
+        $role = Role::findOrFail($roleId);
+        $permission = Permission::findOrFail($request->permission_id);
 
-        // Remove a permissão do papel
         $role->permissions()->detach($permission);
-        return response()->json($role->permissions); // Retorna as permissões restantes do papel
+        return response()->json($role->permissions);
     }
 }
