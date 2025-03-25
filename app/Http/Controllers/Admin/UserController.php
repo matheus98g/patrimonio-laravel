@@ -9,6 +9,11 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Log;
 use Exception;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
 
 class UserController extends Controller
 {
@@ -61,6 +66,28 @@ class UserController extends Controller
 
             return redirect()->route('admin.users.index')->with('error', 'Ocorreu um erro ao atualizar os acessos do usuário. Tente novamente mais tarde.');
         }
+    }
+
+    public function createUser(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        $role = Role::where('name', 'aluno')->first();
+        $user->assignRole($role);
+
+        event(new Registered($user));
+
+        return redirect(route('admin.users.index', absolute: false));
     }
 
 

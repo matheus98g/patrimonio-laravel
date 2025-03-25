@@ -8,42 +8,45 @@ use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
-    // Método para exibir a lista de permissões
     public function index()
     {
-        // Obtém todas as permissões
         $permissions = Permission::all();
-
-        // Retorna a view com as permissões
         return view('admin.permissions.index', compact('permissions'));
     }
 
-    // Método para exibir os detalhes de uma permissão
     public function show($permissionId)
     {
-        // Encontra a permissão pelo ID
         $permission = Permission::findOrFail($permissionId);
-
-        // Retorna a view com a permissão encontrada
         return view('admin.permissions.show', compact('permission'));
     }
 
-    // Método para criar uma nova permissão
-    public function store(Request $request)
+    public function create()
     {
-        $request->validate([
-            'name' => 'required|string|unique:permissions,name',
-            'description' => 'nullable|string',
-        ]);
-
-        // Cria uma nova permissão
-        Permission::create($request->all());
-
-        // Redireciona para a lista de permissões
-        return redirect()->route('permissions.index');
+        return view('admin.permissions.create');
     }
 
-    // Método para atualizar uma permissão existente
+    public function store(Request $request)
+    {
+        // Validação dos dados
+        $request->validate([
+            'permissions' => 'required|string',
+        ]);
+
+        // Separando as permissões por vírgula
+        $permissions = explode(',', $request->permissions);
+
+        // Criando as permissões no banco
+        foreach ($permissions as $permission) {
+            Permission::create([
+                'name' => trim($permission),
+            ]);
+        }
+
+        // Redirecionando de volta para a lista de permissões com uma mensagem de sucesso
+        return redirect()->route('admin.permissions.index')->with('success', 'Permissões criadas com sucesso!');
+    }
+
+
     public function update(Request $request, $permissionId)
     {
         $request->validate([
@@ -51,26 +54,21 @@ class PermissionController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        // Encontra a permissão
         $permission = Permission::findOrFail($permissionId);
-
-        // Atualiza a permissão com os novos dados
         $permission->update($request->all());
 
-        // Redireciona de volta para a lista de permissões
-        return redirect()->route('permissions.index');
+        return redirect()->route('admin.permissions.index');
     }
 
-    // Método para excluir uma permissão
     public function destroy($permissionId)
     {
-        // Encontra a permissão
         $permission = Permission::findOrFail($permissionId);
 
-        // Exclui a permissão
+        $permission->users()->detach();
+
         $permission->delete();
 
-        // Redireciona de volta para a lista de permissões
-        return redirect()->route('permissions.index');
+        return redirect()->route('admin.permissions.index');
     }
+
 }
