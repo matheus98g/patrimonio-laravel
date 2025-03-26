@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/', function () { return view('dashboard'); })->name('dashboard');
+    Route::get('/', function () {
+        return view('dashboard');
+    })->name('dashboard');
 
     Route::prefix('ativos')->name('ativos.')->group(function () {
         Route::middleware(['role_or_permission:admin|view ativos'])->group(function () {
@@ -72,6 +74,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('movimentacoes')->name('movimentacoes.')->group(function () {
         Route::middleware(['role_or_permission:admin|view movimentacoes'])->group(function () {
             Route::get('/', [MovimentacaoController::class, 'index'])->name('index');
+            Route::get('/search', [MovimentacaoController::class, 'search'])->name('search');
         });
 
         Route::middleware(['role_or_permission:admin|create movimentacoes'])->group(function () {

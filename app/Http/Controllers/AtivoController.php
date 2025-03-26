@@ -21,7 +21,6 @@ class AtivoController extends Controller
     {
         $search = $request->input('search');
 
-        // Carrega apenas os campos necessários nos relacionamentos, especificando a tabela
         $query = Ativo::with([
             'marca' => function ($query) {
                 $query->select('marcas.id', 'marcas.descricao');
@@ -37,17 +36,14 @@ class AtivoController extends Controller
             }
         ])->orderBy('created_at', 'desc');
 
-        // Pega o usuário autenticado atual
         $user = auth()->user();
         $userName = $user ? $user->name : 'Usuário não autenticado';
 
-        // Log com o termo de pesquisa e nome do usuário
         Log::info('Pesquisa realizada em ativos:', [
             'termo' => $search,
             'user' => $userName
         ]);
 
-        // Aplica o filtro de busca
         if ($request->filled('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('descricao', 'like', "%{$search}%")
@@ -84,19 +80,12 @@ class AtivoController extends Controller
         return view('ativos.index', compact('ativos', 'marcas', 'tipos', 'ativosDisp'));
     }
 
-    // public function show($id)
-    // {
-    //     $ativo = Ativo::findOrFail($id);
-    //     return response()->json($ativo);
-    // }
-
     public function showDetails($id)
     {
-        $ativo = Ativo::with('movimentacoes', 'locais')->findOrFail($id); // Corrigido 'locais'
+        $ativo = Ativo::with('movimentacoes', 'locais')->findOrFail($id);
         $marcas = Marca::all();
         $tipos = Tipo::all();
 
-        // Obter a quantidade disponível no local específico
         $ativosDisp = DB::table('ativo_local')
             ->select('id_ativo', DB::raw('SUM(quantidade) AS quantidade_disp'))
             ->where('id_local', '=', 1)
@@ -104,7 +93,7 @@ class AtivoController extends Controller
             ->get();
 
         $movimentacoes = $ativo->movimentacoes;
-        $locais = $ativo->locais; // Corrigido para corresponder ao modelo atualizado
+        $locais = $ativo->locais;
 
         return view('ativos.show', compact('ativo', 'marcas', 'tipos', 'ativosDisp', 'movimentacoes', 'locais'));
     }
@@ -116,41 +105,6 @@ class AtivoController extends Controller
         $ativo = Ativo::findOrFail($id);
         return response()->json($ativo);
     }
-
-
-    // public function search(Request $request)
-    // {
-    //     $search = $request->input('search');
-
-    //     $query = Ativo::with(['marca', 'tipo', 'local', 'user'])
-    //         ->orderBy('created_at', 'desc');
-
-    //     if ($search) {
-    //         $query->where(function ($q) use ($search) {
-    //             $q->where('descricao', 'like', '%' . $search . '%')
-    //                 ->orWhere('observacao', 'like', '%' . $search . '%')
-    //                 ->orWhere('status', 'like', '%' . $search . '%')
-    //                 ->orWhere('id_marca', '=', (int) $search)
-    //                 ->orWhere('id_tipo', '=', (int) $search)
-    //                 ->orWhere('id_user', '=', (int) $search);
-    //         });
-    //     }
-
-    //     // Substituí get() por paginate() para habilitar links()
-    //     $ativos = $query->paginate(10);
-
-    //     // Mantive suas outras variáveis
-    //     $marcas = Marca::all();
-    //     $tipos = Tipo::all();
-
-    //     $ativosDisp = DB::table('ativo_local')
-    //         ->select('id_ativo', DB::raw('SUM(quantidade) AS quantidade_disp'))
-    //         ->where('id_local', '=', 1)
-    //         ->groupBy('id_ativo')
-    //         ->get();
-
-    //     return view('ativos.index', compact('ativos', 'marcas', 'tipos', 'ativosDisp'));
-    // }
 
 
     public function store(Request $request)
@@ -168,11 +122,9 @@ class AtivoController extends Controller
                 'imagem' => 'nullable|image|max:2048',
             ]);
 
-            // Processar nova marca/tipo
             $id_marca = $this->processarMarca($request);
             $id_tipo = $this->processarTipo($request);
 
-            // Upload de imagem com tratamento de erro
             try {
                 $imagemPath = $this->uploadImagem($request);
             } catch (Exception $e) {
@@ -181,7 +133,6 @@ class AtivoController extends Controller
                     ->withInput();
             }
 
-            // Criar ativo
             $ativo = Ativo::create([
                 'descricao' => $request->descricao,
                 'quantidade' => $request->quantidade,
@@ -194,14 +145,12 @@ class AtivoController extends Controller
                 'imagem' => $imagemPath,
             ]);
 
-            // Criar vínculo do ativo com o local, utilizando a quantidade total
             AtivoLocal::create([
                 'id_ativo' => $ativo->id,
-                'id_local' => $request->id_local, // local padrão: 1 (almoxarifado)
-                'quantidade' => $request->quantidade, // Atribui a quantidade total ao local fixo
+                'id_local' => $request->id_local,
+                'quantidade' => $request->quantidade,
             ]);
 
-            // Adicionar log de sucesso
             Log::info('Ativo cadastrado com sucesso. Descrição: ' . $ativo->descricao . ' ID: ' . $ativo->id);
 
             return redirect()->route('ativos.index')
@@ -243,13 +192,10 @@ class AtivoController extends Controller
                 'status',
             ]);
 
-            // Atualizar a quantidade
             $dados['quantidade'] = max(0, $request->quantidade);
             $dados['quantidade_min'] = $request->quantidade_min !== null ? max(0, $request->quantidade_min) : null;
             Log::info("Dados extraídos para atualização", ['dados' => $dados]);
 
-
-            // Fluxo seguro para substituição de imagem
             if ($request->hasFile('imagem')) {
                 try {
                     Log::info("Imagem enviada, iniciando upload");
@@ -268,12 +214,10 @@ class AtivoController extends Controller
                 }
             }
 
-            // Atualiza o ativo no banco
             Log::info("Atualizando ativo no banco...");
             $ativo->update($dados);
             Log::info("Ativo atualizado com sucesso", ['ativo_atualizado' => $ativo->toArray()]);
 
-            // Atualizar o vínculo do ativo no local
             $ativoLocal = AtivoLocal::where('id_ativo', $id)->first();
             if ($ativoLocal) {
                 Log::info("Ativo encontrado no AtivoLocal, atualizando quantidade", ['ativo_local' => $ativoLocal->toArray()]);
@@ -301,10 +245,8 @@ class AtivoController extends Controller
         try {
             $ativo = Ativo::findOrFail($id);
 
-            // Remover relacionamentos
             $ativo->local()->delete();
 
-            // Deletar imagem
             $this->deletarImagemAntiga($ativo->imagem);
 
             $ativo->delete();
@@ -324,7 +266,6 @@ class AtivoController extends Controller
         }
     }
 
-    // Métodos auxiliares
     private function processarMarca(Request $request)
     {
         if ($request->filled('nova_marca')) {
@@ -352,10 +293,7 @@ class AtivoController extends Controller
 
             $imagem = $request->file('imagem');
 
-            // Gera nome único para o arquivo
             $nomeArquivo = 'ativo-' . uniqid() . '.' . $imagem->getClientOriginalExtension();
-
-            // Faz upload para a pasta específica
             $caminho = $imagem->storeAs(
                 'ativos',
                 $nomeArquivo,
@@ -398,85 +336,30 @@ class AtivoController extends Controller
 
     public function getLocaisDisponiveis($ativoId)
     {
-        // Buscar o ativo pelo ID
         $ativo = Ativo::find($ativoId);
 
-        // Verificar se o ativo existe
         if (!$ativo) {
             Log::warning("Ativo não encontrado: ID {$ativoId}");
         }
 
-        // Obter os locais e formatar a resposta concatenando descrição e quantidade
         $locais = $ativo->locais()
             ->select('locais.id', 'locais.descricao', 'ativo_local.quantidade')
             ->where('ativo_local.id_ativo', $ativoId)
-            ->where('ativo_local.quantidade', '>', 0) // Filtra locais com quantidade > 0
+            ->where('ativo_local.quantidade', '>', 0)
             ->get()
             ->map(function ($local) {
                 return [
                     'id' => $local->id,
-                    'descricao' => "{$local->descricao} ({$local->quantidade})" // Concatena nome + quantidade
+                    'descricao' => "{$local->descricao} ({$local->quantidade})"
                 ];
             });
 
-        // Verificar se os locais foram encontrados
         if ($locais->isEmpty()) {
             Log::info("Nenhum local encontrado com quantidade disponível para o ativo ID {$ativoId}");
         } else {
             Log::info("Locais encontrados com quantidade disponível para o ativo ID {$ativoId}: " . $locais->count());
         }
 
-        // Retornar os locais formatados
         return response()->json($locais);
     }
-
-    // public function getLocaisDisponiveis($ativoId)
-    // {
-    //     Log::info("Iniciando busca de locais para o ativo ID {$ativoId}");
-
-    //     // Buscar o ativo pelo ID
-    //     $ativo = Ativo::find($ativoId);
-
-    //     // Verificar se o ativo existe
-    //     if (!$ativo) {
-    //         Log::warning("Ativo não encontrado: ID {$ativoId}");
-    //         return response()->json(['error' => 'Ativo não encontrado.'], 404);
-    //     }
-
-    //     Log::info("Ativo encontrado: {$ativo->descricao} (ID: {$ativo->id})");
-
-    //     // Verificar se o relacionamento com locais está carregando corretamente
-    //     if (!method_exists($ativo, 'local')) {
-    //         Log::error("Método locais() não encontrado no modelo Ativo.");
-    //         return response()->json(['error' => 'Erro interno no servidor.'], 500);
-    //     }
-
-    //     // Obter os locais e formatar a resposta concatenando descrição e quantidade
-    //     $locais = $ativo->local()
-    //         ->select('local.id', 'local.descricao', 'ativo_local.quantidade')
-    //         ->where('ativo_local.quantidade', '>', 0) // Filtra locais com quantidade > 0
-    //         ->get();
-
-    //     Log::info("Consulta ao banco executada. Registros retornados: " . $locais->count());
-
-    //     // Verificar se os locais foram encontrados
-    //     if ($locais->isEmpty()) {
-    //         Log::info("Nenhum local encontrado com quantidade disponível para o ativo ID {$ativoId}");
-    //         return response()->json([]);
-    //     }
-
-    //     // Formatar a resposta
-    //     $response = $locais->map(function ($local) {
-    //         return [
-    //             'id' => $local->id,
-    //             'descricao' => "{$local->descricao} ({$local->quantidade})" // Concatena nome + quantidade
-    //         ];
-    //     });
-
-    //     Log::info("Locais encontrados para o ativo ID {$ativoId}: ", $response->toArray());
-
-    //     // Retornar os locais formatados
-    //     return response()->json($response);
-    // }
-
 }
