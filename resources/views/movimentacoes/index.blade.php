@@ -12,7 +12,7 @@
             <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-6">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-200 mb-4">Filtrar Movimentações</h3>
 
-                <form action="{{ route('movimentacoes.search') }}" method="POST">
+                <form action="{{ route('movimentacoes.search') }}" method="GET">
                     @csrf
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
