@@ -32,7 +32,15 @@ class MovimentacaoController extends Controller
         // Log::info('Locais carregados:', ['locais' => $locais]);
         // Log::info('Ativos carregados:', ['ativos' => $ativos]);
 
-        return view('movimentacoes.index', compact('movimentacoes', 'ativos', 'locais'));
+        return view('movimentacoes.index', compact('movimentacoes', 'locais', 'ativos'));
+    }
+
+    public function create()
+    {
+        $ativos = Ativo::all();
+        $locais = Local::all()->keyBy('id');
+
+        return view('movimentacoes.create', compact('ativos', 'locais'));
     }
 
 
