@@ -24,7 +24,8 @@ Route::middleware('auth')->group(function () {
         });
 
         Route::middleware(['role_or_permission:admin|create ativos'])->group(function () {
-            Route::post('/', [AtivoController::class, 'store'])->name('store');
+            Route::get('/create', [AtivoController::class, 'create'])->name('create');
+            Route::post('/cadastrar', [AtivoController::class, 'store'])->name('store');
         });
 
         Route::middleware(['role_or_permission:admin|edit ativos'])->group(function () {

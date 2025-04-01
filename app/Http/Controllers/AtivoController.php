@@ -107,6 +107,11 @@ class AtivoController extends Controller
         return response()->json($ativo);
     }
 
+    public function create()
+    {
+        return view('ativos.create'); 
+    }
+
 
 
     public function store(Request $request)

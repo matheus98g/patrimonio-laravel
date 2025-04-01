@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Integracao extends Model
 {
-    protected $table = "integracoes";
+    protected $table = "integracao";
 
     protected $fillable = [
         'descricao',

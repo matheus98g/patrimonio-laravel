@@ -23,11 +23,12 @@
                         </form>
                     </div>
 
-                    <!-- Botão para abrir o modal de criação -->
                     <div class="py-6">
-                        <x-primary-button onclick="openCreateModal()">
-                            Adicionar Ativo
-                        </x-primary-button>
+                        <a href="{{ route('ativos.create') }}">
+                            <x-primary-button>
+                                Adicionar Ativo
+                            </x-primary-button>
+                        </a>
                     </div>
 
                     <!-- Tabela para Desktop -->
