@@ -12,12 +12,12 @@ class Local extends Model
         'observacao',
     ];
 
-    protected $table = 'locais';
+    protected $table = 'local';
 
     // Relacionamento de muitos para muitos com a tabela 'ativos' através da tabela pivô 'ativo_local'
     public function ativos()
     {
-        return $this->belongsToMany(Ativo::class, 'ativo_local', 'id_local', 'id_ativo')
+        return $this->belongsToMany(Ativo::class, 'ativo_local', 'local_id', 'ativo_id')
             ->withPivot('quantidade');  // Adiciona o campo 'quantidade' da tabela pivô
     }
 }

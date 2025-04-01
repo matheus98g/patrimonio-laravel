@@ -24,8 +24,8 @@
                         @csrf
 
                         <div class="mb-4">
-                            <label for="id_ativo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ativo</label>
-                            <select id="id_ativo" name="id_ativo"
+                            <label for="ativo_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ativo</label>
+                            <select id="ativo_id" name="ativo_id"
                                 class="w-full px-4 py-2 mt-1 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
                                 required>
                                 <option value="">Selecione...</option>
@@ -94,7 +94,7 @@
 </x-app-layout>
 
 <script>
-    document.getElementById('id_ativo').addEventListener('change', function () {
+    document.getElementById('ativo_id').addEventListener('change', function () {
         let ativoId = this.value;
         console.log('Ativo selecionado:', ativoId); // Log para ver o valor do ativo selecionado
 

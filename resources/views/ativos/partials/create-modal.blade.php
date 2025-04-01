@@ -31,10 +31,10 @@
 
                 <!-- Marca -->
                 <div>
-                    <label for="id_marca"
+                    <label for="marca_id"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Marca</label>
                     <div class="flex gap-2">
-                        <select name="id_marca" id="id_marca"
+                        <select name="marca_id" id="marca_id"
                             class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring focus:border-blue-300">
                             <option value="">Selecione</option>
                             @foreach ($marcas as $marca)
@@ -53,10 +53,10 @@
 
                 <!-- Tipo -->
                 <div>
-                    <label for="id_tipo"
+                    <label for="tipo_id"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo</label>
                     <div class="flex gap-2">
-                        <select name="id_tipo" id="id_tipo"
+                        <select name="tipo_id" id="tipo_id"
                             class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring focus:border-blue-300">
                             <option value="">Selecione</option>
                             @foreach ($tipos as $tipo)

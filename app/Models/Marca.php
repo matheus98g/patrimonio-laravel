@@ -12,6 +12,8 @@ class Marca extends Model
         'status',
     ];
 
+    protected $table = "marca";
+
     // Relacionamento com ativos
     public function ativos()
     {

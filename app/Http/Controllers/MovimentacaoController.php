@@ -45,7 +45,7 @@ class MovimentacaoController extends Controller
 
 
 
-    public function search(Request $request)
+    public function search(Request $request, $id = null)
     {
         $query = Movimentacao::with(['ativo', 'user', 'origem', 'destino']);
 
@@ -56,13 +56,14 @@ class MovimentacaoController extends Controller
         Log::info('Locais carregados para filtro:', ['locais' => $locais]);
         Log::info('Ativos carregados para filtro:', ['ativos' => $ativos]);
 
+        // Filtro de busca comum
         if ($request->filled('search')) {
             $search = $request->input('search');
 
             $query->where(function ($q) use ($search) {
                 $q->where('observacao', 'like', "%{$search}%")
                     ->orWhere('status', 'like', "%{$search}%")
-                    ->orWhere('id_user', 'like', "%{$search}%")
+                    ->orWhere('user_id', 'like', "%{$search}%")
                     ->orWhereHas('ativo', function ($subQuery) use ($search) {
                         $subQuery->where('descricao', 'like', "%{$search}%");
                     })
@@ -75,6 +76,12 @@ class MovimentacaoController extends Controller
             });
         }
 
+        // Filtro por ID de Ativo
+        if ($id) {
+            $query->where('ativo_id', $id);  // Assume que 'ativo_id' é o nome da coluna na tabela de movimentações
+        }
+
+        // Filtro por local de origem e destino
         if ($request->filled('local_origem')) {
             $query->where('local_origem', $request->input('local_origem'));
         }
@@ -94,14 +101,15 @@ class MovimentacaoController extends Controller
 
 
 
+
     public function store(Request $request)
     {
         Log::info('Dados recebidos do formulário: ', $request->all());
 
         $validated = $request->validate([
-            'id_ativo' => 'required|exists:ativos,id',
-            'local_origem' => 'required|exists:locais,id',
-            'local_destino' => 'required|exists:locais,id|different:local_origem',
+            'ativo_id' => 'required|exists:ativo,id',
+            'local_origem' => 'required|exists:locai,id',
+            'local_destino' => 'required|exists:local,id|different:local_origem',
             'quantidade_mov' => 'required|integer|min:1',
             'observacao' => 'nullable|string|max:255',
             'status' => 'nullable|in:concluido,pendente',
@@ -117,24 +125,24 @@ class MovimentacaoController extends Controller
         try {
             Log::info('Criando movimentação no banco de dados...');
             $movimentacao = Movimentacao::create([
-                'id_ativo' => $validated['id_ativo'],
+                'ativo_id' => $validated['ativo_id'],
                 'local_origem' => $validated['local_origem'],
                 'local_destino' => $validated['local_destino'],
                 'quantidade_mov' => $validated['quantidade_mov'],
                 'status' => $validated['status'],
                 'observacao' => $validated['observacao'],
-                'id_user' => $request->user()->id,
+                'user_id' => $request->user()->id,
             ]);
 
             Log::info('Movimentação registrada no banco:', ['movimentacao' => $movimentacao]);
 
             Log::info('Verificando a quantidade no local de origem...');
-            $ativoLocalOrigem = AtivoLocal::where('id_ativo', $validated['id_ativo'])
-                ->where('id_local', $validated['local_origem'])
+            $ativoLocalOrigem = AtivoLocal::where('ativo_id', $validated['ativo_id'])
+                ->where('local_id', $validated['local_origem'])
                 ->first();
 
             if (!$ativoLocalOrigem) {
-                Log::warning('Ativo não encontrado no local de origem.', ['id_local_origem' => $validated['local_origem']]);
+                Log::warning('Ativo não encontrado no local de origem.', ['local_id_origem' => $validated['local_origem']]);
                 return response()->json(['error' => 'Ativo não encontrado no local de origem.'], 404);
             }
 
@@ -156,7 +164,7 @@ class MovimentacaoController extends Controller
                 return response()->json(['error' => 'Quantidade insuficiente no local de origem.'], 400);
             }
 
-            $this->updateQuantidade($validated['id_ativo'], $validated['quantidade_mov'], $validated['local_destino']);
+            $this->updateQuantidade($validated['ativo_id'], $validated['quantidade_mov'], $validated['local_destino']);
 
             DB::commit();
             Log::info('Movimentação processada e transação comitada com sucesso.');
@@ -177,8 +185,8 @@ class MovimentacaoController extends Controller
     {
         Log::info('Atualizando a quantidade no local de destino...');
 
-        $ativoLocalDestino = AtivoLocal::where('id_ativo', $idAtivo)
-            ->where('id_local', $idLocalDestino)
+        $ativoLocalDestino = AtivoLocal::where('ativo_id', $idAtivo)
+            ->where('local_id', $idLocalDestino)
             ->first();
 
         if ($ativoLocalDestino) {
@@ -186,25 +194,25 @@ class MovimentacaoController extends Controller
             $ativoLocalDestino->save();
 
             Log::info('Quantidade no local de destino atualizada.', [
-                'id_local_destino' => $idLocalDestino,
+                'local_id_destino' => $idLocalDestino,
                 'quantidade_atualizada' => $ativoLocalDestino->quantidade
             ]);
         } else {
             AtivoLocal::create([
-                'id_ativo' => $idAtivo,
-                'id_local' => $idLocalDestino,
+                'ativo_id' => $idAtivo,
+                'local_id' => $idLocalDestino,
                 'quantidade' => $quantidadeMov,
             ]);
             Log::info('Novo registro de quantidade criado no local de destino.', [
-                'id_local_destino' => $idLocalDestino,
+                'local_id_destino' => $idLocalDestino,
                 'quantidade_adicionada' => $quantidadeMov,
             ]);
         }
     }
 
-    public function showHistorico($id_ativo)
+    public function showHistorico($ativo_id)
     {
-        $movimentacoes = Movimentacao::where('id_ativo', $id_ativo)->get();
+        $movimentacoes = Movimentacao::where('ativo_id', $ativo_id)->get();
 
         return response()->json(['data' => $movimentacoes]);
     }

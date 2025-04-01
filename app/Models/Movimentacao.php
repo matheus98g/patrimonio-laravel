@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Movimentacao extends Model
 {
     protected $fillable = [
-        'id_user',
-        'id_ativo',
+        'user_id',
+        'ativo_id',
         'observacao',
         'status',
         'local_origem',
@@ -17,18 +17,18 @@ class Movimentacao extends Model
         // 'tipo',
     ];
 
-    protected $table = 'movimentacoes';
+    protected $table = 'movimentacao';
 
     // Relacionamento com o modelo Ativo
     public function ativo()
     {
-        return $this->belongsTo(Ativo::class, 'id_ativo', 'id');
+        return $this->belongsTo(Ativo::class, 'ativo_id', 'id');
     }
 
     // Relacionamento com o modelo User
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_user', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function origem()

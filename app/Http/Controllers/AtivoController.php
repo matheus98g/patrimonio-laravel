@@ -23,13 +23,13 @@ class AtivoController extends Controller
 
         $query = Ativo::with([
             'marca' => function ($query) {
-                $query->select('marcas.id', 'marcas.descricao');
+                $query->select('marca.id', 'marca.descricao');
             },
             'tipo' => function ($query) {
-                $query->select('tipos.id', 'tipos.descricao');
+                $query->select('tipo.id', 'tipo.descricao');
             },
             'locais' => function ($query) {
-                $query->select('locais.id', 'locais.descricao');
+                $query->select('local.id', 'local.descricao');
             },
             'user' => function ($query) {
                 $query->select('users.id', 'users.name');
@@ -51,9 +51,9 @@ class AtivoController extends Controller
                     ->orWhere('status', 'like', "%{$search}%")
                     ->orWhere('quantidade', '=', (int) $search)
                     ->orWhere('quantidade_min', '=', (int) $search)
-                    ->orWhere('id_marca', '=', (int) $search)
-                    ->orWhere('id_tipo', '=', (int) $search)
-                    ->orWhere('id_user', '=', (int) $search)
+                    ->orWhere('marca_id', '=', (int) $search)
+                    ->orWhere('tipo_id', '=', (int) $search)
+                    ->orWhere('user_id', '=', (int) $search)
                     ->orWhereHas('marca', function ($subQuery) use ($search) {
                         $subQuery->where('descricao', 'like', "%{$search}%");
                     })
@@ -72,9 +72,9 @@ class AtivoController extends Controller
         $tipos = Tipo::all();
 
         $ativosDisp = DB::table('ativo_local')
-            ->select('id_ativo', DB::raw('SUM(quantidade) AS quantidade_disp'))
-            ->where('id_local', '=', 1)
-            ->groupBy('id_ativo')
+            ->select('ativo_id', DB::raw('SUM(quantidade) AS quantidade_disp'))
+            ->where('local_id', '=', 1)
+            ->groupBy('ativo_id')
             ->get();
 
         return view('ativos.index', compact('ativos', 'marcas', 'tipos', 'ativosDisp'));
@@ -87,9 +87,9 @@ class AtivoController extends Controller
         $tipos = Tipo::all();
 
         $ativosDisp = DB::table('ativo_local')
-            ->select('id_ativo', DB::raw('SUM(quantidade) AS quantidade_disp'))
-            ->where('id_local', '=', 1)
-            ->groupBy('id_ativo')
+            ->select('ativo_id', DB::raw('SUM(quantidade) AS quantidade_disp'))
+            ->where('local_id', '=', 1)
+            ->groupBy('ativo_id')
             ->get();
 
         $movimentacoes = $ativo->movimentacoes;
@@ -102,9 +102,11 @@ class AtivoController extends Controller
 
     public function show($id)
     {
-        $ativo = Ativo::findOrFail($id);
+        $ativo = Ativo::with(['movimentacoes', 'locais'])->findOrFail($id);
+
         return response()->json($ativo);
     }
+
 
 
     public function store(Request $request)
@@ -115,15 +117,15 @@ class AtivoController extends Controller
                 'quantidade' => 'required|integer|min:1',
                 'quantidade_min' => 'nullable|integer|min:1',
                 'observacao' => 'nullable|string',
-                'id_marca' => 'nullable|exists:marcas,id',
-                'id_tipo' => 'nullable|exists:tipos,id',
-                'nova_marca' => 'nullable|string|max:255|exclude_if:id_marca,!=,null',
-                'novo_tipo' => 'nullable|string|max:255|exclude_if:id_tipo,!=,null',
+                'marca_id' => 'nullable|exists:marca,id',
+                'tipo_id' => 'nullable|exists:tipo,id',
+                'nova_marca' => 'nullable|string|max:255|exclude_if:marca_id,!=,null',
+                'novo_tipo' => 'nullable|string|max:255|exclude_if:tipo_id,!=,null',
                 'imagem' => 'nullable|image|max:2048',
             ]);
 
-            $id_marca = $this->processarMarca($request);
-            $id_tipo = $this->processarTipo($request);
+            $marca_id = $this->processarMarca($request);
+            $tipo_id = $this->processarTipo($request);
 
             try {
                 $imagemPath = $this->uploadImagem($request);
@@ -139,15 +141,15 @@ class AtivoController extends Controller
                 'quantidade_min' => $request->quantidade_min,
                 'status' => 1,
                 'observacao' => $request->observacao,
-                'id_marca' => $id_marca,
-                'id_tipo' => $id_tipo,
-                'id_user' => $request->user()->id,
+                'marca_id' => $marca_id,
+                'tipo_id' => $tipo_id,
+                'user_id' => $request->user()->id,
                 'imagem' => $imagemPath,
             ]);
 
             AtivoLocal::create([
-                'id_ativo' => $ativo->id,
-                'id_local' => $request->id_local,
+                'ativo_id' => $ativo->id,
+                'local_id' => $request->local_id,
                 'quantidade' => $request->quantidade,
             ]);
 
@@ -173,8 +175,8 @@ class AtivoController extends Controller
                 'quantidade' => 'required|integer|min:1',
                 'quantidade_min' => 'nullable|integer|min:1',
                 'observacao' => 'nullable|string',
-                'id_marca' => 'required|exists:marcas,id',
-                'id_tipo' => 'required|exists:tipos,id',
+                'marca_id' => 'required|exists:marcas,id',
+                'tipo_id' => 'required|exists:tipos,id',
                 'status' => 'required|boolean',
                 'imagem' => 'nullable|image|max:2048',
             ]);
@@ -187,8 +189,8 @@ class AtivoController extends Controller
                 'quantidade',
                 'quantidade_min',
                 'observacao',
-                'id_marca',
-                'id_tipo',
+                'marca_id',
+                'tipo_id',
                 'status',
             ]);
 
@@ -218,7 +220,7 @@ class AtivoController extends Controller
             $ativo->update($dados);
             Log::info("Ativo atualizado com sucesso", ['ativo_atualizado' => $ativo->toArray()]);
 
-            $ativoLocal = AtivoLocal::where('id_ativo', $id)->first();
+            $ativoLocal = AtivoLocal::where('ativo_id', $id)->first();
             if ($ativoLocal) {
                 Log::info("Ativo encontrado no AtivoLocal, atualizando quantidade", ['ativo_local' => $ativoLocal->toArray()]);
                 $ativoLocal->quantidade = $request->quantidade;
@@ -245,7 +247,7 @@ class AtivoController extends Controller
         try {
             $ativo = Ativo::findOrFail($id);
 
-            $ativo->local()->delete();
+            // $ativo->locais()->delete();
 
             $this->deletarImagemAntiga($ativo->imagem);
 
@@ -272,7 +274,7 @@ class AtivoController extends Controller
             $marca = Marca::firstOrCreate(['descricao' => $request->nova_marca]);
             return $marca->id;
         }
-        return $request->id_marca;
+        return $request->marca_id;
     }
 
     private function processarTipo(Request $request)
@@ -281,7 +283,7 @@ class AtivoController extends Controller
             $tipo = Tipo::firstOrCreate(['descricao' => $request->novo_tipo]);
             return $tipo->id;
         }
-        return $request->id_tipo;
+        return $request->tipo_id;
     }
 
     private function uploadImagem(Request $request)
@@ -347,9 +349,9 @@ class AtivoController extends Controller
 
         // Obtém os locais onde o ativo tem quantidade disponível
         $locais = DB::table('ativo_local')
-            ->join('locais', 'ativo_local.id_local', '=', 'locais.id')
-            ->select('locais.id', 'locais.descricao', 'ativo_local.quantidade')
-            ->where('ativo_local.id_ativo', $ativoId)
+            ->join('local', 'ativo_local.local_id', '=', 'local.id')
+            ->select('local.id', 'local.descricao', 'ativo_local.quantidade')
+            ->where('ativo_local.ativo_id', $ativoId)
             ->where('ativo_local.quantidade', '>', 0) // Garante que a quantidade seja maior que 0
             ->get()
             ->map(function ($local) {

@@ -33,10 +33,10 @@
 
                 <!-- Campo Marca -->
                 <div>
-                    <label for="id_marca-edit"
+                    <label for="marca_id-edit"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Marca</label>
                     <div class="relative">
-                        <select name="id_marca" id="id_marca-edit"
+                        <select name="marca_id" id="marca_id-edit"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring focus:border-blue-300 appearance-none pr-8">
                             <option value="">Selecione</option>
                             @foreach ($marcas as $marca)
@@ -55,10 +55,10 @@
 
                 <!-- Campo Tipo -->
                 <div>
-                    <label for="id_tipo-edit"
+                    <label for="marca_id-edit"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo</label>
                     <div class="relative">
-                        <select name="id_tipo" id="id_tipo-edit"
+                        <select name="marca_id" id="marca_id-edit"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring focus:border-blue-300 appearance-none pr-8">
                             <option value="">Selecione</option>
                             @foreach ($tipos as $tipo)

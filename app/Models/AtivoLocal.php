@@ -14,26 +14,26 @@ class AtivoLocal extends Model
 
     // Definir os campos que podem ser preenchidos via atribuição em massa
     protected $fillable = [
-        'id_ativo',
-        'id_local',
+        'ativo_id',
+        'local_id',
         'quantidade',
     ];
 
     // Relacionamento com o modelo Ativo
     public function ativo()
     {
-        return $this->belongsTo(Ativo::class, 'id_ativo');
+        return $this->belongsTo(Ativo::class, 'ativo_id');
     }
 
     // Relacionamento com o modelo Local (muitos ativos podem estar em vários locais)
     public function local()
     {
-        return $this->belongsTo(Local::class, 'id_local');
+        return $this->belongsTo(Local::class, 'local_id');
     }
 
     // Relacionamento com movimentações (caso o AtivoLocal seja relacionado com movimentações)
     public function movimentacoes()
     {
-        return $this->hasMany(Movimentacao::class, 'id_ativo_local');
+        return $this->hasMany(Movimentacao::class, 'ativo_local_id');
     }
 }

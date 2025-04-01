@@ -12,6 +12,8 @@ class Tipo extends Model
         'status',
     ];
 
+    protected $table = "tipo";
+
     // Relacionamento com ativos
     public function ativos()
     {

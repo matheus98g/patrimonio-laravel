@@ -15,19 +15,19 @@ class LocalController extends Controller
 
     public function index()
     {
-        $locais = DB::table('locais')
-            ->leftJoin('ativo_local', 'locais.id', '=', 'ativo_local.id_local')
-            ->leftJoin('ativos', 'ativo_local.id_ativo', '=', 'ativos.id')
+        $local = DB::table('local')
+            ->leftJoin('ativo_local', 'local.id', '=', 'ativo_local.id_local')
+            ->leftJoin('ativo', 'ativo_local.ativo_id', '=', 'ativo.id')
             ->select(
-                'locais.id as id_local',
-                'locais.descricao as local_descricao',
-                'locais.observacao as local_observacao',
-                DB::raw('GROUP_CONCAT(CONCAT(ativos.descricao, " (", ativo_local.quantidade, ")") SEPARATOR ", ") as ativos')
+                'local.id as id_local',
+                'local.descricao as local_descricao',
+                'local.observacao as local_observacao',
+                DB::raw('GROUP_CONCAT(CONCAT(ativo.descricao, " (", ativo_local.quantidade, ")") SEPARATOR ", ") as ativo')
             )
-            ->groupBy('locais.id', 'locais.descricao')
+            ->groupBy('local.id', 'local.descricao')
             ->get();
 
-        return view('locais.index', compact('locais'));
+        return view('locais.index', compact('local'));
     }
 
     public function store(Request $request)
