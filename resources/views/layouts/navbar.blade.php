@@ -47,7 +47,7 @@
                                 <x-dropdown-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                                     {{ ('Admin Dashboard') }}
                                 </x-dropdown-link>
-                                <x-dropdown-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
+                                {{-- <x-dropdown-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
                                     {{ ('Controle de Acesso') }}
                                 </x-dropdown-link>
                                 <x-dropdown-link :href="route('admin.roles.index')" :active="request()->routeIs('admin.roles.index')">
@@ -55,7 +55,7 @@
                                 </x-dropdown-link>
                                  <x-dropdown-link :href="route('admin.permissions.index')" :active="request()->routeIs('admin.permissions.index')">
                                     {{ ('Permissões') }}
-                                </x-dropdown-link>
+                                </x-dropdown-link> --}}
                             </x-slot>
                         </x-dropdown>
                     </div>
