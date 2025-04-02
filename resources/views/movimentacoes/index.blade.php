@@ -77,6 +77,7 @@
                             <x-primary-button class="px-4 py-2">
                                 Movimentar Ativo
                             </x-primary-button>
+                            
                         </a>
                     </div>
 

@@ -109,10 +109,12 @@ class AtivoController extends Controller
 
     public function create()
     {
-        return view('ativos.create'); 
+        $ativos = Ativo::all();
+        $marcas = Marca::all();
+        $tipos = Tipo::all();
+
+        return view('ativos.create', compact('ativos', 'marcas','tipos'));
     }
-
-
 
     public function store(Request $request)
     {

@@ -25,7 +25,7 @@
                 <!-- Navigation Links -->
 
                 {{-- Admin Dropdown --}}
-                @if(auth()->user() && auth()->user()->hasRole('admin'))
+                
                     <div class="hidden sm:flex sm:items-center sm:ms-6">
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
@@ -59,7 +59,6 @@
                             </x-slot>
                         </x-dropdown>
                     </div>
-                @endif
 
 
                 {{-- Usuarios Dropdown --}}
@@ -131,11 +130,6 @@
 
                 <!-- Ativos Dropdown -->
                 <div class="hidden sm:flex sm:items-center sm:ms-6">
-                    @if (auth()->user()->hasRole('admin') || 
-                        auth()->user()->can('view ativos') || 
-                        auth()->user()->can('view marcas') || 
-                        auth()->user()->can('view tipos') || 
-                        auth()->user()->can('view locais'))
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
                                 <button
@@ -153,32 +147,23 @@
                             </x-slot>
 
                             <x-slot name="content">
-                                @if (auth()->user()->hasRole('admin') || auth()->user()->can('view ativos'))
                                     <x-dropdown-link :href="route('ativos.index')" :active="request()->routeIs('ativos.index')">
                                         {{ ('Ativos') }}
                                     </x-dropdown-link>
-                                @endif
 
-                                @if (auth()->user()->hasRole('admin') || auth()->user()->can('view marcas'))
                                     <x-dropdown-link :href="route('marcas.index')" :active="request()->routeIs('marcas.index')">
                                         {{ ('Marcas') }}
                                     </x-dropdown-link>
-                                @endif
 
-                                @if (auth()->user()->hasRole('admin') || auth()->user()->can('view tipos'))
                                     <x-dropdown-link :href="route('tipos.index')" :active="request()->routeIs('tipos.index')">
                                         {{ ('Tipos') }}
                                     </x-dropdown-link>
-                                @endif
 
-                                @if (auth()->user()->hasRole('admin') || auth()->user()->can('view locais'))
                                     <x-dropdown-link :href="route('locais.index')" :active="request()->routeIs('locais.index')">
                                         {{ ('Locais') }}
                                     </x-dropdown-link>
-                                @endif
                             </x-slot>
                         </x-dropdown>
-                    @endif
                 </div>
 
 

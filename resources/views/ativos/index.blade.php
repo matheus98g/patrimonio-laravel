@@ -24,12 +24,14 @@
                     </div>
 
                     <div class="py-6">
-                        <a href="{{ route('ativos.create') }}">
-                            <x-primary-button>
-                                Adicionar Ativo
-                            </x-primary-button>
-                        </a>
+                            <a href="{{ route('ativos.create') }}">
+                                <x-primary-button>
+                                    Adicionar Ativo
+                                </x-primary-button>
+                            </a>
                     </div>
+                    
+                    
 
                     <!-- Tabela para Desktop -->
                     <div class="hidden md:block">
