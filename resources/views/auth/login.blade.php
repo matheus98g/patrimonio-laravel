@@ -5,9 +5,6 @@
             <form class="space-y-6" id="login-form" method="POST" action="{{ route('login') }}">
                 @csrf
                 
-                <!-- reCAPTCHA Token -->
-                <input type="hidden" name="recaptcha_token" id="recaptcha-token">
-                
                 <!-- Email Address -->
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-900 dark:text-gray-100">{{ ('Email') }}</label>
@@ -56,21 +53,6 @@
             </form>
         </div>
     </div>
-
-    <!-- reCAPTCHA Script -->
-    <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
-    <script>
-        document.getElementById('login-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            grecaptcha.ready(function() {
-                grecaptcha.execute('{{ config("services.recaptcha.site_key") }}', { action: 'login' }).then(function(token) {
-                    document.getElementById('recaptcha-token').value = token;
-                    document.getElementById('login-form').submit();
-                });
-            });
-        });
-    </script>
-
 
 
 </x-guest-layout>
