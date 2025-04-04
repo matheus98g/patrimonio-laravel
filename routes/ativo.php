@@ -17,10 +17,10 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('ativos')->name('ativos.')->group(function () {
         Route::get('/', [AtivoController::class, 'index'])->middleware('can:view ativos')->name('index');
         Route::get('/{id}', [AtivoController::class, 'show'])->middleware('can:view ativos')->name('show');
-        Route::get('/details/{id}', [AtivoController::class, 'showDetails'])->middleware('can:view ativos')->name('show.details');
+        // Route::get('/details/{id}', [AtivoController::class, 'showDetails'])->middleware('can:view ativos')->name('show.details');
 
         Route::post('/', [AtivoController::class, 'store'])->middleware('can:create ativos')->name('store');
-        Route::get('/create', [AtivoController::class, 'create'])->middleware('can:create ativos')->name('create');
+        Route::get('/cadastrar-ativo', [AtivoController::class, 'create'])->middleware('can:create ativos')->name('create');
 
         Route::put('/{id}', [AtivoController::class, 'update'])->middleware('can:edit ativos')->name('update');
         Route::delete('/{id}', [AtivoController::class, 'destroy'])->middleware('can:delete ativos')->name('destroy');
@@ -44,7 +44,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [MovimentacaoController::class, 'index'])->middleware('can:view movimentacoes')->name('index');
         Route::get('/search/{id?}', [MovimentacaoController::class, 'search'])->middleware('can:view movimentacoes')->name('search');
         
-        Route::get('/create', [MovimentacaoController::class, 'create'])->middleware('can:create movimentacoes')->name('create');
+        Route::get('/cadastrar-movimentacao', [MovimentacaoController::class, 'cadastrarMovimentacao'])->middleware('can:create movimentacoes')->name('create');
         Route::post('/', [MovimentacaoController::class, 'store'])->middleware('can:create movimentacoes')->name('store');
 
         Route::put('/{id}', [MovimentacaoController::class, 'update'])->middleware('can:edit movimentacoes')->name('update');

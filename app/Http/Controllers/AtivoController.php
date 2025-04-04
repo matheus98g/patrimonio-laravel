@@ -102,9 +102,20 @@ class AtivoController extends Controller
 
     public function show($id)
     {
-        $ativo = Ativo::with(['movimentacoes', 'locais'])->findOrFail($id);
+        $ativo = Ativo::with('movimentacoes', 'locais')->findOrFail($id);
+        $marcas = Marca::all();
+        $tipos = Tipo::all();
 
-        return response()->json($ativo);
+        $ativosDisp = DB::table('ativo_local')
+            ->select('ativo_id', DB::raw('SUM(quantidade) AS quantidade_disp'))
+            ->where('local_id', '=', 1)
+            ->groupBy('ativo_id')
+            ->get();
+
+        $movimentacoes = $ativo->movimentacoes;
+        $locais = $ativo->locais;
+
+        return view('ativos.show', compact('ativo', 'marcas', 'tipos', 'ativosDisp', 'movimentacoes', 'locais'));
     }
 
     public function create()

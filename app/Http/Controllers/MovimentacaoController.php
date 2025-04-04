@@ -35,7 +35,7 @@ class MovimentacaoController extends Controller
         return view('movimentacoes.index', compact('movimentacoes', 'locais', 'ativos'));
     }
 
-    public function create()
+    public function cadastrarMovimentacao()
     {
         $ativos = Ativo::all();
         $locais = Local::all()->keyBy('id');
