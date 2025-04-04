@@ -142,102 +142,90 @@
                     <!-- Cards para Mobile -->
                     <div class="md:hidden space-y-4">
                         @forelse ($ativos as $ativo)
-                                                <div x-data="{ open: false }"
-                                                    class="bg-white dark:bg-gray-700 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600">
-                                                    <div @click="open = !open"
-                                                        class="p-4 flex items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                                                        <div class="flex-shrink-0 w-16 h-16 mr-4">
-                                                            @if ($ativo->imagem)
-                                                                <img src="{{ Storage::url($ativo->imagem) }}" alt="Imagem do ativo"
-                                                                    class="w-full h-full object-cover rounded-lg">
-                                                            @endif
-                                                        </div>
-                                                        <div class="flex-grow">
-                                                            <h3 class="font-medium text-gray-900 dark:text-gray-100">
-                                                                {{ $ativo->descricao }}
-                                                            </h3>
-                                                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                                                {{ optional($ativo->marca)->descricao ?? 'Sem marca' }}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <div x-show="open" x-transition:enter="transition ease-out duration-150"
-                                                        x-transition:enter-start="opacity-0 transform -translate-y-2"
-                                                        x-transition:enter-end="opacity-100 transform translate-y-0"
-                                                        x-transition:leave="transition ease-in duration-150"
-                                                        x-transition:leave-start="opacity-100 transform translate-y-0"
-                                                        x-transition:leave-end="opacity-0 transform -translate-y-2"
-                                                        class="p-4 border-t border-gray-200 dark:border-gray-600">
-                                                        <div class="space-y-3 text-sm">
-                                                            <div class="flex justify-between">
-                                                                <span class="text-gray-600 dark:text-gray-400">Tipo:</span>
-                                                                <span class="text-gray-900 dark:text-gray-100">
-                                                                    {{ optional($ativo->tipo)->descricao ?? 'N/A' }}
-                                                                </span>
-                                                            </div>
-                                                            <div class="flex justify-between">
-                                                                <span class="text-gray-600 dark:text-gray-400">Quantidade Total:</span>
-                                                                <span class="text-gray-900 dark:text-gray-100">
-                                                                    {{ $ativo->quantidade }}
-                                                                </span>
-                                                            </div>
-                                                            <div class="flex justify-between">
-                                                                <span class="text-gray-600 dark:text-gray-400">Quantidade Disponivel:</span>
-                                                                <span class="text-gray-900 dark:text-gray-100">
-                                                                    @php
-                                                                        $quantidadeDisp =
-                                                                            optional($ativosDisp->firstWhere('id_ativo', $ativo->id))
-                                                                                ->quantidade_disp ?? 0;
-                                                                    @endphp
-                                                                    {{ $quantidadeDisp }}
-                                                                </span>
-                                                            </div>
-                                                            <div class="flex justify-between">
-                                                                <span class="text-gray-600 dark:text-gray-400">Quantidade Mínima:</span>
-                                                                <span class="text-gray-900 dark:text-gray-100">
-                                                                    {{ $ativo->quantidade_min }}
-                                                                </span>
-                                                            </div>
-                                                            <div class="flex justify-between">
-                                                                <span class="text-gray-600 dark:text-gray-400">Status:</span>
-                                                                <span class="{{ $ativo->status ? 'text-green-600' : 'text-red-600' }}">
-                                                                    {{ $ativo->status ? 'Ativo' : 'Inativo' }}
-                                                                </span>
-                                                                @if ($quantidadeDisp <= $ativo->quantidade_min)
-                                                                    <br>
-                                                                    <span class="text-red-600">
-                                                                        {{ 'Estoque Abaixo do Mínimo!' }}
-                                                                    </span>
-                                                                @endif
-                                                            </div>
-                                                        </div>
-                                                        <div class="flex justify-end gap-2 mt-4">
-                                                            <x-secondary-button onclick="openEditModal({{ json_encode([
-                                'id' => $ativo->id,
-                                'descricao' => $ativo->descricao,
-                                'marca_id' => $ativo->id_marca,
-                                'tipo_id' => $ativo->id_tipo,
-                                'quantidade' => $ativo->quantidade,
-                                'quantidade_min' => $ativo->quantidade_min,
-                                'observacao' => $ativo->observacao,
-                                'status' => $ativo->status,
-                                'imagem_url' => $ativo->imagem ? Storage::url($ativo->imagem) : null,
-                            ]) }})" class="text-gray-900 rounded">
-                                                                Editar
-                                                            </x-secondary-button>
-                                                            <x-danger-button onclick="deleteAtivo('{{ $ativo->id }}')"
-                                                                class="text-sm px-3 py-1.5">
-                                                                Excluir
-                                                            </x-danger-button>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                            <div x-data="{ open: false }"
+                                class="bg-white dark:bg-gray-700 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600">
+                                <div @click="open = !open"
+                                    class="p-4 flex items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                                    <div class="flex-shrink-0 w-16 h-16 mr-4">
+                                        @if ($ativo->imagem)
+                                            <img src="{{ Storage::url($ativo->imagem) }}" alt="Imagem do ativo"
+                                                class="w-full h-full object-cover rounded-lg">
+                                        @endif
+                                    </div>
+                                    <div class="flex-grow">
+                                        <h3 class="font-medium text-gray-900 dark:text-gray-100">
+                                            {{ $ativo->descricao }}
+                                        </h3>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                            {{ optional($ativo->marca)->descricao ?? 'Sem marca' }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div x-show="open" x-transition:enter="transition ease-out duration-150"
+                                    x-transition:enter-start="opacity-0 transform -translate-y-2"
+                                    x-transition:enter-end="opacity-100 transform translate-y-0"
+                                    x-transition:leave="transition ease-in duration-150"
+                                    x-transition:leave-start="opacity-100 transform translate-y-0"
+                                    x-transition:leave-end="opacity-0 transform -translate-y-2"
+                                    class="p-4 border-t border-gray-200 dark:border-gray-600">
+                                    <div class="space-y-3 text-sm">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600 dark:text-gray-400">Tipo:</span>
+                                            <span class="text-gray-900 dark:text-gray-100">
+                                                {{ optional($ativo->tipo)->descricao ?? 'N/A' }}
+                                            </span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600 dark:text-gray-400">Quantidade Total:</span>
+                                            <span class="text-gray-900 dark:text-gray-100">
+                                                {{ $ativo->quantidade }}
+                                            </span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600 dark:text-gray-400">Quantidade Disponível:</span>
+                                            <span class="text-gray-900 dark:text-gray-100">
+                                                @php
+                                                    $quantidadeDisp =
+                                                        optional($ativosDisp->firstWhere('id_ativo', $ativo->id))
+                                                            ->quantidade_disp ?? 0;
+                                                @endphp
+                                                {{ $quantidadeDisp }}
+                                            </span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600 dark:text-gray-400">Quantidade Mínima:</span>
+                                            <span class="text-gray-900 dark:text-gray-100">
+                                                {{ $ativo->quantidade_min }}
+                                            </span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600 dark:text-gray-400">Status:</span>
+                                            <span class="{{ $ativo->status ? 'text-green-600' : 'text-red-600' }}">
+                                                {{ $ativo->status ? 'Ativo' : 'Inativo' }}
+                                            </span>
+                                            @if ($quantidadeDisp <= $ativo->quantidade_min)
+                                                <br>
+                                                <span class="text-red-600">
+                                                    {{ 'Estoque Abaixo do Mínimo!' }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-end gap-2 mt-4">
+                                        <a href="{{ route('ativos.show', ['id' => $ativo->id]) }}"
+                                            class="px-4 py-2 text-sm font-medium text-gray-900 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+                                            Ver mais
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         @empty
                             <div class="text-center p-4 text-gray-500">
                                 Nenhum ativo encontrado.
                             </div>
                         @endforelse
                     </div>
+                    
 
                     <div class="mt-6 flex justify-center">
                         {{ $ativos->links() }}
