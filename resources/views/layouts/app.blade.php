@@ -31,7 +31,7 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
+            <main class="min-h-screen overflow-y-auto ">
                 {{ $slot }}
             </main>
         </div>
