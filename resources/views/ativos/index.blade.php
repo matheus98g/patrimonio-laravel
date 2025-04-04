@@ -36,23 +36,23 @@
                     <!-- Tabela para Desktop -->
                     <div class="hidden md:block">
                         <div class="overflow-x-auto">
-                            <table class="w-full border-collapse">
+                            <table class="w-full border-collapse bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                                 <thead class="bg-gray-100 dark:bg-gray-700">
                                     <tr>
-                                        <th class="p-3 text-center text-sm font-medium text-gray-900 dark:text-gray-200">{{ ('Imagem') }}</th>
-                                        <th class="p-3 text-center text-sm font-medium text-gray-900 dark:text-gray-200">{{ ('Descrição') }}</th>
-                                        <th class="p-3 text-center text-sm font-medium text-gray-900 dark:text-gray-200">{{ ('Disponível') }}</th>
-                                        <th class="p-3 text-center text-sm font-medium text-gray-900 dark:text-gray-200">{{ ('Total') }}</th>
-                                        <th class="p-3 text-center text-sm font-medium text-gray-900 dark:text-gray-200">{{ ('Mínimo') }}</th>
-                                        <th class="p-3 text-center text-sm font-medium text-gray-900 dark:text-gray-200">{{ ('Status') }}</th>
-                                        <th class="p-3 text-center text-sm font-medium text-gray-900 dark:text-gray-200">{{ ('Ações') }}</th>
+                                        <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ ('Imagem') }}</th>
+                                        <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ ('Descrição') }}</th>
+                                        <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ ('Disponível') }}</th>
+                                        <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ ('Total') }}</th>
+                                        <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ ('Mínimo') }}</th>
+                                        <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ ('Status') }}</th>
+                                        <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ ('Ações') }}</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                                     @forelse ($ativos as $ativo)
-                                        <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150"
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150"
                                             id="row-{{ $ativo->id }}">
-                                            <td class="border border-gray-200 dark:border-gray-600 px-4 py-2 text-center">
+                                            <td class="p-4 text-left text-sm text-gray-900 dark:text-gray-100">
                                                 @if ($ativo->imagem)
                                                     <div class="flex justify-center">
                                                         <div class="relative w-20 h-20 md:w-24 md:h-24 overflow-hidden rounded-lg shadow-sm hover:shadow-md transition-shadow">
@@ -67,22 +67,22 @@
                                                     </div>
                                                 @endif
                                             </td>
-                                            <td class="border border-gray-200 dark:border-gray-600 px-4 py-2 text-center text-gray-700 dark:text-gray-300">
+                                            <td class="p-4 text-left text-sm text-gray-900 dark:text-gray-100">
                                                 {{ $ativo->descricao ?? 'N/A' }}
                                             </td>
-                                            <td class="border border-gray-200 dark:border-gray-600 px-4 py-2 text-center text-gray-700 dark:text-gray-300">
+                                            <td class="p-4 text-left text-sm text-gray-900 dark:text-gray-100">
                                                 @php
                                                     $quantidadeDisp = optional($ativosDisp->firstWhere('ativo_id', $ativo->id))->quantidade_disp ?? 0;
                                                 @endphp
                                                 {{ $quantidadeDisp }}
                                             </td>
-                                            <td class="border border-gray-200 dark:border-gray-600 px-4 py-2 text-center text-gray-700 dark:text-gray-300">
+                                            <td class="p-4 text-left text-sm text-gray-900 dark:text-gray-100">
                                                 {{ $ativo->quantidade }}
                                             </td>
-                                            <td class="border border-gray-200 dark:border-gray-600 px-4 py-2 text-center text-gray-700 dark:text-gray-300">
+                                            <td class="p-4 text-left text-sm text-gray-900 dark:text-gray-100">
                                                 {{ $ativo->quantidade_min }}
                                             </td>
-                                            <td class="border border-gray-200 dark:border-gray-600 px-4 py-2 text-center">
+                                            <td class="p-4 text-sm text-gray-900 dark:text-gray-100">
                                                 <div class="flex justify-center items-center space-x-2">
                                                     <div class="relative group inline-block">
                                                         <i data-feather="{{ $ativo->status ? 'check-circle' : 'x-circle' }}"
@@ -101,7 +101,7 @@
                                                     @endif
                                                 </div>
                                             </td>
-                                            <td class="border border-gray-200 dark:border-gray-600 px-4 py-2 text-center">
+                                            <td class="p-4 text-sm text-gray-900 dark:text-gray-100">
                                                 <div class="flex gap-3 items-center justify-center">
                                                     <!-- Botão de busca de produtos -->
                                                     <x-secondary-button onclick="searchProdutos('{{ $ativo->descricao }}')"

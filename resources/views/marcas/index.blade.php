@@ -22,23 +22,23 @@
 
 
                     <!-- Tabela de Marcas -->
-                    <table class="table-auto w-full border-collapse border border-gray-300 dark:border-gray-700">
-                        <thead class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
+                    <table class="w-full border-collapse bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+                        <thead class="bg-gray-100 dark:bg-gray-700">
                             <tr>
-                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">ID</th>
-                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Descrição
+                                <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">ID</th>
+                                <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Descrição
                                 </th>
-                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Status</th>
+                                <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Status</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                             @forelse ($marcas as $marca)
-                                <tr class="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
+                                    <td class="p-4 text-sm text-gray-900 dark:text-gray-100">
                                         {{ $marca->id }}</td>
-                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                    <td class="p-4 text-sm text-gray-900 dark:text-gray-100">
                                         {{ $marca->descricao }}</td>
-                                    <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                    <td class="p-4 text-sm text-gray-900 dark:text-gray-100">
                                         <span
                                             class="{{ $marca->status == 1 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
                                             {{ $marca->status == 1 ? 'Ativo' : 'Inativo' }}
@@ -48,7 +48,7 @@
                             @empty
                                 <tr>
                                     <td colspan="3"
-                                        class="text-center border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                        class="text-center p-4 text-sm text-gray-900 dark:text-gray-100">
                                         Nenhuma marca encontrada.</td>
                                 </tr>
                             @endforelse
