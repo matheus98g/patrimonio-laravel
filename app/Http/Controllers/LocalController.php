@@ -13,6 +13,23 @@ class LocalController extends Controller
 {
 
 
+    // public function index()
+    // {
+    //     $locais = DB::table('local')
+    //         ->leftJoin('ativo_local', 'local.id', '=', 'ativo_local.local_id')
+    //         ->leftJoin('ativo', 'ativo_local.ativo_id', '=', 'ativo.id')
+    //         ->select(
+    //             'local.id as local_id',
+    //             'local.descricao as local_descricao',
+    //             'local.observacao as local_observacao',
+    //             DB::raw('GROUP_CONCAT(CONCAT(ativo.descricao, " (", ativo_local.quantidade, ")") SEPARATOR ", ") as ativo')
+    //         )
+    //         ->groupBy('local.id', 'local.descricao')
+    //         ->get();
+
+    //     return view('locais.index', compact('locais'));
+    // }
+
     public function index()
     {
         $locais = DB::table('local')
@@ -22,13 +39,15 @@ class LocalController extends Controller
                 'local.id as local_id',
                 'local.descricao as local_descricao',
                 'local.observacao as local_observacao',
-                DB::raw('GROUP_CONCAT(CONCAT(ativo.descricao, " (", ativo_local.quantidade, ")") SEPARATOR ", ") as ativo')
+                DB::raw('GROUP_CONCAT(CONCAT(ativo.descricao, " (", ativo_local.quantidade, ")") SEPARATOR ", ") as ativos')
             )
-            ->groupBy('local.id', 'local.descricao')
+            ->groupBy('local.id', 'local.descricao', 'local.observacao')
             ->get();
 
         return view('locais.index', compact('locais'));
     }
+
+
 
     public function store(Request $request)
     {

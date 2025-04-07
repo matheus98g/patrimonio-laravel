@@ -82,18 +82,18 @@
                                                                    class="p-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600">
                                                     <i data-feather="dollar-sign" class="w-4 h-4"></i>
                                                 </x-secondary-button>
-                                                <x-secondary-button onclick="openEditModal({{ $ativo->id }})"
+                                                {{-- <x-secondary-button onclick="openEditModal({{ $ativo->id }})"
                                                                    class="p-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600">
                                                     <i data-feather="edit" class="w-4 h-4"></i>
+                                                </x-secondary-button> --}}
+                                                <x-secondary-button onclick="openDetailsAtivo({{ $ativo->id }})"
+                                                    class="p-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600">
+                                                    <i data-feather="more-vertical" class="w-4 h-4"></i>
                                                 </x-secondary-button>
                                                 <x-danger-button onclick="deleteAtivo('{{ $ativo->id }}')"
                                                                 class="p-2 bg-red-500 dark:bg-red-600 hover:bg-red-600 dark:hover:bg-red-700">
                                                     <i data-feather="x" class="w-4 h-4"></i>
                                                 </x-danger-button>
-                                                <x-secondary-button onclick="openDetailsAtivo({{ $ativo->id }})"
-                                                                   class="p-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600">
-                                                    <i data-feather="more-vertical" class="w-4 h-4"></i>
-                                                </x-secondary-button>
                                             </div>
                                         </td>
                                     </tr>
