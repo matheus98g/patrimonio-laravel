@@ -72,7 +72,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <div class="flex justify-between items-center py-4">
-                        <h3 class="text-lg font-semibold">Movimentações</h3>
+                        <h3 class="text-lg font-semibold">Ultimas Movimentações</h3>
                         <a href="{{ route('movimentacoes.create') }}">
                             <x-primary-button class="px-4 py-2">
                                 Movimentar Ativo
