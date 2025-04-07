@@ -59,7 +59,7 @@
                                 <strong>{{ ('Quantidade Mínima:') }}</strong> {{ $ativo->quantidade_min }}
                             </p>
                             <p class="text-gray-700 dark:text-gray-300">
-                                <strong>{{ ('Quantidade Disponível:') }}</strong> {{ $ativo->quantidade_disp ?? 0 }}
+                                <strong>{{ ('Quantidade Disponível:') }}</strong> {{ optional($ativosDisp->firstWhere('ativo_id', $ativo->id))->quantidade_disp ?? 0 }}
                             </p>
                         </div>
                     </div>

@@ -78,10 +78,10 @@
                                         </td>
                                         <td class="p-4">
                                             <div class="flex gap-2 justify-center">
-                                                <x-secondary-button onclick="searchProdutos('{{ $ativo->descricao }}')"
+                                                {{-- <x-secondary-button onclick="searchProdutos('{{ $ativo->descricao }}')"
                                                                    class="p-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600">
                                                     <i data-feather="dollar-sign" class="w-4 h-4"></i>
-                                                </x-secondary-button>
+                                                </x-secondary-button> --}}
                                                 {{-- <x-secondary-button onclick="openEditModal({{ $ativo->id }})"
                                                                    class="p-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600">
                                                     <i data-feather="edit" class="w-4 h-4"></i>

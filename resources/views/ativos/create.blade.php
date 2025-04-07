@@ -26,81 +26,118 @@
                         <input type="hidden" name="status" value="1">
 
                         <div class="mb-4">
-                            <label for="descricao" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descrição*</label>
+                            <label for="descricao"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descrição*</label>
                             <input type="text" name="descricao" id="descricao"
                                 class="w-full px-4 py-2 mt-1 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
                                 required>
                         </div>
 
                         <div class="mb-4">
-                            <label for="marca_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Marca</label>
+                            <label for="marca_id"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Marca</label>
                             <div class="flex gap-2">
                                 <select name="marca_id" id="marca_id"
-                                        class="w-full px-4 py-2 border rounded-md bg-white text-gray-800 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600">
+                                    class="w-full px-4 py-2 border rounded-md bg-white text-gray-800 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600">
                                     <option value="">Selecione</option>
                                     @foreach ($marcas as $marca)
                                         <option value="{{ $marca->id }}">{{ $marca->descricao }}</option>
                                     @endforeach
                                 </select>
-                                <button type="button" onclick="toggleMarcaForm()" class="text-blue-500 hover:text-blue-700">
+                                <button type="button" onclick="toggleMarcaForm()"
+                                    class="text-blue-500 hover:text-blue-700">
                                     <i data-feather="plus" width="20"></i>
                                 </button>
                             </div>
                             <div id="nova-marca-form" class="hidden mt-2">
                                 <input type="text" name="nova_marca" placeholder="Nova Marca"
-                                       class="w-full px-4 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600">
+                                    class="w-full px-4 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600">
                             </div>
                         </div>
-                        
+
                         <div class="mb-4">
-                            <label for="tipo_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo</label>
+                            <label for="tipo_id"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo</label>
                             <div class="flex gap-2">
                                 <select name="tipo_id" id="tipo_id"
-                                        class="w-full px-4 py-2 border rounded-md bg-white text-gray-800 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600">
+                                    class="w-full px-4 py-2 border rounded-md bg-white text-gray-800 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600">
                                     <option value="">Selecione</option>
                                     @foreach ($tipos as $tipo)
                                         <option value="{{ $tipo->id }}">{{ $tipo->descricao }}</option>
                                     @endforeach
                                 </select>
-                                <button type="button" onclick="toggleTipoForm()" class="text-blue-500 hover:text-blue-700">
+                                <button type="button" onclick="toggleTipoForm()"
+                                    class="text-blue-500 hover:text-blue-700">
                                     <i data-feather="plus" width="20"></i>
                                 </button>
                             </div>
                             <div id="novo-tipo-form" class="hidden mt-2">
                                 <input type="text" name="novo_tipo" placeholder="Novo Tipo"
-                                       class="w-full px-4 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600">
+                                    class="w-full px-4 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600">
                             </div>
                         </div>
-                        
+
 
                         <div class="mb-4">
-                            <label for="quantidade" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade*</label>
+                            <label for="quantidade"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade*</label>
                             <input type="number" name="quantidade" id="quantidade" min="1" required
                                 class="w-full px-4 py-2 mt-1 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500">
                         </div>
 
                         <div class="mb-4">
-                            <label for="quantidade_min" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade Mínima</label>
+                            <label for="quantidade_min"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade
+                                Mínima</label>
                             <input type="number" name="quantidade_min" id="quantidade_min" min="1" required
                                 class="w-full px-4 py-2 mt-1 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500">
                         </div>
 
                         <div class="mb-4">
-                            <label for="observacao" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Observação</label>
-                            <textarea name="observacao" id="observacao" class="w-full px-4 py-2 mt-1 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"></textarea>
+                            <label for="observacao"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Observação</label>
+                            <textarea name="observacao" id="observacao"
+                                class="w-full px-4 py-2 mt-1 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"></textarea>
                         </div>
 
-                        <div class="mb-4">
-                            <label for="imagem" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Imagem</label>
+                        {{-- <div class="mb-4">
+                            <label for="imagem"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Imagem</label>
                             <div class="flex flex-col items-center">
-                                <img id="imagem-preview" class="mb-2 max-h-32 object-contain rounded-md hidden" alt="Pré-visualização">
-                                <input type="file" name="imagem" id="imagem" accept="image/*" class="hidden" onchange="previewImagem(event)">
+                                <img id="imagem-preview" class="mb-2 max-h-32 object-contain rounded-md hidden"
+                                    alt="Pré-visualização">
+                                <input type="file" name="imagem" id="imagem" accept="image/*" class="hidden"
+                                    onchange="previewImagem(event)">
                                 <button type="button" onclick="document.getElementById('imagem').click()"
                                     class="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600">
                                     Selecionar Imagem
                                 </button>
                             </div>
+                        </div> --}}
+
+                        <div class="mb-4">
+                            <label for="imagem"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Imagem</label>
+                            <div class="flex flex-col items-center">
+                                <img id="imagem-preview" class="mb-2 max-h-32 object-contain rounded-md hidden"
+                                    alt="Pré-visualização">
+
+                                <input type="file" name="imagem" id="imagem" accept="image/*" class="hidden"
+                                    onchange="previewImagem(event)">
+
+                                <div class="flex gap-2">
+                                    <button type="button" onclick="document.getElementById('imagem').click()"
+                                        class="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600">
+                                        Selecionar Imagem
+                                    </button>
+                                    <button type="button" onclick="removerImagem()"
+                                        class="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600">
+                                        Remover Imagem
+                                    </button>
+                                </div>
+                            </div>
                         </div>
+
 
                         <div class="flex justify-between items-center space-x-4 mt-6">
                             <x-secondary-button type="button" onclick="window.history.back();" class="px-6 py-3">
@@ -136,4 +173,14 @@
         };
         reader.readAsDataURL(event.target.files[0]);
     }
+
+    function removerImagem() {
+        const imagemInput = document.getElementById('imagem');
+        const preview = document.getElementById('imagem-preview');
+
+        imagemInput.value = ''; // limpa o input
+        preview.src = '';
+        preview.classList.add('hidden'); // esconde o preview
+    }
+
 </script>
