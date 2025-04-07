@@ -71,7 +71,7 @@
                 <div class="flex items-center justify-between mb-4">
                     <div>
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ ('Movimentações') }}</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Movimentações em que este ativo estava presente.</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Movimentações com este ativo.</p>
                     </div>
                 </div>
                 <div class="overflow-x-auto">
@@ -116,7 +116,7 @@
                 <div class="flex items-center justify-between mb-4">
                     <div>
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ ('Locais do Ativo') }}</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Último local registrado para o ativo.</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Locais com este ativo.</p>
                     </div>
                 </div>
                 <div class="overflow-x-auto">
