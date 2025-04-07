@@ -55,15 +55,15 @@
                     </div>
 
                     <div class="flex justify-end mt-4 gap-3">
+                        <a href="{{ route('movimentacoes.index') }}">
+                            <x-secondary-button class="px-4 py-2">
+                                Limpar Filtros
+                            </x-secondary-button>
+                        </a>
                         <x-primary-button type="submit" class="px-5 py-2">
                             Pesquisar
                         </x-primary-button>
 
-                        <a href="{{ route('movimentacoes.index') }}">
-                            <x-secondary-button class="px-5 py-2 bg-gray-500 text-white">
-                                Limpar Filtros
-                            </x-secondary-button>
-                        </a>
                     </div>
 
                 </form>
