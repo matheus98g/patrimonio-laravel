@@ -118,14 +118,93 @@ class AtivoController extends Controller
         return view('ativos.show', compact('ativo', 'marcas', 'tipos', 'ativosDisp', 'movimentacoes', 'locais'));
     }
 
-    public function create()
-    {
-        $ativos = Ativo::all();
-        $marcas = Marca::all();
-        $tipos = Tipo::all();
 
-        return view('ativos.create', compact('ativos', 'marcas','tipos'));
+    public function cadastrarAtivo()
+    {
+        try {
+            Log::info('Entrou no método cadastrarAtivo');
+
+            $ativos = Ativo::all();
+            Log::info('Ativos carregados', ['count' => count($ativos)]);
+
+            $marcas = Marca::all();
+            Log::info('Marcas carregadas', ['count' => count($marcas)]);
+
+            $tipos = Tipo::all();
+            Log::info('Tipos carregados', ['count' => count($tipos)]);
+
+            // Checa se a view existe
+            if (!view()->exists('ativos.create')) {
+                Log::error('View ativos.create NÃO existe');
+                abort(500, 'View ativos.create não encontrada');
+            }
+
+            Log::info('View ativos.create existe, retornando...');
+
+            return view('ativos.create', compact('ativos', 'marcas', 'tipos'));
+
+        } catch (Exception $e) {
+            Log::error('Erro ao carregar cadastrarAtivo: ' . $e->getMessage());
+            abort(500, 'Erro interno no servidor');
+        }
     }
+
+
+    // public function store(Request $request)
+    // {
+    //     try {
+    //         $request->validate([
+    //             'descricao' => 'required|string|max:255',
+    //             'quantidade' => 'required|integer|min:1',
+    //             'quantidade_min' => 'nullable|integer|min:1',
+    //             'observacao' => 'nullable|string',
+    //             'marca_id' => 'nullable|exists:marca,id',
+    //             'tipo_id' => 'nullable|exists:tipo,id',
+    //             'nova_marca' => 'nullable|string|max:255|exclude_if:marca_id,!=,null',
+    //             'novo_tipo' => 'nullable|string|max:255|exclude_if:tipo_id,!=,null',
+    //             'imagem' => 'nullable|image|max:2048',
+    //         ]);
+
+    //         $marca_id = $this->processarMarca($request);
+    //         $tipo_id = $this->processarTipo($request);
+
+    //         try {
+    //             $imagemPath = $this->uploadImagem($request);
+    //         } catch (Exception $e) {
+    //             return redirect()->back()
+    //                 ->withErrors(['imagem' => $e->getMessage()])
+    //                 ->withInput();
+    //         }
+
+    //         $ativo = Ativo::create([
+    //             'descricao' => $request->descricao,
+    //             'quantidade' => $request->quantidade,
+    //             'quantidade_min' => $request->quantidade_min,
+    //             'status' => 1,
+    //             'observacao' => $request->observacao,
+    //             'marca_id' => $marca_id,
+    //             'tipo_id' => $tipo_id,
+    //             'user_id' => $request->user()->id,
+    //             'imagem' => $imagemPath,
+    //         ]);
+
+    //         AtivoLocal::create([
+    //             'ativo_id' => $ativo->id,
+    //             'local_id' => $request->local_id,
+    //             'quantidade' => $request->quantidade,
+    //         ]);
+
+    //         Log::info('Ativo cadastrado com sucesso. Descrição: ' . $ativo->descricao . ' ID: ' . $ativo->id);
+
+    //         return redirect()->route('ativos.index')
+    //             ->with('success', 'Ativo cadastrado com sucesso!');
+    //     } catch (Exception $e) {
+    //         Log::error('Erro ao cadastrar ativo: ' . $e->getMessage());
+    //         return redirect()->back()
+    //             ->withErrors(['error' => 'Erro ao cadastrar ativo: ' . $e->getMessage()])
+    //             ->withInput();
+    //     }
+    // }
 
     public function store(Request $request)
     {
@@ -140,48 +219,88 @@ class AtivoController extends Controller
                 'nova_marca' => 'nullable|string|max:255|exclude_if:marca_id,!=,null',
                 'novo_tipo' => 'nullable|string|max:255|exclude_if:tipo_id,!=,null',
                 'imagem' => 'nullable|image|max:2048',
+                'local_id' => 'required|exists:local,id',
             ]);
 
             $marca_id = $this->processarMarca($request);
             $tipo_id = $this->processarTipo($request);
 
+            $imagemPath = null;
             try {
                 $imagemPath = $this->uploadImagem($request);
             } catch (Exception $e) {
+                Log::warning('Falha ao fazer upload da imagem.', [
+                    'user_id' => $request->user()->id,
+                    'descricao' => $request->descricao,
+                    'erro' => $e->getMessage()
+                ]);
                 return redirect()->back()
-                    ->withErrors(['imagem' => $e->getMessage()])
+                    ->withErrors(['imagem' => 'Erro ao fazer upload da imagem: ' . $e->getMessage()])
                     ->withInput();
             }
 
-            $ativo = Ativo::create([
-                'descricao' => $request->descricao,
-                'quantidade' => $request->quantidade,
-                'quantidade_min' => $request->quantidade_min,
-                'status' => 1,
-                'observacao' => $request->observacao,
-                'marca_id' => $marca_id,
-                'tipo_id' => $tipo_id,
-                'user_id' => $request->user()->id,
-                'imagem' => $imagemPath,
+            DB::beginTransaction();
+            try {
+                $ativo = Ativo::create([
+                    'descricao' => $request->descricao,
+                    'quantidade' => $request->quantidade,
+                    'quantidade_min' => $request->quantidade_min,
+                    'status' => 1,
+                    'observacao' => $request->observacao,
+                    'marca_id' => $marca_id,
+                    'tipo_id' => $tipo_id,
+                    'user_id' => $request->user()->id,
+                    'imagem' => $imagemPath,
+                ]);
+
+                AtivoLocal::create(attributes: [
+                    'ativo_id' => $ativo->id,
+                    'local_id' => $request->local_id,
+                    'quantidade' => $request->quantidade,
+                ]);
+
+                DB::commit();
+
+                Log::info('Ativo e local vinculados com sucesso.', [
+                    'ativo_id' => $ativo->id,
+                    'descricao' => $ativo->descricao,
+                    'user_id' => $request->user()->id,
+                    'local_id' => $request->local_id,
+                    'quantidade' => $request->quantidade,
+                ]);
+
+                return redirect()->route('ativos.index')
+                    ->with('success', 'Ativo cadastrado com sucesso!');
+
+            } catch (Exception $e) {
+                DB::rollBack();
+                Log::error('Erro ao criar ativo ou vincular ao local.', [
+                    'descricao' => $request->descricao,
+                    'user_id' => $request->user()->id,
+                    'local_id' => $request->local_id ?? null,
+                    'erro' => $e->getMessage()
+                ]);
+                return redirect()->back()
+                    ->withErrors(['error' => 'Erro ao salvar ativo e local: ' . $e->getMessage()])
+                    ->withInput();
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::notice('Erro de validação ao cadastrar ativo.', [
+                'erros' => $e->errors(),
+                'user_id' => $request->user()->id
             ]);
-
-            AtivoLocal::create([
-                'ativo_id' => $ativo->id,
-                'local_id' => $request->local_id,
-                'quantidade' => $request->quantidade,
-            ]);
-
-            Log::info('Ativo cadastrado com sucesso. Descrição: ' . $ativo->descricao . ' ID: ' . $ativo->id);
-
-            return redirect()->route('ativos.index')
-                ->with('success', 'Ativo cadastrado com sucesso!');
+            throw $e; // para manter o comportamento padrão do Laravel
         } catch (Exception $e) {
-            Log::error('Erro ao cadastrar ativo: ' . $e->getMessage());
+            Log::critical('Erro inesperado ao cadastrar ativo.', [
+                'user_id' => $request->user()->id,
+                'erro' => $e->getMessage()
+            ]);
             return redirect()->back()
-                ->withErrors(['error' => 'Erro ao cadastrar ativo: ' . $e->getMessage()])
+                ->withErrors(['error' => 'Erro inesperado ao cadastrar ativo: ' . $e->getMessage()])
                 ->withInput();
         }
     }
+
 
     public function update(Request $request, $id)
     {
@@ -354,14 +473,14 @@ class AtivoController extends Controller
     }
 
 
-    public function getLocaisDisponiveis($ativoId)
+    public function getLocaisDisponiveis($id)
     {
         // Verifica se o ativo existe
-        $ativo = Ativo::find($ativoId);
+        $ativo = Ativo::find($id);
 
         // Se o ativo não existir, registra um aviso no log
         if (!$ativo) {
-            Log::warning("Ativo não encontrado: ID {$ativoId}");
+            Log::warning("Ativo não encontrado: ID {$id}");
             return response()->json([], 404); // Retorna uma resposta 404 se o ativo não for encontrado
         }
 
@@ -369,7 +488,7 @@ class AtivoController extends Controller
         $locais = DB::table('ativo_local')
             ->join('local', 'ativo_local.local_id', '=', 'local.id')
             ->select('local.id', 'local.descricao', 'ativo_local.quantidade')
-            ->where('ativo_local.ativo_id', $ativoId)
+            ->where('ativo_local.ativo_id', $id)
             ->where('ativo_local.quantidade', '>', 0) // Garante que a quantidade seja maior que 0
             ->get()
             ->map(function ($local) {
@@ -381,9 +500,9 @@ class AtivoController extends Controller
 
         // Log para verificar se algum local foi encontrado
         if ($locais->isEmpty()) {
-            Log::info("Nenhum local encontrado com quantidade disponível para o ativo ID {$ativoId}");
+            Log::info("Nenhum local encontrado com quantidade disponível para o ativo ID {$id}");
         } else {
-            Log::info("Locais encontrados com quantidade disponível para o ativo ID {$ativoId}: " . $locais->count());
+            Log::info("Locais encontrados com quantidade disponível para o ativo ID {$id}: " . $locais->count());
         }
 
         // Retorna os locais como JSON

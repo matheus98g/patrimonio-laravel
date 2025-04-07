@@ -13,15 +13,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/', function () {
         return view('dashboard');
     })->name('dashboard');
-
+    
+    
     Route::prefix('ativos')->name('ativos.')->group(function () {
         Route::get('/', [AtivoController::class, 'index'])->middleware('can:view ativos')->name('index');
+        Route::get('/cadastrar-ativo', [AtivoController::class, 'cadastrarAtivo'])->middleware('can:create ativos')->name('create');
+        Route::post('/cadastrar-ativo', [AtivoController::class, 'store'])->middleware('can:create ativos')->name('store');
+        Route::get('/locais-disponiveis/{id}', [AtivoController::class, 'getLocaisDisponiveis'])->middleware('can:view ativos')->name('showLocais');
         Route::get('/{id}', [AtivoController::class, 'show'])->middleware('can:view ativos')->name('show');
-        // Route::get('/details/{id}', [AtivoController::class, 'showDetails'])->middleware('can:view ativos')->name('show.details');
-
-        Route::post('/', [AtivoController::class, 'store'])->middleware('can:create ativos')->name('store');
-        Route::get('/cadastrar-ativo', [AtivoController::class, 'create'])->middleware('can:create ativos')->name('create');
-
         Route::put('/{id}', [AtivoController::class, 'update'])->middleware('can:edit ativos')->name('update');
         Route::delete('/{id}', [AtivoController::class, 'destroy'])->middleware('can:delete ativos')->name('destroy');
     });

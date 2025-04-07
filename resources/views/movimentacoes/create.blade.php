@@ -100,7 +100,7 @@
 
         if (ativoId) {
             console.log('Buscando locais disponíveis para o ativo ID:', ativoId); // Log para indicar que estamos buscando os locais
-            fetch(`/ativos/${ativoId}/locais-disponiveis`) // Corrige a URL para corresponder à rota correta
+            fetch(`/ativos/locais-disponiveis/${ativoId}`) // Corrige a URL para corresponder à rota correta
                 .then(response => {
                     console.log('Resposta recebida:', response); // Log para verificar a resposta
                     if (!response.ok) {

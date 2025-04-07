@@ -22,7 +22,7 @@
 
                     <form action="{{ route('ativos.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <input type="hidden" name="id_local" value="1">
+                        <input type="hidden" name="local_id" value="1">
                         <input type="hidden" name="status" value="1">
 
                         <div class="mb-4">
@@ -35,7 +35,8 @@
                         <div class="mb-4">
                             <label for="marca_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Marca</label>
                             <div class="flex gap-2">
-                                <select name="marca_id" id="marca_id" class="w-full px-4 py-2 border rounded-md">
+                                <select name="marca_id" id="marca_id"
+                                        class="w-full px-4 py-2 border rounded-md bg-white text-gray-800 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600">
                                     <option value="">Selecione</option>
                                     @foreach ($marcas as $marca)
                                         <option value="{{ $marca->id }}">{{ $marca->descricao }}</option>
@@ -46,14 +47,16 @@
                                 </button>
                             </div>
                             <div id="nova-marca-form" class="hidden mt-2">
-                                <input type="text" name="nova_marca" placeholder="Nova Marca" class="w-full px-4 py-2 border rounded-md">
+                                <input type="text" name="nova_marca" placeholder="Nova Marca"
+                                       class="w-full px-4 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600">
                             </div>
                         </div>
-
+                        
                         <div class="mb-4">
                             <label for="tipo_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo</label>
                             <div class="flex gap-2">
-                                <select name="tipo_id" id="tipo_id" class="w-full px-4 py-2 border rounded-md">
+                                <select name="tipo_id" id="tipo_id"
+                                        class="w-full px-4 py-2 border rounded-md bg-white text-gray-800 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600">
                                     <option value="">Selecione</option>
                                     @foreach ($tipos as $tipo)
                                         <option value="{{ $tipo->id }}">{{ $tipo->descricao }}</option>
@@ -64,25 +67,27 @@
                                 </button>
                             </div>
                             <div id="novo-tipo-form" class="hidden mt-2">
-                                <input type="text" name="novo_tipo" placeholder="Novo Tipo" class="w-full px-4 py-2 border rounded-md">
+                                <input type="text" name="novo_tipo" placeholder="Novo Tipo"
+                                       class="w-full px-4 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600">
                             </div>
                         </div>
+                        
 
                         <div class="mb-4">
                             <label for="quantidade" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade*</label>
                             <input type="number" name="quantidade" id="quantidade" min="1" required
-                                class="w-full px-4 py-2 border rounded-md">
+                                class="w-full px-4 py-2 mt-1 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500">
                         </div>
 
                         <div class="mb-4">
                             <label for="quantidade_min" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade Mínima</label>
                             <input type="number" name="quantidade_min" id="quantidade_min" min="1" required
-                                class="w-full px-4 py-2 border rounded-md">
+                                class="w-full px-4 py-2 mt-1 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500">
                         </div>
 
                         <div class="mb-4">
                             <label for="observacao" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Observação</label>
-                            <textarea name="observacao" id="observacao" class="w-full px-4 py-2 border rounded-md"></textarea>
+                            <textarea name="observacao" id="observacao" class="w-full px-4 py-2 mt-1 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"></textarea>
                         </div>
 
                         <div class="mb-4">

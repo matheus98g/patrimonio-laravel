@@ -12,7 +12,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100 space-y-6">
                     <!-- Formulário de busca -->
-                    <div class="flex flex-col sm:flex-row gap-4 items-center">
+                    <div class="flex flex-col sm:flex-row gap-4">
                         <form method="GET" action="{{ route('ativos.index') }}" class="flex w-full sm:w-auto flex-grow gap-2">
                             <input type="text" name="search"
                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2"
@@ -22,11 +22,13 @@
                                 {{ __('Buscar') }}
                             </x-primary-button>
                         </form>
-                        <a href="{{ route('ativos.create') }}">
-                            <x-primary-button class="px-4 py-2">
-                                {{ __('Adicionar Ativo') }}
-                            </x-primary-button>
-                        </a>
+                        <div>
+                            <a href="{{ route('ativos.create') }}">
+                                <x-primary-button class="px-4 py-2">
+                                    {{ __('Adicionar Ativo') }}
+                                </x-primary-button>
+                            </a>
+                        </div>
                     </div>
 
                     <!-- Tabela para Desktop -->

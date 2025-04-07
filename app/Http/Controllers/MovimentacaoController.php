@@ -108,7 +108,7 @@ class MovimentacaoController extends Controller
 
         $validated = $request->validate([
             'ativo_id' => 'required|exists:ativo,id',
-            'local_origem' => 'required|exists:locai,id',
+            'local_origem' => 'required|exists:local,id',
             'local_destino' => 'required|exists:local,id|different:local_origem',
             'quantidade_mov' => 'required|integer|min:1',
             'observacao' => 'nullable|string|max:255',
