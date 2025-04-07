@@ -80,25 +80,79 @@ class AtivoController extends Controller
         return view('ativos.index', compact('ativos', 'marcas', 'tipos', 'ativosDisp'));
     }
 
-    public function showDetails($id)
-    {
-        $ativo = Ativo::with('movimentacoes', 'locais')->findOrFail($id);
-        $marcas = Marca::all();
-        $tipos = Tipo::all();
+    // public function showDetails($id)
+    // {
+    //     $ativo = Ativo::with('movimentacoes', 'locais')->findOrFail($id);
+    //     $marcas = Marca::all();
+    //     $tipos = Tipo::all();
 
-        $ativosDisp = DB::table('ativo_local')
-            ->select('ativo_id', DB::raw('SUM(quantidade) AS quantidade_disp'))
-            ->where('local_id', '=', 1)
-            ->groupBy('ativo_id')
-            ->get();
+    //     $ativosDisp = DB::table('ativo_local')
+    //         ->select('ativo_id', DB::raw('SUM(quantidade) AS quantidade_disp'))
+    //         ->where('local_id', '=', 1)
+    //         ->groupBy('ativo_id')
+    //         ->get();
 
-        $movimentacoes = $ativo->movimentacoes;
-        $locais = $ativo->locais;
+    //     $movimentacoes = $ativo->movimentacoes;
+    //     $locais = $ativo->locais;
 
-        return view('ativos.show', compact('ativo', 'marcas', 'tipos', 'ativosDisp', 'movimentacoes', 'locais'));
-    }
+    //     return view('ativos.show', compact('ativo', 'marcas', 'tipos', 'ativosDisp', 'movimentacoes', 'locais'));
+    // }
+
+    // public function showDetails($id)
+    // {
+    //     $ativo = Ativo::with('movimentacoes', 'locais')->findOrFail($id);
+    //     $marcas = Marca::all();
+    //     $tipos = Tipo::all();
+
+    //     // Quantidade total por ativo no local_id = 1 (se ainda precisar disso)
+    //     $ativosDisp = DB::table('ativo_local')
+    //         ->select('ativo_id', DB::raw('SUM(quantidade) AS quantidade_disp'))
+    //         ->where('local_id', '=', 1)
+    //         ->groupBy('ativo_id')
+    //         ->get();
+
+    //     // Todas as movimentações e locais relacionados ao ativo
+    //     $movimentacoes = $ativo->movimentacoes;
+
+    //     // Aqui está o que faltava: pegar os locais e a quantidade do ativo
+    //     $locaisComQuantidade = DB::table('ativo_local')
+    //         ->join('local', 'ativo_local.local_id', '=', 'local.id')
+    //         ->select('local.descricao', 'ativo_local.quantidade')
+    //         ->where('ativo_local.ativo_id', $id)
+    //         ->where('ativo_local.quantidade', '>', 0)
+    //         ->get();
+
+    //     return view('ativos.show', compact(
+    //         'ativo',
+    //         'marcas',
+    //         'tipos',
+    //         'ativosDisp',
+    //         'movimentacoes',
+    //         'locaisComQuantidade'
+    //     ));
+    // }
 
 
+
+
+
+    // public function show($id)
+    // {
+    //     $ativo = Ativo::with('movimentacoes', 'locais')->findOrFail($id);
+    //     $marcas = Marca::all();
+    //     $tipos = Tipo::all();
+
+    //     $ativosDisp = DB::table('ativo_local')
+    //         ->select('ativo_id', DB::raw('SUM(quantidade) AS quantidade_disp'))
+    //         ->where('local_id', '=', 1)
+    //         ->groupBy('ativo_id')
+    //         ->get();
+
+    //     $movimentacoes = $ativo->movimentacoes;
+    //     $locais = $ativo->locais;
+
+    //     return view('ativos.show', compact('ativo', 'marcas', 'tipos', 'ativosDisp', 'movimentacoes', 'locais'));
+    // }
 
     public function show($id)
     {
@@ -115,8 +169,25 @@ class AtivoController extends Controller
         $movimentacoes = $ativo->movimentacoes;
         $locais = $ativo->locais;
 
-        return view('ativos.show', compact('ativo', 'marcas', 'tipos', 'ativosDisp', 'movimentacoes', 'locais'));
+        // 👉 Novo bloco: buscar todos os locais com o ativo presente e quantidade > 0
+        $locaisComQuantidade = DB::table('ativo_local')
+            ->join('local', 'ativo_local.local_id', '=', 'local.id')
+            ->select('local.id', 'local.descricao', 'ativo_local.quantidade')
+            ->where('ativo_local.ativo_id', $id)
+            ->where('ativo_local.quantidade', '>', 0)
+            ->get();
+
+        return view('ativos.show', compact(
+            'ativo',
+            'marcas',
+            'tipos',
+            'ativosDisp',
+            'movimentacoes',
+            'locais',
+            'locaisComQuantidade' // 👈 Adicionado aqui
+        ));
     }
+
 
 
     public function cadastrarAtivo()

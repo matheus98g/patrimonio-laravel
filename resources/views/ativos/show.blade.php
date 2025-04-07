@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Detalhes do Ativo') }}
+                {{ ('Detalhes do Ativo') }}
             </h2>
             <div class="md:hidden">
                 <!-- O menu hamburger será renderizado aqui pelo layout padrão -->
@@ -16,7 +16,7 @@
             <div class="flex justify-start">
                 <a href="{{ route('ativos.index') }}">
                     <x-secondary-button class="px-4 py-2">
-                        {{ __('Voltar aos Ativos') }}
+                        {{ ('Voltar aos Ativos') }}
                     </x-secondary-button>
                 </a>
             </div>
@@ -34,7 +34,7 @@
                             </div>
                         @else
                             <div class="w-32 h-32 md:w-48 md:h-48 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-400">
-                                {{ __('Sem imagem') }}
+                                {{ ('Sem imagem') }}
                             </div>
                         @endif
                     </div>
@@ -44,22 +44,22 @@
                         <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $ativo->descricao }}</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <p class="text-gray-700 dark:text-gray-300">
-                                <strong>{{ __('Observação:') }}</strong> {{ $ativo->observacao ?? '' }}
+                                <strong>{{ ('Observação:') }}</strong> {{ $ativo->observacao ?? '' }}
                             </p>
                             <p class="text-gray-700 dark:text-gray-300">
-                                <strong>{{ __('Marca:') }}</strong> {{ $ativo->marca->descricao ?? 'N/A' }}
+                                <strong>{{ ('Marca:') }}</strong> {{ $ativo->marca->descricao ?? 'N/A' }}
                             </p>
                             <p class="text-gray-700 dark:text-gray-300">
-                                <strong>{{ __('Tipo:') }}</strong> {{ $ativo->tipo->descricao ?? 'N/A' }}
+                                <strong>{{ ('Tipo:') }}</strong> {{ $ativo->tipo->descricao ?? 'N/A' }}
                             </p>
                             <p class="text-gray-700 dark:text-gray-300">
-                                <strong>{{ __('Quantidade Total:') }}</strong> {{ $ativo->quantidade }}
+                                <strong>{{ ('Quantidade Total:') }}</strong> {{ $ativo->quantidade }}
                             </p>
                             <p class="text-gray-700 dark:text-gray-300">
-                                <strong>{{ __('Quantidade Mínima:') }}</strong> {{ $ativo->quantidade_min }}
+                                <strong>{{ ('Quantidade Mínima:') }}</strong> {{ $ativo->quantidade_min }}
                             </p>
                             <p class="text-gray-700 dark:text-gray-300">
-                                <strong>{{ __('Quantidade Disponível:') }}</strong> {{ $ativo->quantidade_disp ?? 0 }}
+                                <strong>{{ ('Quantidade Disponível:') }}</strong> {{ $ativo->quantidade_disp ?? 0 }}
                             </p>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
             <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6">
                 <div class="flex items-center justify-between mb-4">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ __('Movimentações') }}</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ ('Movimentações') }}</h3>
                         <p class="text-sm text-gray-600 dark:text-gray-400">Movimentações em que este ativo estava presente.</p>
                     </div>
                 </div>
@@ -78,10 +78,10 @@
                     <table class="w-full border-collapse">
                         <thead>
                             <tr class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-200">
-                                <th class="p-3 text-left text-sm font-medium">{{ __('Data') }}</th>
-                                <th class="p-3 text-left text-sm font-medium">{{ __('Origem') }}</th>
-                                <th class="p-3 text-left text-sm font-medium">{{ __('Destino') }}</th>
-                                <th class="p-3 text-left text-sm font-medium">{{ __('Quantidade') }}</th>
+                                <th class="p-3 text-left text-sm font-medium">{{ ('Data') }}</th>
+                                <th class="p-3 text-left text-sm font-medium">{{ ('Origem') }}</th>
+                                <th class="p-3 text-left text-sm font-medium">{{ ('Destino') }}</th>
+                                <th class="p-3 text-left text-sm font-medium">{{ ('Quantidade') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -95,7 +95,7 @@
                             @empty
                                 <tr>
                                     <td colspan="4" class="p-4 text-center text-gray-500 dark:text-gray-400">
-                                        {{ __('Nenhuma movimentação até agora.') }}
+                                        {{ ('Nenhuma movimentação até agora.') }}
                                     </td>
                                 </tr>
                             @endforelse
@@ -104,7 +104,7 @@
                     <div class="flex justify-end mt-4">
                         <a href="{{ route('movimentacoes.search', ['id' => $ativo->id]) }}">
                             <x-secondary-button class="px-4 py-2">
-                                {{ __('Ver todas as movimentações') }}
+                                {{ ('Ver todas as movimentações') }}
                             </x-secondary-button>
                         </a>
                     </div>
@@ -115,7 +115,7 @@
             <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6">
                 <div class="flex items-center justify-between mb-4">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ __('Locais do Ativo') }}</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ ('Locais do Ativo') }}</h3>
                         <p class="text-sm text-gray-600 dark:text-gray-400">Último local registrado para o ativo.</p>
                     </div>
                 </div>
@@ -123,12 +123,12 @@
                     <table class="w-full border-collapse">
                         <thead>
                             <tr class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-200">
-                                <th class="p-3 text-left text-sm font-medium">{{ __('Local') }}</th>
-                                <th class="p-3 text-left text-sm font-medium">{{ __('Quantidade') }}</th>
+                                <th class="p-3 text-left text-sm font-medium">{{ ('Local') }}</th>
+                                <th class="p-3 text-left text-sm font-medium">{{ ('Quantidade') }}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($locais as $local)
+                            @forelse ($locaisComQuantidade as $local)
                                 <tr class="border-b border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
                                     <td class="p-3 text-gray-700 dark:text-gray-300">{{ $local->descricao }}</td>
                                     <td class="p-3 text-gray-700 dark:text-gray-300">{{ $local->quantidade }}</td>
@@ -136,16 +136,18 @@
                             @empty
                                 <tr>
                                     <td colspan="2" class="p-4 text-center text-gray-500 dark:text-gray-400">
-                                        {{ __('Nenhum local registrado.') }}
+                                        Nenhum local registrado.
                                     </td>
                                 </tr>
                             @endforelse
                         </tbody>
+                        
+                        
                     </table>
                     <div class="flex justify-end mt-4">
                         <a href="{{ route('movimentacoes.index') }}">
                             <x-secondary-button class="px-4 py-2">
-                                {{ __('Ver todos os locais') }}
+                                {{ ('Ver todos os locais') }}
                             </x-secondary-button>
                         </a>
                     </div>
