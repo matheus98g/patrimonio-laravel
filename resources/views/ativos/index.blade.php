@@ -260,7 +260,7 @@
         }
 
         function openDetailsAtivo(id) {
-            window.location.href = `/ativos/details/${id}`;
+            window.location.href = `/ativos/${id}`;
         }
 
         function searchProdutos(descricao) {
