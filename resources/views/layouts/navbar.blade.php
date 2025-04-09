@@ -25,6 +25,10 @@
 
             <!-- Center Section: Navigation -->
             <div class="hidden sm:flex sm:items-center sm:space-x-6 z-50">
+
+                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    {{ ('Dashboard') }}
+                </x-responsive-nav-link>
                 <!-- Admin Dropdown -->
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
@@ -39,11 +43,20 @@
                         <x-dropdown-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                             {{ ('Admin Dashboard') }}
                         </x-dropdown-link>
+                        <x-dropdown-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
+                            {{ ('Usuários') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link :href="route('admin.roles.index')" :active="request()->routeIs('admin.roles.index')">
+                            {{ ('Cargos') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link :href="route('admin.permissions.index')" :active="request()->routeIs('admin.permissions.index')">
+                            {{ ('Permissões') }}
+                        </x-dropdown-link>
                     </x-slot>
                 </x-dropdown>
 
                 <!-- Usuarios Dropdown -->
-                <x-dropdown align="right" width="48">
+                {{-- <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 bg-white dark:bg-gray-800 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
                             <span>Usuários</span>
@@ -57,7 +70,25 @@
                             {{ ('Listar todos') }}
                         </x-dropdown-link>
                     </x-slot>
-                </x-dropdown>
+                </x-dropdown> --}}
+
+
+                <!-- Usuarios Dropdown -->
+                {{-- <x-dropdown align="right" width="48">
+                    <x-slot name="trigger">
+                        <button class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 bg-white dark:bg-gray-800 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                            <span>Usuários</span>
+                            <svg class="ml-1 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </x-slot>
+                    <x-slot name="content">
+                        
+                    </x-slot>
+                </x-dropdown> --}}
+
+
 
                 <!-- Gerenciar Dropdown -->
                 <x-dropdown align="right" width="48">
@@ -77,9 +108,9 @@
                         <x-dropdown-link :href="route('movimentacoes.index')" :active="request()->routeIs('movimentacoes.index')">
                             {{ ('Movimentações') }}
                         </x-dropdown-link>
-                        <x-dropdown-link :href="route('produtos.index')" :active="request()->routeIs('produtos.index')">
+                        {{-- <x-dropdown-link :href="route('produtos.index')" :active="request()->routeIs('produtos.index')">
                             {{ ('Produtos') }}
-                        </x-dropdown-link>
+                        </x-dropdown-link> --}}
                     </x-slot>
                 </x-dropdown>
 
@@ -122,8 +153,115 @@
         </div>
     </div>
 
-    <!-- Responsive Navigation Menu -->
+    <!-- Responsive Navigation Menu (Mobile) -->
     <div :class="{'block': open, 'hidden': !open}" 
+    class="sm:hidden absolute top-full left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-600 shadow-lg z-50">
+   <div class="pt-2 pb-3 space-y-1">
+
+    <!-- Dashboard Link -->
+    <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+        {{ ('Dashboard') }}
+    </x-responsive-nav-link>
+
+    <!-- Admin Links -->
+
+    <div x-data="{ adminOpen: false }">
+        <button @click="adminOpen = !adminOpen" 
+                class="w-full flex items-center justify-between px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+            Admin
+            <svg class="w-4 h-4 transform transition-transform" :class="{'rotate-180': adminOpen}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
+        <div x-show="adminOpen" x-transition class="pl-6 space-y-1">
+            <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                {{ ('Admin Dashboard') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
+                {{ ('Usuários') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.roles.index')" :active="request()->routeIs('admin.roles.index')">
+                {{ ('Cargos') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.permissions.index')" :active="request()->routeIs('admin.permissions.index')">
+                {{ ('Permissões') }}
+            </x-responsive-nav-link>
+        </div>
+    </div>
+
+    <!-- Gerenciar Links -->
+    {{-- <div class="border-t border-gray-200 dark:border-gray-600 mt-2 pt-2">
+        <div class="px-4 text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
+            Gerenciar
+        </div>
+        <x-responsive-nav-link :href="route('ativos.index')" :active="request()->routeIs('ativos.index')">
+            {{ ('Ativos') }}
+        </x-responsive-nav-link>
+        <x-responsive-nav-link :href="route('marcas.index')" :active="request()->routeIs('marcas.index')">
+            {{ ('Marcas') }}
+        </x-responsive-nav-link>
+        <x-responsive-nav-link :href="route('tipos.index')" :active="request()->routeIs('tipos.index')">
+            {{ ('Tipos') }}
+        </x-responsive-nav-link>
+        <x-responsive-nav-link :href="route('locais.index')" :active="request()->routeIs('locais.index')">
+            {{ ('Locais') }}
+        </x-responsive-nav-link>
+        <x-responsive-nav-link :href="route('movimentacoes.index')" :active="request()->routeIs('movimentacoes.index')">
+            {{ ('Movimentações') }}
+        </x-responsive-nav-link>
+        {{-- <x-responsive-nav-link :href="route('produtos.index')" :active="request()->routeIs('produtos.index')">
+            {{ ('Produtos') }}
+        </x-responsive-nav-link> --}}
+    {{-- </div> --}}
+
+    <div x-data="{ gerenciarOpen: false }">
+        <button @click="gerenciarOpen = !gerenciarOpen" 
+                class="w-full flex items-center justify-between px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+            Gerenciar
+            <svg class="w-4 h-4 transform transition-transform" :class="{'rotate-180': gerenciarOpen}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
+        <div x-show="gerenciarOpen" x-transition class="pl-6 space-y-1">
+            <x-responsive-nav-link :href="route('ativos.index')" :active="request()->routeIs('ativos.index')">
+                {{ ('Ativos') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('marcas.index')" :active="request()->routeIs('marcas.index')">
+                {{ ('Marcas') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('tipos.index')" :active="request()->routeIs('tipos.index')">
+                {{ ('Tipos') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('locais.index')" :active="request()->routeIs('locais.index')">
+                {{ ('Locais') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('movimentacoes.index')" :active="request()->routeIs('movimentacoes.index')">
+                {{ ('Movimentações') }}
+            </x-responsive-nav-link>
+        </div>
+    </div>
+
+    <div class="pt-4 pb-3 border-t border-gray-200 dark:border-gray-600">
+        <div class="px-4">
+            <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
+            <div class="font-medium text-sm text-gray-500 dark:text-gray-400">{{ Auth::user()->email }}</div>
+        </div>
+        <div class="mt-3 space-y-1">
+            <x-responsive-nav-link :href="route('profile.edit')">{{ ('Perfil') }}</x-responsive-nav-link>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <x-responsive-nav-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
+                    {{ ('Sair') }}
+                </x-responsive-nav-link>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+    <!-- Responsive Navigation Menu -->
+    {{-- <div :class="{'block': open, 'hidden': !open}" 
          class="sm:hidden absolute top-full left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-600 shadow-lg z-50">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
@@ -202,5 +340,5 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> --}}
 </nav>

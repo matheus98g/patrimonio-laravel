@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     
@@ -18,7 +18,7 @@
                     @endif
 
                     <!-- Formulário de edição -->
-                    <form action="{{ route('users.update', $user->id) }}" method="POST" class="space-y-6">
+                    <form action="{{ route('admin.users.update', $user->id) }}" method="POST" class="space-y-6">
                         @csrf
                         @method('PUT')
 
@@ -44,30 +44,34 @@
 
                         <!-- Papéis (roles) -->
                         <div>
-                            <label for="roles" class="block text-sm font-medium mb-1">{{ ('Papéis') }}</label>
-                            <select name="roles[]" id="roles" multiple
-                                    class="w-full px-4 py-2 border rounded-md dark:bg-gray-900 dark:border-gray-700 focus:ring focus:ring-indigo-500">
+                            <label class="block text-sm font-medium mb-1">{{ ('Cargo') }}</label>
+                            <div class="space-y-2 py-2">
                                 @foreach ($roles as $role)
-                                    <option value="{{ $role->name }}"
-                                        {{ $user->roles->pluck('name')->contains($role->name) ? 'selected' : '' }}>
-                                        {{ $role->name }}
-                                    </option>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="roles[]" value="{{ $role->name }}"
+                                               {{ $user->roles->pluck('name')->contains($role->name) ? 'checked' : '' }}
+                                               class="text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:bg-gray-900 dark:border-gray-700">
+                                        <span class="text-sm text-gray-700 dark:text-gray-300">{{ $role->name }}</span>
+                                    </label>
                                 @endforeach
-                            </select>
+                            </div>
                             @error('roles')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
                         </div>
+                        
 
                         <!-- Botões -->
                         <div class="flex justify-between items-center">
-                            <a href="{{ route('users.index') }}" class="text-sm text-gray-500 hover:underline">
-                                ← {{ ('Voltar à lista') }}
-                            </a>
-                            <button type="submit"
+                            <x-secondary-button>
+                                <a href="{{ route('admin.users.index') }}" class="text-sm text-gray-500 hover:underline">
+                                    ← {{ ('Voltar à lista') }}
+                                </a>
+                            </x-secondary-button>
+                            <x-primary-button type="submit"
                                     class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition">
                                 {{ ('Salvar Alterações') }}
-                            </button>
+                            </x-primary-button>
                         </div>
                     </form>
 

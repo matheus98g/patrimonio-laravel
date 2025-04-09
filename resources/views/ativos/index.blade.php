@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Lista de Ativos') }}
+                {{ ('Lista de Ativos') }}
             </h2>
         </div>
     </x-slot>
@@ -19,13 +19,13 @@
                                    placeholder="Buscar por descrição, observação, status..."
                                    value="{{ request('search') }}">
                             <x-primary-button type="submit" class="shrink-0 px-4 py-2">
-                                {{ __('Buscar') }}
+                                {{ ('Buscar') }}
                             </x-primary-button>
                         </form>
                         <div>
                             <a href="{{ route('ativos.create') }}">
                                 <x-primary-button class="px-4 py-2">
-                                    {{ __('Adicionar Ativo') }}
+                                    {{ ('Adicionar Ativo') }}
                                 </x-primary-button>
                             </a>
                         </div>
@@ -36,13 +36,13 @@
                         <table class="w-full border-collapse bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                             <thead class="bg-gray-100 dark:bg-gray-700">
                                 <tr>
-                                    <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ __('Imagem') }}</th>
-                                    <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ __('Descrição') }}</th>
-                                    <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ __('Disponível') }}</th>
-                                    <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ __('Total') }}</th>
-                                    <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ __('Mínimo') }}</th>
-                                    <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ __('Status') }}</th>
-                                    <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ __('Ações') }}</th>
+                                    <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ ('Imagem') }}</th>
+                                    <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ ('Descrição') }}</th>
+                                    <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ ('Disponível') }}</th>
+                                    <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ ('Total') }}</th>
+                                    <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ ('Mínimo') }}</th>
+                                    <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ ('Status') }}</th>
+                                    <th class="p-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ ('Ações') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -57,7 +57,7 @@
                                                 </div>
                                             @else
                                                 <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-400 text-xs">
-                                                    {{ __('Sem imagem') }}
+                                                    {{ ('Sem imagem') }}
                                                 </div>
                                             @endif
                                         </td>
@@ -99,7 +99,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="p-4 text-center text-gray-500 dark:text-gray-400">{{ __('Nenhum ativo encontrado.') }}</td>
+                                        <td colspan="7" class="p-4 text-center text-gray-500 dark:text-gray-400">{{ ('Nenhum ativo encontrado.') }}</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -117,7 +117,7 @@
                                                  class="w-full h-full object-cover rounded-lg">
                                         @else
                                             <div class="w-full h-full bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-400 text-xs">
-                                                {{ __('Sem imagem') }}
+                                                {{ ('Sem imagem') }}
                                             </div>
                                         @endif
                                     </div>
@@ -131,17 +131,17 @@
                                 </div>
                                 <div x-show="open" x-transition class="p-4 border-t border-gray-200 dark:border-gray-600 space-y-3 text-sm">
                                     <div class="grid grid-cols-2 gap-2">
-                                        <span class="text-gray-600 dark:text-gray-400">{{ __('Tipo:') }}</span>
+                                        <span class="text-gray-600 dark:text-gray-400">{{ ('Tipo:') }}</span>
                                         <span class="text-gray-900 dark:text-gray-100">{{ optional($ativo->tipo)->descricao ?? 'N/A' }}</span>
-                                        <span class="text-gray-600 dark:text-gray-400">{{ __('Total:') }}</span>
+                                        <span class="text-gray-600 dark:text-gray-400">{{ ('Total:') }}</span>
                                         <span class="text-gray-900 dark:text-gray-100">{{ $ativo->quantidade }}</span>
-                                        <span class="text-gray-600 dark:text-gray-400">{{ __('Disponível:') }}</span>
+                                        <span class="text-gray-600 dark:text-gray-400">{{ ('Disponível:') }}</span>
                                         <span class="text-gray-900 dark:text-gray-100">
                                             {{ optional($ativosDisp->firstWhere('ativo_id', $ativo->id))->quantidade_disp ?? 0 }}
                                         </span>
-                                        <span class="text-gray-600 dark:text-gray-400">{{ __('Mínimo:') }}</span>
+                                        <span class="text-gray-600 dark:text-gray-400">{{ ('Mínimo:') }}</span>
                                         <span class="text-gray-900 dark:text-gray-100">{{ $ativo->quantidade_min }}</span>
-                                        <span class="text-gray-600 dark:text-gray-400">{{ __('Status:') }}</span>
+                                        <span class="text-gray-600 dark:text-gray-400">{{ ('Status:') }}</span>
                                         <span class="{{ $ativo->status ? 'text-green-600' : 'text-red-600' }}">
                                             {{ $ativo->status ? 'Ativo' : 'Inativo' }}
                                             @if (optional($ativosDisp->firstWhere('ativo_id', $ativo->id))->quantidade_disp <= $ativo->quantidade_min)
@@ -152,14 +152,14 @@
                                     <div class="flex justify-end gap-2">
                                         <a href="{{ route('ativos.show', ['id' => $ativo->id]) }}">
                                             <x-secondary-button class="p-2">
-                                                {{ __('Ver mais') }}
+                                                {{ ('Ver mais') }}
                                             </x-secondary-button>
                                         </a>
                                     </div>
                                 </div>
                             </div>
                         @empty
-                            <div class="text-center p-4 text-gray-500 dark:text-gray-400">{{ __('Nenhum ativo encontrado.') }}</div>
+                            <div class="text-center p-4 text-gray-500 dark:text-gray-400">{{ ('Nenhum ativo encontrado.') }}</div>
                         @endforelse
                     </div>
 

@@ -21,19 +21,19 @@ class UserController extends Controller
 
     public function index()
     {
-        $usuarios = User::with(['roles', 'permissions'])->get();
+        $users = User::with(['roles', 'permissions'])->get();
         
-        return view('admin.users.index', compact('usuarios'));
+        return view('admin.users.index', compact('users'));
     }
 
     public function edit($id)
     {
-        $usuario = User::findOrFail($id);
+        $user = User::findOrFail($id);
         
         $roles = Role::all();
         $permissions = Permission::all();
         
-        return view('admin.users.edit', compact('usuario', 'roles', 'permissions'));
+        return view('admin.users.edit', compact('user', 'roles', 'permissions'));
     }
 
     public function update(Request $request, $id)
